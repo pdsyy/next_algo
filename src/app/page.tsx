@@ -242,7 +242,7 @@ const MainPage = ({activePopup, setActivePopup}:any) => {
 
           <div className="about_us_block">
             <motion.div className="market_list" {...fadeUp}>
-              {[...Array(window.innerWidth < 768 ? 14 : 7)].map((_, i) => (
+              {[...Array(isMobile ? 14 : 7)].map((_, i) => (
                   <img
                       key={i}
                       src={marketImages[i % 7].src}
@@ -269,7 +269,7 @@ const MainPage = ({activePopup, setActivePopup}:any) => {
 
           <div className="money_in_management">
             <motion.div className="money_in_management_number" {...fadeUp}>
-              {window.innerWidth < 768 ? "200 000$" : <AnimatedNumber value="200 000$" duration={2.5}/>}
+              {isMobile ? "200 000$" : <AnimatedNumber value="200 000$" duration={2.5}/>}
             </motion.div>
             <motion.div className="in_management" {...fadeUp}>
               {t.home.stats.management}
@@ -337,7 +337,7 @@ const MainPage = ({activePopup, setActivePopup}:any) => {
 
             <div className="bots_list">
               {botsList.map((el:any, idx:number) =>
-                  {return window.innerWidth > 768 ?  <motion.div className = "piece_pay_full_block" key={idx} {...fadeNumeric} custom={idx}>
+                  {return !isMobile ?  <motion.div className = "piece_pay_full_block" key={idx} {...fadeNumeric} custom={idx}>
                         <div className = "white_info_block">
                           <img src = {white_info_icon.src} alt = ""/>
                           {t.home.piecePay}
@@ -432,7 +432,7 @@ const MainPage = ({activePopup, setActivePopup}:any) => {
           </div>
 
           <motion.div className="prop_container_fs" {...fadeUp}>
-            {window.innerWidth > 768 ?
+            {!isMobile ?
                 <div className="main_page_prop_container"
                      onMouseOver={() => {
                        /*
@@ -722,7 +722,7 @@ const MainPage = ({activePopup, setActivePopup}:any) => {
 
           <motion.div className="footer" {...fadeUp}>
             <a href="/">
-              <img src="/images/logo.svg" alt="Logo" className="logo_img"/>
+              <img src="./images/logo.svg" alt="Logo" className="logo_img"/>
             </a>
             <hr/>
 
@@ -730,18 +730,18 @@ const MainPage = ({activePopup, setActivePopup}:any) => {
                 <div className="society_block">
                   <div>
                     <a href="https://t.me/+uKCqVOr1OAE2ZmQy" target="_blank" rel="noreferrer">
-                      <img src="/images/tg_icon.svg" alt=""/>
+                      <img src="/src/app/images/tg_icon.svg" alt=""/>
                     </a>
                   </div>
                   <div>
                     <a href="https://www.instagram.com/alg0_bots?igsh=NW82eGFuajRlYmpw" target="_blank"
                        rel="noreferrer">
-                      <img src="/images/insta_icon.svg" alt=""/>
+                      <img src="/src/app/images/insta_icon.svg" alt=""/>
                     </a>
                   </div>
                   <div>
                     <a href="https://www.youtube.com/@alg0_ofx" target="_blank" rel="noreferrer">
-                      <img src="/images/youtube_icon.svg" alt=""/>
+                      <img src="/src/app/images/youtube_icon.svg" alt=""/>
                     </a>
                   </div>
                 </div>

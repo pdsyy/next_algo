@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import dollar_circle from "../app/terra/images/dollar_circle.svg";
+import dollar_circle from "@/app/terra/images/dollar_circle.svg";
 
 const InputRangeBar = ({SLIDER_MAX, startValue, inputIcon, value, setValue}:any) => {
 

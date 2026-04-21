@@ -4,6 +4,7 @@ import {useLanguage} from "@/context/LanguageProvider";
 import YearMonthHandler from "./YearMonthHandler";
 import TripleHandler from "./TripleHandler";
 import Image from "next/image";
+import {usePathname} from "next/navigation";
 
 interface HeaderProps {
     dark: boolean,
@@ -13,6 +14,21 @@ interface HeaderProps {
 }
 
 const Header = ({dark, visibleHeader, setVisibleHeader, initialLanguage}: HeaderProps) => {
+
+
+
+    const pathname = usePathname();
+
+    const changeLanguage = (newLang: string) => {
+        const segments = pathname.split('/');
+        segments[1] = newLang;
+
+        const newPath = segments.join('/');
+
+        window.location.assign(newPath);
+    };
+
+
     const {t, language, setLanguage} = useLanguage()!;
 
 
@@ -94,7 +110,7 @@ const Header = ({dark, visibleHeader, setVisibleHeader, initialLanguage}: Header
                 </div>
 
                 <div className="lang_select_block">
-                    <div className="languages_block">
+                    {/*<div className="languages_block">
                         <div
                             className={language === "UA" ? "active" : ""}
                             onClick={() => setLanguage("UA")}
@@ -113,7 +129,7 @@ const Header = ({dark, visibleHeader, setVisibleHeader, initialLanguage}: Header
                         >
                             EN
                         </div>
-                    </div>
+                    </div>*/}
                     <div className="select_bot_button" onClick={() => handleMenuClick("catalog")}>
                         {t.home.hero.button}
                     </div>
@@ -197,7 +213,7 @@ const Header = ({dark, visibleHeader, setVisibleHeader, initialLanguage}: Header
 
                 </div>
 
-                <TripleHandler items={["UA", "RU", "EN"]} setHandleValue={setLanguage} handleValue={language}/>
+                {/*<TripleHandler items={["UA", "RU", "EN"]} setHandleValue={setLanguage} handleValue={language}/>*/}
                 <div className="select_bot_button_mobile" onClick={() => handleMenuClick("catalog")}>
                     {t.home.hero.button}
                 </div>

@@ -722,18 +722,18 @@ const MainPage = ({activePopup, setActivePopup}:any) => {
                 <div className="society_block">
                   <div>
                     <a href="https://t.me/+uKCqVOr1OAE2ZmQy" target="_blank" rel="noreferrer">
-                      <img src="/src/app/images/tg_icon.svg" alt=""/>
+                      <img src="/images/tg_icon.svg" alt=""/>
                     </a>
                   </div>
                   <div>
                     <a href="https://www.instagram.com/alg0_bots?igsh=NW82eGFuajRlYmpw" target="_blank"
                        rel="noreferrer">
-                      <img src="/src/app/images/insta_icon.svg" alt=""/>
+                      <img src="/images/insta_icon.svg" alt=""/>
                     </a>
                   </div>
                   <div>
                     <a href="https://www.youtube.com/@alg0_ofx" target="_blank" rel="noreferrer">
-                      <img src="/src/app/images/youtube_icon.svg" alt=""/>
+                      <img src="/images/youtube_icon.svg" alt=""/>
                     </a>
                   </div>
                 </div>

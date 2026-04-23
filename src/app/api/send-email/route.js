@@ -9,7 +9,7 @@ export async function POST(req) {
 
         const data = await resend.emails.send({
             from: 'info@algo-market.com',
-            to: 'prodseoy@gmail.com',
+            to: 'mailvladimirab@gmail.com',
             subject: 'Новая заявка с сайта ALGO',
             html: `
                 <h2>Новая заявка с сайта ALGO MARKET</h2>

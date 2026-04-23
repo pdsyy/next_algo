@@ -538,12 +538,12 @@ const TerraPage = ({activePopup, setActivePopup}:any) => {
                                 {t.terra.buy.buy}
                             </div>
 
-                            <div
+                            {/* <div
                                 className="piece_pay_bottom"
                                 onClick={() => setIsActive(true)}
                             >
                                 {t.terra.buy.parts}
-                            </div>
+                            </div>*/}
                         </div>
                     </motion.div>
                 </div>

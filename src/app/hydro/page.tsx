@@ -463,9 +463,9 @@ const HydroPage = ({activePopup, setActivePopup}:any) => {
                             <div className="button_buy_bottom" onClick={() => setIsActive(true)}>
                                 {t.terra.buy.buy}
                             </div>
-                            <div className="piece_pay_bottom" onClick={() => setIsActive(true)}>
+                            {/*<div className="piece_pay_bottom" onClick={() => setIsActive(true)}>
                                 {t.terra.buy.parts}
-                            </div>
+                            </div>*/}
                         </div>
                     </motion.div>
                 </div>

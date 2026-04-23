@@ -8,11 +8,11 @@ export async function POST(req) {
         const dataF = await req.json();
 
         const data = await resend.emails.send({
-            from: 'info@algo-bots.com',
-            to: 'mailvladimirab@gmail.com',
+            from: 'info@algo-market.com',
+            to: 'prodseoy@gmail.com',
             subject: 'Новая заявка с сайта ALGO',
             html: `
-                <h2>Новая заявка с сайта ALGO WEB</h2>
+                <h2>Новая заявка с сайта ALGO MARKET</h2>
                 <p><strong>Название бота:</strong> ${dataF.botName}</p>
                 <p><strong>Связь через:</strong> ${dataF.contactChanel}</p>
                 <p><strong>Имя:</strong> ${dataF.userName}</p>

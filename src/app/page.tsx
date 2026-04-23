@@ -337,12 +337,8 @@ const MainPage = ({activePopup, setActivePopup}:any) => {
 
             <div className="bots_list">
               {botsList.map((el:any, idx:number) =>
-                  {return !isMobile ?  <motion.div className = "piece_pay_full_block" key={idx} {...fadeNumeric} custom={idx}>
-                        <div className = "white_info_block">
-                          <img src = {white_info_icon.src} alt = ""/>
-                          {t.home.piecePay}
-                        </div>
-                        <div className = "bot_gradient_border">
+                  {return !isMobile ?
+                        <motion.div className = "bot_gradient_border" key={idx} {...fadeNumeric} custom={idx}>
                           <div className="bot_item">
                             <div className="bot_image">
                               {/*el.prop && <div className="prop_pl">{t.home.catalog.propLabel}</div>*/}
@@ -380,8 +376,8 @@ const MainPage = ({activePopup, setActivePopup}:any) => {
                               </div>
                             </a>
                           </div>
-                        </div>
-                      </motion.div> :
+                        </motion.div>
+                      :
 
                       <div className = "bot_gradient_border">
                         <div className="bot_item">
@@ -413,10 +409,6 @@ const MainPage = ({activePopup, setActivePopup}:any) => {
                               {el.price}
                               <span>USD</span>
                             </div>
-                          </div>
-
-                          <div className = "mob_piece_pay">
-                            ✓ {t.home.piecePay}
                           </div>
 
                           <a href={el.href}>

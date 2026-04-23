@@ -25,21 +25,27 @@ const PopupBot = ({bot_info = [], bot_name, price, isActive, setIsActive, active
                 account: contactChanelValue,
             });
 
-            if (response.status === 200) {
-                setIsActive(false)
-                setActiveThx(true)
-                //alert('Заявка успешно отправлена!');
+            if (response.data.success || response.status === 200) {
 
+                if (typeof setIsActive === 'function') {
+                    setIsActive(false);
+                }
+                if (typeof setActiveThx === 'function') {
+                    setActiveThx(true);
+                }
+
+                setName("");
+                setContactChanelValue("");
             }
-        } catch (error:any) {
+        } catch (error: any) {
             console.error('Ошибка отправки:', error.response?.data || error.message);
-            alert('Произошла ошибка при отправке заявки.');
+            alert('Ошибка при отправке.');
         }
     };
     const pathname = usePathname();
     console.log(pathname)
     const isMainPage = pathname === "/"
-
+    console.log('Props check:', { setIsActive, setActiveThx });
     return (
         <div className={`popup_fs ${isActive ? "active_popup" : ""} ${isMainPage ? "prop_bot" : ""}`} onClick={() => setIsActive(false)}>
             <div className="popup_container_gradient" onClick={(e) => e.stopPropagation()}>

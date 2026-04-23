@@ -28,8 +28,10 @@ import instagram_icon from "../images/insta_icon.svg";
 import youtube_icon from "../images/youtube_icon.svg";
 import circles_bg from "./images/circles.svg";
 import {ThemeContext} from "@/context/ThemeContext";
+import {useThxContext} from "@/context/ThxContext";
 
-const PropPage = ({activePopup, setActivePopup}:any) => {
+const PropPage = () => {
+    const {activePopup, setActivePopup} = useThxContext()
     const [isMobile, setIsMobile] = useState(false);
     const {setDarkTheme} = useContext(ThemeContext);
 

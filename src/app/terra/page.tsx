@@ -29,8 +29,10 @@ import { useLanguage } from "@/context/LanguageProvider";
 import tg_icon from "../images/tg_icon.svg";
 import instagram_icon from "../images/insta_icon.svg";
 import youtube_icon from "../images/youtube_icon.svg";
+import {useThxContext} from "@/context/ThxContext";
 
-const TerraPage = ({activePopup, setActivePopup}:any) => {
+const TerraPage = () => {
+    const {activePopup, setActivePopup} = useThxContext()
 
     const [isMobile, setIsMobile] = useState(false);
     useEffect(() => {

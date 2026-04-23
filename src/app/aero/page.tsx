@@ -28,9 +28,11 @@ import CalculatorSectionAero from "@/components/CalculatorSectionAero";
 import tg_icon from "../images/tg_icon.svg";
 import instagram_icon from "../images/insta_icon.svg";
 import youtube_icon from "../images/youtube_icon.svg";
+import {useThxContext} from "@/context/ThxContext";
 
-const AeroPage = ({activePopup, setActivePopup}:any) => {
+const AeroPage = () => {
     const { t } = useLanguage()!;
+    const {activePopup, setActivePopup} = useThxContext()
     const [isMobile, setIsMobile] = useState(false);
     useEffect(() => {
         setIsMobile(window.innerWidth < 768);

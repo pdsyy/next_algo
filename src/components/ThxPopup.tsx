@@ -1,8 +1,10 @@
 import React, {useState} from 'react';
 import cross from "./components_images/popup_cross.svg";
 import {useLanguage} from "@/context/LanguageProvider";
+import {useThxContext} from "@/context/ThxContext";
 
-const ThxPopup = ({activePopup, setActivePopup, dark}:any) => {
+const ThxPopup = ({dark}:any) => {
+    const {activePopup, setActivePopup} = useThxContext()
     const { t } = useLanguage()!;
 
     return (
@@ -12,7 +14,7 @@ const ThxPopup = ({activePopup, setActivePopup, dark}:any) => {
                     <div className="thx_tex">
                         {t.thx.title}
                         <div className="cross_block_popup" onClick={() => setActivePopup(false)}>
-                            <img src={cross} alt="close" />
+                            <img src={cross.src} alt="close" />
                         </div>
                     </div>
 

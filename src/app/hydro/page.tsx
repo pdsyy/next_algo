@@ -29,8 +29,10 @@ import CalculatorSectionHydro from "@/components/CalculatorSectionHydro";
 import tg_icon from "../images/tg_icon.svg";
 import instagram_icon from "../images/insta_icon.svg";
 import youtube_icon from "../images/youtube_icon.svg";
+import {useThxContext} from "@/context/ThxContext";
 
-const HydroPage = ({activePopup, setActivePopup}:any) => {
+const HydroPage = () => {
+    const {activePopup, setActivePopup} = useThxContext()
     const { t } = useLanguage()!;
     const [isMobile, setIsMobile] = useState(false);
     useEffect(() => {

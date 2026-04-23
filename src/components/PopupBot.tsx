@@ -15,7 +15,6 @@ const PopupBot = ({bot_info = [], bot_name, price, isActive, setIsActive, active
     const handlerItems = ["Telegram", "Instagram"]
 
     const [contactChanel, setContactChanel] = useState(handlerItems[0])
-
     const handleFormSubmit = async () => {
         try {
             const response = await axios.post('/api/send-email', {

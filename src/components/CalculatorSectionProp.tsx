@@ -96,10 +96,10 @@ const CalculatorSection = ({startPercentage}:any) => {
     let paybackDaysDisplay;
     if (exactPaybackX !== null) {
         const days = Math.round(exactPaybackX * 30.44);
-        paybackDaysDisplay = `${days} днів`;
+        paybackDaysDisplay = `${days} ${t.prop.calculationWords.days}`;
     } else if (calcResults) {
         // Если расчет был, но точка не найдена
-        paybackDaysDisplay = "> 1 року";
+        paybackDaysDisplay = `> 1 ${t.prop.calculationWords.year}`;
     } else {
         paybackDaysDisplay = "—";
     }
@@ -228,12 +228,12 @@ const CalculatorSection = ({startPercentage}:any) => {
                             599$
                         </div>
                     </div>
-                    <div className="test_detail_item">
+                    {/*<div className="test_detail_item">
                         {t.prop.calculator.labels.monthSubscribe}
                         <div className="test_detail_number">
                             <span>1 {t.prop.calculator.labels.month} FREE</span>39$
                         </div>
-                    </div>
+                    </div>*/}
 
                     <div className="test_detail_item last_item">
                         {t.prop.calculator.labels.term}

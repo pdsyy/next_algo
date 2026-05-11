@@ -506,7 +506,7 @@ const PropPage = () => {
                                     <span>USD</span>
                                 </div>
                             </div>
-                            <div className="advantages_block">
+                            {/*<div className="advantages_block">
                                 <div className="advantages_name_prop">
                                     {t.prop.buySection.labels.subscription}
                                 </div>
@@ -514,7 +514,7 @@ const PropPage = () => {
                                     39
                                     <span>USD</span>
                                 </div>
-                            </div>
+                            </div>*/}
                         </div>
                         <div className="main_btn_buy" onClick={() => setIsActive(true)}>
                             {t.prop.buySection.button}

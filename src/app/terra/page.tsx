@@ -16,6 +16,13 @@ export async function generateMetadata(): Promise<Metadata> {
             title: t.terra.seo.title,
             description: t.terra.seo.description,
             url: "https://algo-market.com/terra",
+            images: [
+                {
+                    url: '/images/logo192.png',
+                    width: 192,
+                    height: 192,
+                },
+            ],
         },
         twitter: {
             title: t.terra.seo.title,

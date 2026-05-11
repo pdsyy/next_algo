@@ -15,6 +15,13 @@ export async function generateMetadata(): Promise<Metadata> {
             title: t.aero.seo.title,
             description: t.aero.seo.description,
             url: "https://algo-market.com/aero",
+            images: [
+                {
+                    url: '/images/logo192.png',
+                    width: 192,
+                    height: 192,
+                },
+            ],
         },
         twitter: {
             title: t.aero.seo.title,

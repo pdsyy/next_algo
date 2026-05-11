@@ -291,15 +291,9 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                                 Metatrader
                             </div>
                             <div className="mql5_block_title">
-                                ALGO офіційно на маркетплейсі MQL5
+                                {t.mql5.title}
                             </div>
-                            <div className="mql5_block_description">
-                                Ми за абсолютну прозорість результатів. Тепер наші торгові алгоритми доступні на
-                                найбільшому незалежному майданчику для трейдерів.
-                                <br/><br/>
-                                Перевіряйте реальну статистику, історію угод та підключайте ботів у безпечному
-                                середовищі.
-                            </div>
+                            <div className="mql5_block_description"  dangerouslySetInnerHTML={{__html: t.mql5.description}}/>
                             <a className="open_mql5_black"
                                href="https://www.mql5.com/en/users/ferwer31234/news"
                                target="_blank"
@@ -415,8 +409,9 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                                     </motion.div>
                                     :
 
-                                    <div className="bot_gradient_border">
+                                    <div className="bot_gradient_border" key = {idx}>
                                         <div className="bot_item">
+                                            {el.name === "Aero EA" ? <img src={mql_pl.src} alt="" className="mql_pl"/> : ""}
                                             <div className="bot_image">
                                                 {/*el.prop && <div className="prop_pl">{t.home.catalog.propLabel}</div>*/}
                                                 <img src={el.image.src} alt={el.name}/>
@@ -604,13 +599,13 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                                                 599<span className="usd_main">USD</span>
                                             </div>
                                         </div>
-                                        <div className="test_detail_item">
+                                        {/*<div className="test_detail_item">
                                             {t.prop.calculator.labels.monthSubscribe}
                                             <div className="test_detail_number f_month_free">
                                                 <span>1 {t.prop.calculator.labels.month} FREE</span>39<span
                                                 className="usd_main">USD</span>
                                             </div>
-                                        </div>
+                                        </div>*/}
                                     </div>
 
                                     <a href="/prop">

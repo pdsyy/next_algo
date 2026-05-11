@@ -811,7 +811,7 @@
 .two_prop_bot_advantages {
     margin-top: 8px;
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     grid-gap: 8px;
 }
 

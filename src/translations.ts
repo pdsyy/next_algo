@@ -1,6 +1,10 @@
 export const translations = {
     UA: {
 
+        mql5: {
+            title: "Ми офіційно на маркетплейсі MQL5",
+            description: "Тепер наші торгові алгоритми доступні на найбільшому незалежному майданчику для трейдерів.<br/><br/>Ми за абсолютну прозорість результатів. Перевіряйте реальну статистику, історію угод та підключайте ботів у безпечному середовищі.",
+        },
         menu: {
             how: "Як працюють",
             advantages: "Переваги",
@@ -382,7 +386,7 @@ export const translations = {
                 timeframeValue: "1 день ( D1 )"
             }
         }, home: {
-            bestOfferProp:"Краща пропозиція",
+            bestOfferProp:"Найкращий вибір для проп-компаній",
             piecePay: "Доступна оплата частинами",
             botsList: [
                 {
@@ -564,6 +568,10 @@ export const translations = {
 
 
         prop: {
+            calculationWords:{
+                days: "днів",
+                year: "року",
+            },
             hero: {
                 botName: "PROP EA",
                 theme: "Торговий бот для проп-компаній",
@@ -702,9 +710,16 @@ export const translations = {
     },
 
     RU: {
-
+        mql5: {
+            title: "Мы официально на маркетплейсе MQL5",
+            description: "Теперь наши торговые алгоритмы доступны на крупнейшей независимой площадке для трейдеров.<br/><br/>Мы за абсолютную прозрачность результатов. Проверяйте реальную статистику, историю сделок и подключайте ботов в безопасной среде.",
+        },
 
         prop: {
+            calculationWords:{
+                days: "дней",
+                year: "года",
+            },
             buy: {
                 subscribe: "Подписка"
             },
@@ -1228,7 +1243,7 @@ export const translations = {
                 timeframeValue: "1 день ( D1 )"
             }
         }, home: {
-            bestOfferProp:"Лучшее предложение",
+            bestOfferProp:"Лучший выбор для проп-компаний",
             piecePay: "Доступная оплата частями",
             botsList: [
                 {
@@ -1411,6 +1426,10 @@ export const translations = {
 
     EN:{
         prop: {
+            calculationWords:{
+                days: "days",
+                year: "year",
+            },
             buy: {
                 subscribe: "Subscription"
             },
@@ -1565,6 +1584,10 @@ export const translations = {
             selectBot: "Select Bot",
             openMql: "Open in MQL5",
         },
+        mql5:{
+            title: "We are officially on the MQL5 Marketplace",
+            description: "Our trading algorithms are now available on the largest independent marketplace for traders.<br/><br/>We stand for absolute transparency of results. Check real-time statistics, trade history, and connect bots in a secure environment.",
+        },
 
         terra: {
             seo: {
@@ -1574,7 +1597,7 @@ export const translations = {
             },
 
             hero: {
-                theme: "The bot with the longest track record in Ukraine",
+                theme: "The bot with the longest track record in our lineup",
                 desc: "Over 2 years of verified statistics with stable results",
                 buy: "Purchase bot",
                 slogan: "The foundation of your capital",
@@ -1947,7 +1970,7 @@ export const translations = {
         },
 
         home: {
-            bestOfferProp: "Best Offer",
+            bestOfferProp: "Best For Prop-Companies",
             piecePay: "Available payment in installments",
             botsList: [
                 {

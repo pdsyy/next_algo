@@ -48,9 +48,9 @@ export const metadata: Metadata = {
         siteName: 'ALGO Official',
         images: [
             {
-                url: '/images/logo512.png',
-                width: 512,
-                height: 512,
+                url: '/images/logo192.png',
+                width: 192,
+                height: 192,
             },
         ],
         type: 'website',

@@ -528,7 +528,7 @@ const TerraPage = () => {
                         <div className="bot_stat_price">
                             {t.terra.buy.price}
                             <div className="price_block_bottom">
-                                800 <span>USD</span>
+                                499 <span>USD</span>
                             </div>
                         </div>
 

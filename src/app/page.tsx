@@ -305,10 +305,10 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                                target="_blank"
                                rel="noopener noreferrer">
                                 {t.buttons.openMql}
-                                <Image src={mql5_light} alt=""/>
+                                <img src={mql5_light.src} alt=""/>
                             </a>
                         </div>
-                        <Image src={mql5_2x} className="mql5_big_image" alt="mql5_logo"/>
+                        <Image src={mql5_2x} className="mql5_big_image" alt="mql5_logo" placeholder = "blur"/>
                     </div>
                 </div>
 

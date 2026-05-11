@@ -520,7 +520,7 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                                             <span>USD</span>
                                         </div>
                                     </div>
-                                    <div className="advantages_block">
+                                    {/*<div className="advantages_block">
                                         <div className="advantages_name_prop">
                                             {t.prop.buySection.labels.subscription}
                                         </div>
@@ -528,7 +528,7 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                                             39
                                             <span>USD</span>
                                         </div>
-                                    </div>
+                                    </div>*/}
                                 </div>
                                 <a href="/prop">
                                     <div className="main_btn_buy" onClick={() => {

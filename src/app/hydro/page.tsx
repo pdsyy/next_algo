@@ -14,6 +14,13 @@ export async function generateMetadata(): Promise<Metadata> {
             title: t.hydro.seo.title,
             description: t.hydro.seo.description,
             url: "https://algo-market.com/hydro",
+            images: [
+                {
+                    url: '/images/logo192.png',
+                    width: 192,
+                    height: 192,
+                },
+            ],
 
         },
         twitter: {

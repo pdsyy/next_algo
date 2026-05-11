@@ -272,7 +272,7 @@ h2{
         flex-direction: column;
         align-items: center;
     }
-    .effective_points, .first_deal_details{
+    .effective_points, .first_deal_details, .main_page_mql5{
         max-width: 1344px;
     }
 
@@ -437,6 +437,7 @@ h2 span{
     border-radius: 20px;
     display: flex;
     flex-direction: column;
+    position: relative;
 }
 
 .white_info_block{

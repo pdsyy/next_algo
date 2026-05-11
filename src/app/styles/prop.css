@@ -621,6 +621,7 @@
     .popup_container{
         max-height: 90vh;
         overflow-y: scroll;
+        padding: 5.26px;
     }
 }
 
@@ -1902,7 +1903,8 @@
 .calculate_button, .button_buy_bottom,
 .read_more_button, .telegram_btn,
 .bot_more_details, .consult_button,
-.piece_pay_bottom, .send_button {
+.piece_pay_bottom, .send_button,
+.open_mql5_black{
     transition: all 0.1s, background-color 0.4s;
 }
 
@@ -1914,6 +1916,10 @@
 .bot_more_details:active, .consult_button:active {
     background: #000000;
     box-shadow: 0px 1px 3px 0px #0E121B1F;
+    transform: scale(0.98);
+}
+
+.open_mql5_black:active{
     transform: scale(0.98);
 }
 

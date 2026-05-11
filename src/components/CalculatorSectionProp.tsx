@@ -110,7 +110,7 @@ const CalculatorSection = ({startPercentage}:any) => {
         let currentBalance = startSum;
         const results:any = [];
         const monthlyRate = rate / 100;
-        const botCost = 350;
+        const botCost = 599;
 
         // Точка старта
         results.push({ month: 0, balance: startSum, profit: 0 });
@@ -225,7 +225,7 @@ const CalculatorSection = ({startPercentage}:any) => {
                     <div className="test_detail_item mt16">
                         {t.prop.calculator.labels.botPrice}
                         <div className="test_detail_number">
-                            350$
+                            599$
                         </div>
                     </div>
                     <div className="test_detail_item">

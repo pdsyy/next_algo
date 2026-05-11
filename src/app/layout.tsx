@@ -40,6 +40,7 @@ const manrope = Manrope({
 export const metadata: Metadata = {
     title: "ALGO — Algorithmic Trading and Trading Bots | ALGO Trading",
     description: "Automated trading bots with transparent statistics. Passive income in trading without the human factor. Choose your bot: Terra, Aero, or Hydro EA.",
+    metadataBase: new URL('https://algo-market.com/'),
     openGraph: {
         title: 'ALGO — Algorithmic Trading and Trading Bots | ALGO Trading',
         description: 'Automated trading bots with transparent statistics. Passive income in trading without the human factor. Choose your bot: Terra, Aero, or Hydro EA.',

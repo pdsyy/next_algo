@@ -299,13 +299,20 @@
     display: flex;
     align-items: center;
     gap: 24px;
-    background: #F1F1F1;
     border-radius: 24px;
     padding: 24px;
+    background: linear-gradient(180deg, #1A1B1D 0%, #4D5155 100%),  linear-gradient(0deg, #F1F1F1, #F1F1F1);
+    box-shadow: 0 35.41px 70.81px 0 #A8D8F50F inset,
+    0 1.48px 1.48px 0 #D8ECF833 inset,
+    0 1px 2px 0 #0A0D1408;
+
+
 }
 
+
+
 .mql5_big_image{
-    max-width: 798px;
+    max-width: 712px;
     height: auto;
 }
 
@@ -313,10 +320,9 @@
     display: flex;
     gap: 2px;
     padding: 4px 8px 4px 4px;
-    border: 1px solid #EBEBEB;
-    background: #FFFFFF;
+    background: rgba(255, 255, 255, 0.24);
     border-radius: 6px;
-    color: #5C5C5C;
+    color: #F1F1F1;
     font-family: var(--font-manrope);
     font-weight: 700;
     font-size: 12px;
@@ -332,8 +338,8 @@
 }
 
 .mql5_block_title{
+    color: #F1F1F1;
     margin-top: 24px;
-    color: #232323;
     font-family: var(--font-inter);
     font-weight: 700;
     font-size: 36px;
@@ -347,13 +353,14 @@
     font-weight: 400;
     font-size: 18px;
     line-height: 100%;
+    color: #F1F1F1;
 
 }
 
 .open_mql5_black{
     margin-top: 24px;
     background: #232323;
-    box-shadow: 0 1px 3px 0 #0E121B1F;
+    box-shadow: 0px 1px 3px 0px #0E121B1F;
     padding: 14px 16px;
     border-radius: 200px;
     white-space: nowrap;
@@ -376,7 +383,9 @@
 
 @media screen and (max-width: 768px) {
     .main_page_mql5{
-        flex-direction: column;
+        flex-direction: column-reverse;
+        border-radius: 21px;
+        gap: 16px;
     }
     .main_page_mql5_fs{
         padding: 0 20px;
@@ -386,10 +395,15 @@
     }
     .open_mql5_black{
         width: 100%;
+        margin-top: 16px;
+    }
+    .mql5_block_description{
+        font-size: 16px;
     }
 
     .mql5_block_title{
-        font-size: 30px;
+        font-size: 24px;
+        margin-top: 16px;
     }
 }
 

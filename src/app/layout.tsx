@@ -74,10 +74,10 @@ export const metadata: Metadata = {
     },
 };
 
-export default async function RootLayout({children,}: Readonly<{ children: React.ReactNode; }>) {
+export default async function RootLayout({children}: Readonly<{ children: React.ReactNode }>) {
 
     const cookieStore = await cookies();
-    const savedLang = cookieStore.get('algo_lang')?.value || "UA";
+    const savedLang = cookieStore.get('algo_lang')?.value || "EN";
 
     return (
         <html lang="en" className={`

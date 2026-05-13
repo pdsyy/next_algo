@@ -1,4 +1,5 @@
 import type {Metadata} from "next";
+import {SpeedInsights} from "@vercel/speed-insights/next"
 import {Geist, Geist_Mono, Geologica, Inter, Manrope} from "next/font/google";
 import {cookies} from 'next/headers';
 import 'swiper/css';
@@ -57,11 +58,11 @@ export const metadata: Metadata = {
     },
     icons: {
         icon: [
-            { url: '/favicon.png' },
-            { url: '/favicon.png', sizes: '16x16', type: 'image/png' },
+            {url: '/favicon.png'},
+            {url: '/favicon.png', sizes: '16x16', type: 'image/png'},
         ],
         apple: [
-            { url: '/logo192.png' },
+            {url: '/logo192.png'},
         ],
 
         other: [
@@ -90,9 +91,9 @@ export default async function RootLayout({children}: Readonly<{ children: React.
 
         <body>
         <Providers initialLanguage={savedLang}>
-
             {children}
         </Providers>
+        <SpeedInsights/>
         </body>
         </html>
     );

@@ -1,11 +1,11 @@
 
 .best_offer_container {
-    padding: 2px 8px 2px 2px;
+    padding: 2px 2px 2px 2px;
     background: linear-gradient(180deg, rgba(52, 199, 89, 0.24) 0%, rgba(0, 139, 29, 0.24) 100%);
     display: flex;
     border-radius: 24px;
     align-items: center;
-    gap: 10px;
+    gap: 0px;
     color: #34C759;
     font-family: var(--font-inter);
     font-weight: 500;
@@ -15,6 +15,11 @@
 
 }
 
+@media screen and (max-width: 768px) {
+    .three_prop_bot_advantages > div:nth-child(3) {
+        grid-column: 1 / -1;
+    }
+}
 
 
 .best_offer {

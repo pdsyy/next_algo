@@ -293,7 +293,8 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                             <div className="mql5_block_title">
                                 {t.mql5.title}
                             </div>
-                            <div className="mql5_block_description"  dangerouslySetInnerHTML={{__html: t.mql5.description}}/>
+                            <div className="mql5_block_description"
+                                 dangerouslySetInnerHTML={{__html: t.mql5.description}}/>
                             <a className="open_mql5_black"
                                href="https://www.mql5.com/en/users/ferwer31234/news"
                                target="_blank"
@@ -399,16 +400,32 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                                                 </div>
                                             </div>
 
-                                            <a href={el.href}>
-                                                <div className="bot_more_details">
-                                                    {t.home.catalog.moreDetails}
+                                            {el.name === "Aero EA" ?
+                                                <div className = "aero_card_buttons">
+                                                    <a href={el.href}>
+                                                        <div className="bot_more_details">
+                                                            {t.home.catalog.moreDetails}
+                                                        </div>
+                                                    </a>
+                                                    <a href="https://www.mql5.com/en/market/product/176860?source=Site+Market+My+Products+Page#description" target="_blank"
+                                                       rel="noopener noreferrer" className = "mql_card_button">
+                                                        <div className="mql_aero_card_button">
+                                                            {t.buttons.openMql}
+                                                        </div>
+                                                    </a>
                                                 </div>
-                                            </a>
+                                                :
+                                                <a href={el.href}>
+                                                    <div className="bot_more_details">
+                                                        {t.home.catalog.moreDetails}
+                                                    </div>
+                                                </a>
+                                            }
                                         </div>
                                     </motion.div>
                                     :
 
-                                    <div className="bot_gradient_border" key = {idx}>
+                                    <div className="bot_gradient_border" key={idx}>
                                         <div className="bot_item">
                                             {el.name === "Aero EA" ? <img src={mql_pl.src} alt="" className="mql_pl"/> : ""}
                                             <div className="bot_image">
@@ -441,11 +458,27 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                                                 </div>
                                             </div>
 
-                                            <a href={el.href}>
-                                                <div className="bot_more_details">
-                                                    {t.home.catalog.moreDetails}
+                                            {el.name === "Aero EA" ?
+                                                <div className = "aero_card_buttons">
+                                                    <a href={el.href}>
+                                                        <div className="bot_more_details">
+                                                            {t.home.catalog.moreDetails}
+                                                        </div>
+                                                    </a>
+                                                    <a href="https://www.mql5.com/en/market/product/176860?source=Site+Market+My+Products+Page#description" target="_blank"
+                                                       rel="noopener noreferrer" className = "mql_card_button">
+                                                        <div className="mql_aero_card_button">
+                                                            {t.buttons.openMql}
+                                                        </div>
+                                                    </a>
                                                 </div>
-                                            </a>
+                                                :
+                                                <a href={el.href}>
+                                                    <div className="bot_more_details">
+                                                        {t.home.catalog.moreDetails}
+                                                    </div>
+                                                </a>
+                                            }
                                         </div>
                                     </div>
                             }
@@ -473,9 +506,9 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                                     <div className="best_offer">
                                         {t.prop.buySection.badge}
                                     </div>
-                                    <div className="first_month_free">
+                                    {/*<div className="first_month_free">
                                         {t.prop.buySection.freeMonth}
-                                    </div>
+                                    </div>*/}
                                 </div>
                                 <div className="prop_bot_name">
                                     {t.prop.buySection.title}

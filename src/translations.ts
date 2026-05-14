@@ -233,10 +233,10 @@ export const translations = {
             }, hero: {
                 botName: "Aero EA",
                 theme: "Торговий бот з найнижчими просадками",
-                desc: "Має понад 7 місяців підтвердженої статистики і 10 років тестів зі стабільними результатами.",
+                desc: "Має понад 11 місяців підтвердженої статистики і 10 років тестів зі стабільними результатами.",
                 buy: "Придбати бота",
                 slogan: "Безпека вашого капіталу",
-                about: "Aero - елемент повітря, він може бути спокійним, <span>як легкий вітер, так і динамічним, перетворюючи вітер на бурю</span>, завдяки рівню ризику, що налаштовується.<br/><br/>Алгоритм навчали за допомогою AI на базі символу XAUUSD з 1999 року, <span>його стратегія не має жодних «небезпечних» методик як мартингейл, сіткова торгівля та подібні.</span><br/><br/>Це забезпечує максимально <span>безпечну торгівлю.</span>",
+                about: "Aero — елемент повітря; він може бути як спокійним, <span>немов легкий бриз, так і динамічним, як шторм,</span> перетворюючи вітер на шквал завдяки налаштовуваним рівням ризику.<br/><br/>В його основі лежить алгоритм розпізнавання патернів — kNN (k-найближчих сусідів), <span>метод машинного навчання, навчений на даних про ціну золота за 25+ років.</span><br/><br/>Результат: <span>короткі, чисті угоди з незмінно високим вінрейтом і чітко визначеним ризиком у кожній позиції.</span>",
                 videoFallback: "Ваш браузер не підтримує відео."
             },
             seo: {
@@ -654,7 +654,7 @@ export const translations = {
                 subtitle: "за останній рік",
                 winTrades: "Прибуткові угоди"
             }, buySection: {
-                badge: "Краща пропозиція",
+                badge: "Найкращий вибір для проп-компаній",
                 freeMonth: "Перший місяць підписки безкоштовно",
                 title: "Prop EA",
                 desc: "Надійний фундамент для автоматичної торгівлі зі стабільними результатами.",
@@ -776,7 +776,7 @@ export const translations = {
                 keywords: "Prop EA, проп трейдинг бот, бот для проп компаний, пройти челлендж проп, алгоритмическая торговля, торговый робот без мартингейла, безопасный трейдинг"
             },
             buySection: {
-                badge: "Лучшее предложение",
+                badge: "Лучший выбор для проп-компаний",
                 freeMonth: "Первый месяц подписки бесплатно",
                 title: "Prop EA",
                 desc: "Надежный фундамент для автоматической торговли со стабильными результатами.",
@@ -1090,10 +1090,10 @@ export const translations = {
             }, hero: {
                 botName: "Aero EA",
                 theme: "Торговый бот с самыми низкими просадками",
-                desc: "Более 7 месяцев подтвержденной статистики и 10 лет тестов со стабильными результатами.",
+                desc: "Более 11 месяцев подтвержденной статистики и 10 лет тестов со стабильными результатами.",
                 buy: "Приобрести бота",
                 slogan: "Безопасность вашего капитала",
-                about: "Aero - элемент воздуха, он может быть как спокойным, <span>словно легкий бриз, так и динамичным, превращая ветер в бурю</span> благодаря настраиваемому уровню риска.<br/><br/>Алгоритм обучали с помощью AI на базе символа XAUUSD с 1999 года, <span>его стратегия не использует «опасных» методик, таких как мартингейл, сеточная торговля и подобные.</span><br/><br/>Это обеспечивает максимально <span>безопасную торговлю.</span>",
+                about: "Aero — это стихия воздуха; он может быть как спокойным, <span>словно легкий бриз, так и динамичным, как шторм,</span> превращая ветер в шквал благодаря настраиваемым уровням риска.<br/><br/>В его основе лежит алгоритм распознавания паттернов — kNN (k-ближайших соседей), <span>метод машинного обучения, обученный на данных о цене золота за 25+ лет.</span><br/><br/>Результат: <span>короткие, чистые сделки с неизменно высоким винрейтом и четко определенным риском в каждой позиции.</span>",
                 videoFallback: "Ваш браузер не поддерживает видео."
             },
             seo: {
@@ -1486,7 +1486,7 @@ export const translations = {
                 keywords: "Prop EA, prop trading bot, bot for prop firms, pass prop challenge, algorithmic trading, trading robot no martingale, safe trading"
             },
             buySection: {
-                badge: "Best Offer",
+                badge: "Best For Prop-Companies",
                 freeMonth: "First month of subscription for free",
                 title: "Prop EA",
                 desc: "A reliable foundation for automated trading with stable results.",
@@ -1807,10 +1807,10 @@ export const translations = {
             hero: {
                 botName: "Aero EA",
                 theme: "Trading bot with the lowest drawdowns",
-                desc: "Over 7 months of verified statistics and 10 years of tests with stable results.",
+                desc: "Over 11 months of verified statistics and 10 years of tests with stable results.",
                 buy: "Purchase bot",
                 slogan: "The security of your capital",
-                about: "Aero is the element of air; it can be as calm <span>as a light breeze or as dynamic as a storm,</span> turning wind into a gale thanks to adjustable risk levels.<br/><br/>The algorithm was trained using AI based on the XAUUSD symbol since 1999. <span>Its strategy does not use 'dangerous' methods such as martingale, grid trading, or similar techniques.</span><br/><br/>This ensures the <span>safest possible trading.</span>",
+                about: "Aero is the element of air; it can be as calm <span>as a light breeze or as dynamic as a storm,</span> turning wind into a gale thanks to adjustable risk levels.<br/><br/>At its core is a pattern recognition algorithm — kNN (k-Nearest Neighbors), <span>a machine learning method trained on 25+ years of Gold price data.</span><br/><br/>The result: <span>short, clean trades with a consistently high winrate and clearly defined risk on every position.</span>",
                 videoFallback: "Your browser does not support the video tag."
             },
             seo: {

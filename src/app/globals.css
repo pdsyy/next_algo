@@ -309,7 +309,27 @@
 
 }
 
+.aero_card_buttons{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 12px;
+}
 
+.mql_card_button{
+    box-shadow: 0px 1px 3px 0px #0E121B1F;
+    background: #FFFFFF;
+    color: #000000;
+    border-radius: 200px;
+    font-family: var(--font-inter);
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 20px;
+    padding: 14px;
+    text-align: center;
+    border: 1px solid #000000;
+
+
+}
 
 .mql5_big_image{
     max-width: 712px;
@@ -382,6 +402,9 @@
 }
 
 @media screen and (max-width: 768px) {
+    .aero_card_buttons{
+        grid-template-columns: 1fr;
+    }
     .main_page_mql5{
         flex-direction: column-reverse;
         border-radius: 21px;

@@ -2057,7 +2057,7 @@ export const translations = {
                 management: "under management",
                 items: [
                     {num: "2", desc: "Years on the market"},
-                    {num: "4", desc: "Profitable bots"},
+                    {num: "3", desc: "Profitable bots"},
                     {num: "5", desc: "Accounts with live statistics"},
                     {num: "+80%", desc: "For 2025"}
                 ]

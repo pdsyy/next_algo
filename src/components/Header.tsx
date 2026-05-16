@@ -94,9 +94,9 @@ const Header = ({dark, visibleHeader, setVisibleHeader, initialLanguage}: Header
                             <a href="/hydro">
                                 <div className="menu_item">Hydro EA</div>
                             </a>
-                            <a href="/prop">
+                            {/*<a href="/prop">
                                 <div className="menu_item prop_bot_menu">Prop EA <span>NEW</span></div>
-                            </a>
+                            </a>*/}
                         </div>
                     </div>
 
@@ -180,9 +180,9 @@ const Header = ({dark, visibleHeader, setVisibleHeader, initialLanguage}: Header
                     <a href="/hydro">
                         <div className="menu_item">Hydro EA</div>
                     </a>
-                    <a href="/prop">
+                    {/*<a href="/prop">
                         <div className="menu_item prop_bot_menu">Prop EA <span>NEW</span></div>
-                    </a>
+                    </a>*/}
                 </div>
                 <div className="menu_item" onClick={() => handleMenuClick("reviews")}>
                     {t.home.header.reviews}

@@ -1975,7 +1975,7 @@ export const translations = {
             botsList: [
                 {
                     name: "Terra EA",
-                    description: "The bot with the longest public statistics in Ukraine.",
+                    description: "The bot with the longest public statistics in the lineup.",
                     advantages: {yearProfit: "+20%", maxDrawDown: "16.5%", winRate: "72.3%"},
                     price: 499,
                     href: "/terra",

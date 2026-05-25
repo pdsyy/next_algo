@@ -561,25 +561,26 @@ const TerraPage = () => {
                     <div className="society_block">
                         <div>
                             <a href="https://t.me/+uKCqVOr1OAE2ZmQy" target="_blank" rel="noreferrer">
-                                <img src = {tg_icon.src} alt = ""/>
+                                <img src={tg_icon.src} alt=""/>
                             </a>
                         </div>
-                        <div>
-                            <a href="https://www.instagram.com/alg0_bots?igsh=NW82eGFuajRlYmpw" target="_blank" rel="noreferrer">
-                                <img src = {instagram_icon.src} alt = ""/>
+                        {/*<div>
+                            <a href="https://www.instagram.com/alg0_bots?igsh=NW82eGFuajRlYmpw" target="_blank"
+                               rel="noreferrer">
+                                <img src={instagram_icon.src} alt=""/>
                             </a>
-                        </div>
+                        </div>*/}
                         <div>
                             <a href="https://www.youtube.com/@alg0_ofx" target="_blank" rel="noreferrer">
-                                <img src = {youtube_icon.src} alt = ""/>
+                                <img src={youtube_icon.src} alt=""/>
                             </a>
                         </div>
                     </div>
 
                     : <div className="society_block">
-                        <div>
-                            <a href="https://www.instagram.com/alg0_bots?igsh=NW82eGFuajRlYmpw">{t.terra.footer.instagram}</a>
-                        </div>
+                        {/* <div>
+                           <a href="https://www.instagram.com/alg0_bots?igsh=NW82eGFuajRlYmpw">{t.terra.footer.instagram}</a>
+                        </div>*/}
                         <div>
                             <a href="https://www.youtube.com/@alg0_ofx">{t.terra.footer.youtube}</a>
                         </div>

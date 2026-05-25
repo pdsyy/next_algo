@@ -53,6 +53,9 @@ import {useLanguage} from "@/context/LanguageProvider";
 import PopupBot from "@/components/PopupBot";
 import AnimatedNumber from "@/components/AnimatedNumber";
 import mql5_button from "@/app/images/mql_button.svg";
+import logo from "@/app/images/logo.svg";
+import tg_icon from "@/app/images/tg_icon.svg";
+import youtube_icon from "@/app/images/youtube_icon.svg";
 
 const MainPage = ({activePopup, setActivePopup}: any) => {
     const [isMobile, setIsMobile] = useState(false);
@@ -606,7 +609,7 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
 
                 <motion.div className="footer" {...fadeUp}>
                     <a href="/">
-                        <img src="./images/logo.svg" alt="Logo" className="logo_img"/>
+                        <img src={logo.src} alt="Logo" className="logo_img"/>
                     </a>
                     <hr/>
 
@@ -614,26 +617,26 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                         <div className="society_block">
                             <div>
                                 <a href="https://t.me/+uKCqVOr1OAE2ZmQy" target="_blank" rel="noreferrer">
-                                    <img src="/images/tg_icon.svg" alt=""/>
+                                    <img src={tg_icon.src} alt=""/>
                                 </a>
                             </div>
-                            <div>
-                                <a href="https://www.instagram.com/alg0_bots?igsh=NW82eGFuajRlYmpw" target="_blank"
-                                   rel="noreferrer">
-                                    <img src="/images/insta_icon.svg" alt=""/>
-                                </a>
-                            </div>
+                            {/*<div>
+                            <a href="https://www.instagram.com/alg0_bots?igsh=NW82eGFuajRlYmpw" target="_blank"
+                               rel="noreferrer">
+                                <img src={instagram_icon.src} alt=""/>
+                            </a>
+                        </div>*/}
                             <div>
                                 <a href="https://www.youtube.com/@alg0_ofx" target="_blank" rel="noreferrer">
-                                    <img src="/images/youtube_icon.svg" alt=""/>
+                                    <img src={youtube_icon.src} alt=""/>
                                 </a>
                             </div>
                         </div>
 
                         : <div className="society_block">
-                            <div>
-                                <a href="https://www.instagram.com/alg0_bots?igsh=NW82eGFuajRlYmpw">{t.terra.footer.instagram}</a>
-                            </div>
+                            {/* <div>
+                           <a href="https://www.instagram.com/alg0_bots?igsh=NW82eGFuajRlYmpw">{t.terra.footer.instagram}</a>
+                        </div>*/}
                             <div>
                                 <a href="https://www.youtube.com/@alg0_ofx">{t.terra.footer.youtube}</a>
                             </div>

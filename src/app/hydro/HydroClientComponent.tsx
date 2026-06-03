@@ -137,7 +137,7 @@ const HydroPage = () => {
             <div className="bot_info_main">
                 <motion.div className = "main_video_block" {...fadeLeft}>
                     <video
-                        src="/images/hydroMainVideo_old.mp4"
+                        src="/images/hydroMainVideo.mp4"
                         autoPlay
                         muted
                         loop

@@ -2007,7 +2007,7 @@ export const translations = {
                     text: "I bought the bot two weeks ago; I was interested in the detailed statistics 📈 I tested it for a week since I've been in this field for a long time and know that words often diverge from practice. I confirm — everything matches the claims, and the trades align with the statistics."
                 },
                 {
-                    name: "Robert",
+                    name: "Eduard",
                     text: "The bot successfully passed the first phase on FTMO in 22 trading days ✅ It closed the second verification phase in just 4 days. I am completely satisfied with the result; it works stably, without surprises, and follows risk management."
                 },
                 {

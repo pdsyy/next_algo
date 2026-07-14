@@ -6,7 +6,7 @@ import advantageIcon3 from "./images/connection_icon.svg"
 import advantageIcon4 from "./images/connetction_icon2.svg"
 import advantageIcon5 from "./images/bot_icon.svg"
 import result2025 from "./images/result2025.png"
-import hydroBuyImage from "./images/hydroBuyBlock.png"
+import hydroBuyImage from "./images/hydroBuyBlock1.png"
 import how_to_image from "./images/how_to_image.png"
 import prev_arrow from "../images/prev-arrow.svg";
 import next_arrow from "../images/next-arrow.svg";

@@ -25,9 +25,9 @@ import effectiveImage1 from "./images/effectiveImage1.png"
 import effectiveImage2 from "./images/effectiveImage2.png"
 import effectiveImage3 from "./images/effectiveImage3.png"
 import effectiveImage4 from "./images/effectiveImage4.png"
-import bot_item1 from "./images/bot_item1.png"
-import bot_item2 from "./images/bot_item2.png"
-import bot_item3 from "./images/bot_item3.png"
+import bot_item1 from "./images/bot_item1_1.png"
+import bot_item2 from "./images/bot_item2_1.png"
+import bot_item3 from "./images/bot_item3_1.png"
 import prev_arrow from "./images/prev-arrow.svg"
 import next_arrow from "./images/next-arrow.svg"
 import review_image1 from "./images/review_image1.png"
@@ -37,7 +37,7 @@ import review_image4 from "./images/review_image4.png"
 import review_image5 from "./images/review_image5.png"
 import review_image6 from "./images/review_image6.png"
 import circles_bg from "./images/circles.svg"
-import select_bot_img from "./images/select_bot_img.png"
+import select_bot_img from "./images/select_bot_img1.png"
 import select_bot_img_mob from "./images/select_bot_img_mob.png"
 import white_info_icon from "./images/white_info_label.svg"
 
@@ -593,7 +593,7 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                             <div className="select_bot_desc">
                                 {t.home.consult.desc}
                             </div>
-                            <a href="https://t.me/volodymyrbbk" target="_blank" rel="noreferrer">
+                            <a href="https://telegram.me/vladimirbabak_mql" target="_blank" rel="noreferrer">
                                 <div className="consult_button">
                                     {t.home.consult.button}
                                 </div>

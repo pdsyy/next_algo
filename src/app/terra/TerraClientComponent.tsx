@@ -16,7 +16,7 @@ import review_image3 from "./images/review_image3.png";
 import review_image4 from "./images/review_image4.png";
 import review_image5 from "./images/review_image5.png";
 import test_image from "./images/test_image.png";
-import bottom_product_image from "./images/bottom_product_image.png";
+import bottom_product_image from "./images/bottom_product_image1.png";
 import logo from "../images/logo.svg";
 import PopupBot from "@/components/PopupBot";
 import {Pagination} from "swiper/modules";

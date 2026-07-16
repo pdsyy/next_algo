@@ -38,7 +38,7 @@ import review_image5 from "./images/review_image5.png"
 import review_image6 from "./images/review_image6.png"
 import circles_bg from "./images/circles.svg"
 import select_bot_img from "./images/select_bot_img1.png"
-import select_bot_img_mob from "./images/select_bot_img_mob.png"
+import select_bot_img_mob from "./images/select_bot_img_mob1.png"
 import white_info_icon from "./images/white_info_label.svg"
 
 import {Swiper, SwiperSlide} from "swiper/react";

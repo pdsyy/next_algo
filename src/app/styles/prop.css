@@ -1203,7 +1203,7 @@
     padding: 4px;
     height: 36px;
     position: relative;
-    width: 240px;
+    width: 356px;
 
 }
 
@@ -1214,16 +1214,16 @@
     left: 4px;
     position: absolute;
     transform: translate(0);
-    width: calc(50% - 6px);
+    width: calc(33% - 6px);
     box-shadow: 0 6px 10px 0 #0e121b0f;
     transition: all .3s;
 }
 
-.year2025.active, .year2024.active {
+.year2025.active, .year2024.active, .year2026.active {
     color: #171717;
 }
 
-.year2025, .year2024 {
+.year2025, .year2024, .year2026 {
     cursor: pointer;
     transition: .5s;
     font-family: Geist;
@@ -1235,18 +1235,23 @@
     width: 100%;
 }
 
-.year2025, .year2025 a, .year2024, .year2024 a {
+.year2025, .year2025 a, .year2024, .year2024 a, .year2026, .year2026 a {
     color: #a3a3a3;
     position: relative;
 }
 
-.year2025 a, .year2024 a {
+.year2025 a, .year2024 a, .year2026 a {
     text-decoration: none;
 }
 
 .active2025 {
 
-    transform: translate(calc(100% + 4px)) !important;
+    transform: translate(calc(100% + 6px)) !important;
+}
+
+.active2026 {
+    transform: translate(calc(212% + 4px)) !important;
+    left: 0 !important;
 }
 
 
@@ -1698,7 +1703,7 @@
     background: #fff;
     border-radius: 6px;
     height: calc(100% - 8px);
-    left: 4px;
+    left: 5px;
     position: absolute;
     transform: translate(0);
     width: calc(50% - 6px);
@@ -1781,6 +1786,8 @@
 .buy_block_fs {
     margin-top: 80px;
     padding: 0 48px;
+    display: flex;
+    justify-content: center;
 }
 
 .buy_block {
@@ -1788,8 +1795,10 @@
     padding: 24px;
     border-radius: 24px;
     background: #F1F1F1;
-    grid-template-columns: 656fr 616fr;
+    grid-template-columns: 292fr 616fr;
     grid-gap: 24px;
+    width: 100%;
+    max-width: 980px;
 
 }
 

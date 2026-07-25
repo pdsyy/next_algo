@@ -554,7 +554,7 @@ const PropPage = () => {
 
                     : <div className="society_block">
                         {/* <div>
-                           <a href="https://www.instagram.com/alg0_bots?igsh=NW82eGFuajRlYmpw">{t.terra.footer.instagram}</a>
+                           <a href="fhttps://www.instagram.com/alg0_bots?igsh=NW82eGFuajRlYmpw">{t.terra.footer.instagram}</a>
                         </div>*/}
                         <div>
                             <a href="https://www.youtube.com/@alg0_ofx">{t.terra.footer.youtube}</a>

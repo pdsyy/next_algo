@@ -16,7 +16,7 @@ const CalculatorSection = ({name}:any) => {
     const [startSum, setStartSum] = useState(10000)
 
     const [years, setYears] = useState(5);
-    const [rate, setRate] = useState(20);
+    const [rate, setRate] = useState(25);
     const [refillSum, setRefillSum] = useState(0);
 
     const [periodUnit, setPeriodUnit] = useState("Рік"); // Рік / Місяць
@@ -37,21 +37,17 @@ const CalculatorSection = ({name}:any) => {
             let periodAdded = 0;
             const startOfPeriodBalance = currentBalance;
 
-            // 2. Расчет дохода за текущий период (Год или Месяц)
             if (periodUnit === "Рік" && rateFrequency === "Щомісяця") {
-                // Магия сложного процента: 12 начислений внутри одного года
                 for (let m = 1; m <= 12; m++) {
                     let monthlyProfit = currentBalance * (rate / 100);
                     currentBalance += monthlyProfit;
                     periodIncome += monthlyProfit;
                 }
             } else {
-                // Обычное начисление раз в период
                 periodIncome = currentBalance * (rate / 100);
                 currentBalance += periodIncome;
             }
 
-            // 3. Расчет пополнения за текущий период
             if (periodUnit === "Рік" && refillFrequency === "Щомісяця") {
                 periodAdded = refillSum * 12;
             } else {
@@ -159,7 +155,7 @@ const CalculatorSection = ({name}:any) => {
                         {t.terra.calculator.labels.rate}
                     </div>
 
-                    <InputRangeBar SLIDER_MAX="40" startValue="20" inputIcon={percent_icon} value={rate}
+                    <InputRangeBar SLIDER_MAX="50" startValue="25" inputIcon={percent_icon} value={rate}
                                    setValue={setRate}/>
 
                     <div className="calculate_warn">

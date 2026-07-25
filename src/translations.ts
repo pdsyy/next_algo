@@ -19,7 +19,7 @@ export const translations = {
         terra: {
             seo: {
                 title: "Terra EA — Торговий бот з найдовшою статистикою в Україні",
-                description: "Terra EA: понад 2 роки підтвердженої статистики, 23 з 24 місяців у плюс. Надійний алгоритм для MT4/MT5 з річним прибутком +20% та контролем ризику.",
+                description: "Terra EA: понад 2 роки підтвердженої статистики, 23 з 24 місяців у плюс. Надійний алгоритм для MT4/MT5 з річним прибутком +25% та контролем ризику.",
                 keywords: "Terra EA, торговий робот статистика, форекс бот скачати, автоматична торгівля MT4, алгоритм RSI Bollinger, стабільний заробіток на трейдингу"
             },
 
@@ -55,7 +55,7 @@ export const translations = {
                 title: "Результати говорять самі за себе",
                 subtitle: "23 з 24 місяців торгівлі закриті в плюс.",
                 stats: [
-                    {label: "Year profit", value: "+20%"},
+                    {label: "Year profit", value: "+25%"},
                     {label: "Max drawdown", value: "16.5%"},
                     {label: "Winrate", value: "72.3%"}
                 ],
@@ -186,7 +186,7 @@ export const translations = {
                     incomeMonth: "Місячний дохід",
                     totalIncome: "Загальний дохід",
                     finalBalance: "Підсумковий баланс",
-                    description: "Terra EA в середньому робить стабільні +20% на рік/1.6% на місяць.<br/>Чим більший термін інвестицій, тим більша магія складного відсотку!",
+                    description: "Terra EA в середньому робить стабільні +25% на рік/1.6% на місяць.<br/>Чим більший термін інвестицій, тим більша магія складного відсотку!",
                     descriptionAero: "Aero EA в середньому робить стабільні +30% на рік/2.5% на місяць.<br/>Чим більший термін інвестицій, тим більша магія складного відсотку!",
                     descriptionHydro: "Hydro EA в середньому робить стабільні +50% на рік/4.2% на місяць.<br/>Чим більший термін інвестицій, тим більша магія складного відсотку!"
                 }
@@ -392,7 +392,7 @@ export const translations = {
                 {
                     name: "Terra EA",
                     description: "Бот з найдовшою публічною статистикою в Україні.",
-                    advantages: {yearProfit: "+20%", maxDrawDown: "16.5%", winRate: "72.3%"},
+                    advantages: {yearProfit: "+25%", maxDrawDown: "16.5%", winRate: "72.3%"},
                     price: 499,
                     href: "/terra",
                     prop: false,
@@ -879,7 +879,7 @@ export const translations = {
         terra: {
             seo: {
                 title: "Terra EA — Торговый бот с самой длинной статистикой в Украине",
-                description: "Terra EA: более 2 лет подтверждённой статистики, 23 из 24 месяцев в плюс. Надёжный алгоритм для MT4/MT5 с годовой доходностью +20% и контролем риска.",
+                description: "Terra EA: более 2 лет подтверждённой статистики, 23 из 24 месяцев в плюс. Надёжный алгоритм для MT4/MT5 с годовой доходностью +25% и контролем риска.",
                 keywords: "Terra EA, торговый робот статистика, форекс бот скачать, автоматическая торговля MT4, алгоритм RSI Bollinger, стабильный заработок на трейдинге"
             },
 
@@ -913,7 +913,7 @@ export const translations = {
                 title: "Результаты говорят сами за себя",
                 subtitle: "23 из 24 месяцев торговли закрыты в плюс.",
                 stats: [
-                    {label: "Year profit", value: "+20%"},
+                    {label: "Year profit", value: "+25%"},
                     {label: "Max drawdown", value: "16.5%"},
                     {label: "Winrate", value: "72.3%"}
                 ],
@@ -1044,7 +1044,7 @@ export const translations = {
                     incomeMonth: "Месячный доход",
                     totalIncome: "Общий доход",
                     finalBalance: "Итоговый баланс",
-                    description: "Terra EA в среднем делает стабильные +20% в год/1.6% в месяц.<br/>Чем больше срок инвестиций, тем больше магия сложного процента!",
+                    description: "Terra EA в среднем делает стабильные +25% в год/1.6% в месяц.<br/>Чем больше срок инвестиций, тем больше магия сложного процента!",
                     descriptionAero: "Aero EA в среднем делает стабильные +30% в год/2.5% в месяц.<br/>Чем больше срок инвестиций, тем больше магия сложного процента!",
                     descriptionHydro: "Hydro EA в среднем делает стабильные +50% в год/4.2% в месяц.<br/>Чем больше срок инвестиций, тем больше магия сложного процента!"
                 }
@@ -1249,7 +1249,7 @@ export const translations = {
                 {
                     name: "Terra EA",
                     description: "Бот с самой долгой публичной статистикой в Украине.",
-                    advantages: {yearProfit: "+20%", maxDrawDown: "16.5%", winRate: "72.3%"},
+                    advantages: {yearProfit: "+25%", maxDrawDown: "16.5%", winRate: "72.3%"},
                     price: 499,
                     href: "/terra",
                     prop: false,
@@ -1592,7 +1592,7 @@ export const translations = {
         terra: {
             seo: {
                 title: "Terra EA — Trading bot with the longest track record in Ukraine",
-                description: "Terra EA: over 2 years of verified statistics, 23 out of 24 months in profit. A reliable algorithm for MT4/MT5 with +20% annual return and risk control.",
+                description: "Terra EA: over 2 years of verified statistics, 23 out of 24 months in profit. A reliable algorithm for MT4/MT5 with +25% annual return and risk control.",
                 keywords: "Terra EA, trading robot statistics, forex bot download, automated trading MT4, RSI Bollinger algorithm, stable trading income"
             },
 
@@ -1627,7 +1627,7 @@ export const translations = {
                 title: "Results speak for themselves",
                 subtitle: "23 out of 24 trading months closed in profit.",
                 stats: [
-                    {label: "Year profit", value: "+20%"},
+                    {label: "Year profit", value: "+25%"},
                     {label: "Max drawdown", value: "16.5%"},
                     {label: "Winrate", value: "72.3%"}
                 ],
@@ -1760,7 +1760,7 @@ export const translations = {
                     incomeMonth: "Monthly Income",
                     totalIncome: "Total Income",
                     finalBalance: "Final Balance",
-                    description: "Terra EA averages a stable +20% per year / 1.6% per month.<br/>The longer the investment period, the greater the magic of compound interest!",
+                    description: "Terra EA averages a stable +25% per year / 1.6% per month.<br/>The longer the investment period, the greater the magic of compound interest!",
                     descriptionAero: "Aero EA averages a stable +30% per year / 2.5% per month.<br/>The longer the investment period, the greater the magic of compound interest!",
                     descriptionHydro: "Hydro EA averages a stable +50% per year / 4.2% per month.<br/>The longer the investment period, the greater the magic of compound interest!"
                 }
@@ -1976,7 +1976,7 @@ export const translations = {
                 {
                     name: "Terra EA",
                     description: "The bot with the longest public statistics in the lineup.",
-                    advantages: {yearProfit: "+20%", maxDrawDown: "16.5%", winRate: "72.3%"},
+                    advantages: {yearProfit: "+25%", maxDrawDown: "16.5%", winRate: "72.3%"},
                     price: 499,
                     href: "/terra",
                     prop: false,

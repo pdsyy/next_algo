@@ -5,8 +5,9 @@ import advantageIcon2 from "./images/advantage_icon2.svg"
 import advantageIcon3 from "./images/connection_icon.svg"
 import advantageIcon4 from "./images/connetction_icon2.svg"
 import advantageIcon5 from "./images/bot_icon.svg"
-import result2025 from "./images/result2025.png"
-import hydroBuyImage from "./images/hydroBuyBlock1.png"
+import mt5_stat from "./images/mt5_stat.png"
+import mt4_stat from "./images/mt4_stat.png"
+import hydroBuyImage from "./images/hydro_product_image.png"
 import how_to_image from "./images/how_to_image.png"
 import prev_arrow from "../images/prev-arrow.svg";
 import next_arrow from "../images/next-arrow.svg";
@@ -30,6 +31,8 @@ import tg_icon from "../images/tg_icon.svg";
 import instagram_icon from "../images/insta_icon.svg";
 import youtube_icon from "../images/youtube_icon.svg";
 import {useThxContext} from "@/context/ThxContext";
+import lines from "@/app/images/bottom_lines.svg";
+import Image from "next/image";
 
 const HydroPage = () => {
     const {activePopup, setActivePopup} = useThxContext()
@@ -55,6 +58,11 @@ const HydroPage = () => {
         bot_name: t.hydro.botInfoPopup.botName,
         bot_price: t.hydro.botInfoPopup.botPrice
     };
+
+    const [hoverMode, setHoverMode]:any = useState(null);
+    const [mode, setMode] = useState("mt5");
+
+
 
 
     const swiperRef:any = useRef(null);
@@ -216,9 +224,36 @@ const HydroPage = () => {
             <div className="product_result_fs">
                 <div className="product_result">
                     <div className="product_result_info">
-                        <motion.div className="product_name" {...fadeNumeric} custom={1}>
+                        {/* <motion.div className="product_name" {...fadeNumeric} custom={1}>
                             {t.hydro.hero.botName}
-                        </motion.div>
+                        </motion.div>*/}
+                        <div className="mt_handler">
+                            <div
+                                className={`mt_top_handler ${
+                                    (hoverMode === "mt5" || (!hoverMode && mode === "mt5")) ? "active_mt5" : ""
+                                }`}
+                            ></div>
+
+                            <div
+                                className={`mt4 ${mode === "mt4" ? "active" : ""}`}
+                                onClick={() => {
+                                    setHoverMode("mt4")
+                                    setMode("mt4")
+                                }}
+                            >
+                                mt4
+                            </div>
+
+                            <div
+                                className={`mt5 ${mode === "mt5" ? "active" : ""}`}
+                                onClick={() => {
+                                    setHoverMode("mt5")
+                                    setMode("mt5")
+                                }}
+                            >
+                                mt5
+                            </div>
+                        </div>
                         <motion.div className="result_block_name_aero" {...fadeNumeric} custom={2}>
                             {t.hydro.results.subtitle}
                         </motion.div>
@@ -234,7 +269,7 @@ const HydroPage = () => {
                             ))}
                         </motion.div>
 
-                        <motion.a href="https://www.myfxbook.com/portfolio/hydro-ea--4-risk/11886037"
+                        <motion.a href={mode === "mt4" ? "https://www.myfxbook.com/portfolio/hydro-mt4--1-year/12118207" : "https://www.myfxbook.com/portfolio/hydro-mt5--7-months/12118210"}
                                   target="_blank" rel="noreferrer" {...fadeNumeric} custom={5}>
                             <div className="see_stat_button">
                                 {t.aero.results.button}
@@ -242,7 +277,7 @@ const HydroPage = () => {
                         </motion.a>
                     </div>
                     <motion.div className="result_image" {...fadeUp}>
-                        <img src={result2025.src} alt="Statistics"/>
+                        <img src={mode === "mt4" ? mt4_stat.src : mt5_stat.src} alt="Statistics"/>
                     </motion.div>
                 </div>
             </div>
@@ -417,7 +452,7 @@ const HydroPage = () => {
                         <div className="how_to_main_info">
                             {t.hydro.propInfo.title}
                         </div>
-                        <a href="https://teletype.in/@volodymyrbbk/sun8mJ6tXbz" target="_blank" rel="noreferrer">
+                        <a href="https://teletype.in/@volodymyrbbk/QtEljMxEy61" target="_blank" rel="noreferrer">
                             <div className="read_more_button">
                                 {t.aero.propInfo.button}
                             </div>
@@ -456,7 +491,7 @@ const HydroPage = () => {
                         <div className="bot_stat_price">
                             {t.terra.buy.price}
                             <div className="price_block_bottom">
-                                {t.hydro.botInfoPopup.botPrice}
+                                <a className = "blur_price">{t.hydro.botInfoPopup.botPrice}</a>
                                 <span>USD</span>
                             </div>
                         </div>
@@ -482,7 +517,7 @@ const HydroPage = () => {
                 {isMobile ?
                     <div className="society_block">
                         <div>
-                            <a href="https://t.me/+uKCqVOr1OAE2ZmQy" target="_blank" rel="noreferrer">
+                            <a href="https://t.me/algoworId" target="_blank" rel="noreferrer">
                                 <img src={tg_icon.src} alt=""/>
                             </a>
                         </div>
@@ -493,7 +528,7 @@ const HydroPage = () => {
                             </a>
                         </div>*/}
                         <div>
-                            <a href="https://www.youtube.com/@alg0_ofx" target="_blank" rel="noreferrer">
+                            <a href="https://www.youtube.com/channel/UCUdEXqsf87y8gSnz7FjxS8g" target="_blank" rel="noreferrer">
                                 <img src={youtube_icon.src} alt=""/>
                             </a>
                         </div>
@@ -504,13 +539,14 @@ const HydroPage = () => {
                            <a href="https://www.instagram.com/alg0_bots?igsh=NW82eGFuajRlYmpw">{t.terra.footer.instagram}</a>
                         </div>*/}
                         <div>
-                            <a href="https://www.youtube.com/@alg0_ofx">{t.terra.footer.youtube}</a>
+                            <a href="https://www.youtube.com/channel/UCUdEXqsf87y8gSnz7FjxS8g">{t.terra.footer.youtube}</a>
                         </div>
                         <div>
-                            <a href="https://t.me/+uKCqVOr1OAE2ZmQy">{t.terra.footer.telegram}</a>
+                            <a href="https://t.me/algoworId">{t.terra.footer.telegram}</a>
                         </div>
                     </div>}
             </motion.div>
+            <Image src={lines} alt="" className="bottom_lines" style={{ width: '100%', height: 'auto' }} loading="eager"/>
         </div>
     );
 };

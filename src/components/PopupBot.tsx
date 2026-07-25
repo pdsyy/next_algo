@@ -146,7 +146,7 @@ const PopupBot = ({bot_info = [], bot_name, price, isActive, setIsActive, active
                                     <div className="price_text_popup">{t.terra.buy.price}</div>
                                     <div className="price_container">
                                         <div className="paying">{t.home.catalog.payingLabel}</div>
-                                        <div className="price_main">${price}</div>
+                                        {bot_name === "TERRA EA" || bot_name === "HYDRO EA" ? <div className="price_main"><a className = "blur_price">${price}</a></div> : <div className="price_main">${price}</div>}
                                     </div>
                                 </div>}
 

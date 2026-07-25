@@ -1,5 +1,6 @@
 "use client"
 import React, {useEffect, useRef, useState} from 'react';
+import lines from "./images/bottom_lines.svg"
 import Image from "next/image";
 import mainBlockBg from "./images/mainBlockBg.png"
 import mainBlockBgMobile from "./images/MainBlockBgMobile.png"
@@ -39,7 +40,6 @@ import review_image6 from "./images/review_image6.png"
 import circles_bg from "./images/circles.svg"
 import select_bot_img from "./images/select_bot_img1.png"
 import select_bot_img_mob from "./images/select_bot_img_mob1.png"
-import white_info_icon from "./images/white_info_label.svg"
 
 import {Swiper, SwiperSlide} from "swiper/react";
 import {Pagination} from "swiper/modules";
@@ -48,16 +48,23 @@ import 'swiper/css/pagination';
 import "swiper/css";
 import "swiper/css/navigation";
 import {useScroll} from "@/context/ScrollContext";
-import {HTMLMotionProps, motion} from "framer-motion"
+import {AnimatePresence, HTMLMotionProps, motion} from "framer-motion"
 import {useLanguage} from "@/context/LanguageProvider";
 import PopupBot from "@/components/PopupBot";
 import AnimatedNumber from "@/components/AnimatedNumber";
-import mql5_button from "@/app/images/mql_button.svg";
 import logo from "@/app/images/logo.svg";
 import tg_icon from "@/app/images/tg_icon.svg";
 import youtube_icon from "@/app/images/youtube_icon.svg";
+import trailer_preview from "@/app/images/trailer_preview.png";
 
 const MainPage = ({activePopup, setActivePopup}: any) => {
+
+
+    const [isPlaying, setIsPlaying] = useState(false);
+    const handlePlay = () => {
+        setIsPlaying(true);
+    };
+
     const [isMobile, setIsMobile] = useState(false);
     useEffect(() => {
         setIsMobile(window.innerWidth < 768);
@@ -286,6 +293,39 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                     </motion.div>
                 </div>
 
+                <div className = "trailer_main_page">
+                    <motion.h2 {...fadeUp} dangerouslySetInnerHTML={{__html: t.home.effective.title}}/>
+                    <motion.div className="trailer_video_block" {...fadeRight}>
+                        <iframe
+                            key={isPlaying ? "playing" : "stopped"}
+                            style={{ width: '100%', height: '100%', border: 'none' }}
+                            src={
+                                isPlaying
+                                    ? "https://www.youtube.com/embed/zH1KVCrpSm0?autoplay=1&mute=0&si=oCgsWa31-1ZkLTj1"
+                                    : "about:blank"
+                            }
+                            title="YouTube video player"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowFullScreen
+                        />
+
+                        <AnimatePresence>
+                            {!isPlaying && (
+                                <motion.div
+                                    key="cover"
+                                    initial={{ opacity: 1 }}
+                                    exit={{ opacity: 0, scale: 1.05 }}
+                                    transition={{ duration: 0.5, ease: "easeInOut" }}
+                                    className="video_cover_wrapper"
+                                    onClick={handlePlay}
+                                >
+                                    <img src={trailer_preview.src} alt="Video Cover" loading="lazy"/>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </motion.div>
+                </div>
+
                 <motion.div className="main_page_mql5_fs" {...fadeUp}>
                     <div className="main_page_mql5">
                         <div className="mql_info">
@@ -398,7 +438,8 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                                             <div className="bot_price_block">
                                                 <div className="bot_price_text">{t.terra.buy.price}</div>
                                                 <div className="bot_price">
-                                                    {el.price}
+
+                                                    {el.name !== "Aero EA" ? <a className = "blur_price">{el.price}</a> : el.price}
                                                     <span>USD</span>
                                                 </div>
                                             </div>
@@ -456,7 +497,8 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                                             <div className="bot_price_block">
                                                 <div className="bot_price_text">{t.terra.buy.price}</div>
                                                 <div className="bot_price">
-                                                    {el.price}
+
+                                                    {el.name !== "Aero EA" ? <a className = "blur_price">{el.price}</a> : el.price}
                                                     <span>USD</span>
                                                 </div>
                                             </div>
@@ -616,7 +658,7 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                     {isMobile ?
                         <div className="society_block">
                             <div>
-                                <a href="https://t.me/+uKCqVOr1OAE2ZmQy" target="_blank" rel="noreferrer">
+                                <a href="https://t.me/algoworId" target="_blank" rel="noreferrer">
                                     <img src={tg_icon.src} alt=""/>
                                 </a>
                             </div>
@@ -627,7 +669,7 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                             </a>
                         </div>*/}
                             <div>
-                                <a href="https://www.youtube.com/@alg0_ofx" target="_blank" rel="noreferrer">
+                                <a href="https://www.youtube.com/channel/UCUdEXqsf87y8gSnz7FjxS8g" target="_blank" rel="noreferrer">
                                     <img src={youtube_icon.src} alt=""/>
                                 </a>
                             </div>
@@ -638,13 +680,14 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                            <a href="https://www.instagram.com/alg0_bots?igsh=NW82eGFuajRlYmpw">{t.terra.footer.instagram}</a>
                         </div>*/}
                             <div>
-                                <a href="https://www.youtube.com/@alg0_ofx">{t.terra.footer.youtube}</a>
+                                <a href="https://www.youtube.com/channel/UCUdEXqsf87y8gSnz7FjxS8g">{t.terra.footer.youtube}</a>
                             </div>
                             <div>
-                                <a href="https://t.me/+uKCqVOr1OAE2ZmQy">{t.terra.footer.telegram}</a>
+                                <a href="https://t.me/algoworId">{t.terra.footer.telegram}</a>
                             </div>
                         </div>}
                 </motion.div>
+                <Image src={lines} alt="" className="bottom_lines"/>
 
 
             </div>

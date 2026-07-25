@@ -873,3 +873,64 @@
     box-shadow: 0px 1px 3px 0px #0E121B1F;
 
 }
+
+
+
+
+.mt_handler {
+    margin-right: 24px;
+    background: #EAEAEA;
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    text-align: center;
+    gap: 4px;
+    padding: 4px;
+    height: 36px;
+    position: relative;
+    width: 240px;
+
+}
+
+.mt_top_handler {
+    background: #fff;
+    border-radius: 6px;
+    height: calc(100% - 8px);
+    left: 4px;
+    position: absolute;
+    transform: translate(0);
+    width: calc(50% - 6px);
+    box-shadow: 0 6px 10px 0 #0e121b0f;
+    transition: all .3s;
+}
+
+.mt5.active, .mt4.active {
+    color: #171717;
+}
+
+.mt5, .mt4 {
+    cursor: pointer;
+    transition: .5s;
+    font-family: Geist;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 20px;
+    text-align: center;
+    text-transform: uppercase;
+
+    width: 100%;
+}
+
+.mt5, .mt5 a, .mt4, .mt4 a {
+    color: #a3a3a3;
+    position: relative;
+}
+
+.mt5 a, .mt4 a {
+    text-decoration: none;
+}
+
+.active_mt5 {
+
+    transform: translate(calc(100% + 4px)) !important;
+}

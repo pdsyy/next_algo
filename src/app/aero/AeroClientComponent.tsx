@@ -4,7 +4,8 @@ import advantageIcon1 from "./images/strategy_icon.svg"
 import advantageIcon2 from "./images/connection_icon.svg"
 import advantageIcon3 from "./images/connetction_icon2.svg"
 import advantageIcon4 from "./images/bot_icon.svg"
-import result2025 from "./images/result2025.png"
+import mt4_stat from "./images/mt4_stat.png"
+import mt5_stat from "./images/mt5_stat.png"
 import how_to_image from "./images/how_to_image.png"
 import prev_arrow from "../images/prev-arrow.svg";
 import next_arrow from "../images/next-arrow.svg";
@@ -16,7 +17,7 @@ import review_image3 from "./images/review_image3.png";
 import review_image4 from "./images/review_image4.png";
 import review_image5 from "./images/review_image5.png";
 import test_image from "./images/test_image.png";
-import bottom_product_image from "./images/bottom_product_image1.png";
+import bottom_product_image from "./images/aero_product_image.png";
 import logo from "../images/logo.svg";
 import PopupBot from "@/components/PopupBot";
 import {Pagination} from "swiper/modules";
@@ -27,9 +28,10 @@ import preview from "../images/logo192.png"
 import {useLanguage} from "@/context/LanguageProvider";
 import CalculatorSectionAero from "@/components/CalculatorSectionAero";
 import tg_icon from "../images/tg_icon.svg";
-import instagram_icon from "../images/insta_icon.svg";
 import youtube_icon from "../images/youtube_icon.svg";
 import {useThxContext} from "@/context/ThxContext";
+import Image from "next/image";
+import lines from "@/app/images/bottom_lines.svg";
 
 const AeroClientComponent = () => {
     const {t} = useLanguage()!;
@@ -109,6 +111,10 @@ const AeroClientComponent = () => {
         viewport: baseViewport,
         transition: baseTransition
     };
+
+
+    const [hoverMode, setHoverMode]:any = useState(null);
+    const [mode, setMode] = useState("mt5");
 
 
     const [isPlaying, setIsPlaying] = useState(false);
@@ -213,8 +219,35 @@ const AeroClientComponent = () => {
             <div className="product_result_fs">
                 <div className="product_result">
                     <motion.div className="product_result_info" {...fadeNumeric} custom={1}>
-                        <div className="product_name">
+                        {/*<div className="product_name">
                             {t.aero.hero.botName}
+                        </div>*/}
+                        <div className="mt_handler">
+                            <div
+                                className={`mt_top_handler ${
+                                    (hoverMode === "mt5" || (!hoverMode && mode === "mt5")) ? "active_mt5" : ""
+                                }`}
+                            ></div>
+
+                            <div
+                                className={`mt4 ${mode === "mt4" ? "active" : ""}`}
+                                onClick={() => {
+                                    setHoverMode("mt4")
+                                    setMode("mt4")
+                                }}
+                            >
+                                mt4
+                            </div>
+
+                            <div
+                                className={`mt5 ${mode === "mt5" ? "active" : ""}`}
+                                onClick={() => {
+                                    setHoverMode("mt5")
+                                    setMode("mt5")
+                                }}
+                            >
+                                mt5
+                            </div>
                         </div>
                         <div className="result_block_name_aero">
                             {t.aero.results.subtitle}
@@ -230,7 +263,7 @@ const AeroClientComponent = () => {
                                 </div>
                             ))}
                         </div>
-                        <a href="https://www.myfxbook.com/members/alg0_o/aero-ea-low-risk-set/11648009" target="_blank"
+                        <a href={mode === "mt4" ? "https://www.myfxbook.com/portfolio/aero-mt4--1year-live/12118216" : "https://www.myfxbook.com/portfolio/aero-mt5--7-months/12118223"} target="_blank"
                            rel="noreferrer">
                             <div className="see_stat_button">
                                 {t.aero.results.button}
@@ -238,7 +271,7 @@ const AeroClientComponent = () => {
                         </a>
                     </motion.div>
                     <motion.div className="result_image" {...fadeNumeric} custom={2}>
-                        <img src={result2025.src} alt="Statistics"/>
+                        <img src={mode === "mt4" ? mt4_stat.src : mt5_stat.src} alt="Statistics"/>
                     </motion.div>
                 </div>
             </div>
@@ -252,7 +285,7 @@ const AeroClientComponent = () => {
                         key={isPlaying ? "playing" : "stopped"}
                         style={{width: '100%', height: '100%', border: 'none'}}
                         src={isPlaying
-                            ? "https://www.youtube.com/embed/8fZmyU_JZXQ?autoplay=1&mute=0&si=stKJz6oasfygiEZk"
+                            ? "https://www.youtube.com/embed/xesKDIFx0EM?autoplay=1&mute=0&si=stKJz6oasfygiEZk"
                             : "about:blank"
                         }
                         title="YouTube video player"
@@ -488,7 +521,7 @@ const AeroClientComponent = () => {
                 {isMobile ?
                     <div className="society_block">
                         <div>
-                            <a href="https://t.me/+uKCqVOr1OAE2ZmQy" target="_blank" rel="noreferrer">
+                            <a href="https://t.me/algoworId" target="_blank" rel="noreferrer">
                                 <img src={tg_icon.src} alt=""/>
                             </a>
                         </div>
@@ -499,7 +532,7 @@ const AeroClientComponent = () => {
                             </a>
                         </div>*/}
                         <div>
-                            <a href="https://www.youtube.com/@alg0_ofx" target="_blank" rel="noreferrer">
+                            <a href="https://www.youtube.com/channel/UCUdEXqsf87y8gSnz7FjxS8g" target="_blank" rel="noreferrer">
                                 <img src={youtube_icon.src} alt=""/>
                             </a>
                         </div>
@@ -510,13 +543,14 @@ const AeroClientComponent = () => {
                            <a href="https://www.instagram.com/alg0_bots?igsh=NW82eGFuajRlYmpw">{t.terra.footer.instagram}</a>
                         </div>*/}
                         <div>
-                            <a href="https://www.youtube.com/@alg0_ofx">{t.terra.footer.youtube}</a>
+                            <a href="https://www.youtube.com/channel/UCUdEXqsf87y8gSnz7FjxS8g">{t.terra.footer.youtube}</a>
                         </div>
                         <div>
-                            <a href="https://t.me/+uKCqVOr1OAE2ZmQy">{t.terra.footer.telegram}</a>
+                            <a href="https://t.me/algoworId">{t.terra.footer.telegram}</a>
                         </div>
                     </div>}
             </motion.div>
+            <Image src={lines} alt="" className="bottom_lines" style={{ width: '100%', height: 'auto' }} loading="eager"/>
         </div>
     );
 };

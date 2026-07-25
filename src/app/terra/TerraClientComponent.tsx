@@ -6,6 +6,7 @@ import advantageIcon2 from "./images/advantage_icon2.svg"
 import advantageIcon3 from "./images/advantage_icon3.svg"
 import result2024 from "./images/result2024.png"
 import result2025 from "./images/result2025.png"
+import result2026 from "./images/result2026.png"
 import demonstration from "./images/demonstration.png"
 import prev_arrow from "../images/prev-arrow.svg";
 import next_arrow from "../images/next-arrow.svg";
@@ -16,20 +17,21 @@ import review_image3 from "./images/review_image3.png";
 import review_image4 from "./images/review_image4.png";
 import review_image5 from "./images/review_image5.png";
 import test_image from "./images/test_image.png";
-import bottom_product_image from "./images/bottom_product_image1.png";
+import bottom_product_image from "./images/terra_product_image.png";
 import logo from "../images/logo.svg";
 import PopupBot from "@/components/PopupBot";
 import {Pagination} from "swiper/modules";
 import CalculatorSection from "@/components/CalculatorSection";
 import {AnimatePresence, HTMLMotionProps, motion} from "framer-motion"
 import terraPreview from "./images/terraPreviewVIdeoFigma.png";
-//import terraVideo from "../../../public/images/terraMainVideo.mp4";
 import preview from "../images/logo192.png"
 import { useLanguage } from "@/context/LanguageProvider";
 import tg_icon from "../images/tg_icon.svg";
 import instagram_icon from "../images/insta_icon.svg";
 import youtube_icon from "../images/youtube_icon.svg";
 import {useThxContext} from "@/context/ThxContext";
+import lines from "@/app/images/bottom_lines.svg";
+import Image from "next/image";
 
 const TerraPage = () => {
     const {activePopup, setActivePopup} = useThxContext()
@@ -130,7 +132,7 @@ const TerraPage = () => {
         <div className="product_page">
             {/*<SEO
                 title="Terra EA — Торговий бот з найдовшою статистикою в Україні"
-                description="Terra EA: понад 2 роки підтвердженої статистики, 23 з 24 місяців у плюс. Надійний алгоритм для MT4/MT5 з річним прибутком +20% та контролем ризику."
+                description="Terra EA: понад 2 роки підтвердженої статистики, 23 з 24 місяців у плюс. Надійний алгоритм для MT4/MT5 з річним прибутком +25% та контролем ризику."
                 keywords="Terra EA, торговий робот статистика, форекс бот скачати, автоматична торгівля MT4, алгоритм RSI Bollinger, стабільний заробіток на трейдингу"
                 image={preview}
             />*/}
@@ -233,7 +235,7 @@ const TerraPage = () => {
                         <div className="years_handler">
                             <div
                                 className={`top_handler ${
-                                    (hoverMode === "2025" || (!hoverMode && mode === "2025")) ? "active2025" : ""
+                                    (hoverMode === "2025" || (!hoverMode && mode === "2025")) ? "active2025" : (hoverMode === "2026" || (!hoverMode && mode === "2026")) ? "active2026" : ""
                                 }`}
                             ></div>
 
@@ -255,6 +257,15 @@ const TerraPage = () => {
                                 }}
                             >
                                 2025
+                            </div>
+                            <div
+                                className={`year2026 ${mode === "2026" ? "active" : ""}`}
+                                onClick={() => {
+                                    setHoverMode("2026")
+                                    setMode("2026")
+                                }}
+                            >
+                                2026
                             </div>
                         </div>
 
@@ -280,7 +291,7 @@ const TerraPage = () => {
                         </div>
 
                         <a
-                            href="https://www.myfxbook.com/members/alg0_o/terra-ea-v2/11649755"
+                            href={mode === "2026" ? "https://www.myfxbook.com/portfolio/terra-ea-v2/11649755" : "https://www.myfxbook.com/members/alg0_o/terra-ea-v2/11649755"}
                             target="_blank"
                             rel="noreferrer"
                         >
@@ -291,7 +302,7 @@ const TerraPage = () => {
                     </motion.div>
 
                     <motion.div className="result_image" {...fadeNumeric} custom={2}>
-                        <img src={mode === "2024" ? result2024.src : result2025.src} alt="" />
+                        <img src={mode === "2024" ? result2024.src : mode === "2025" ? result2025.src : result2026.src} alt="" />
                     </motion.div>
                 </div>
             </div>
@@ -398,7 +409,7 @@ const TerraPage = () => {
 
                             <div className="test_detail_item">
                                 {t.terra.tests.maxDrawdown}
-                                <div className="test_detail_number">31.42%</div>
+                                <div className="test_detail_number">14.62%</div>
                             </div>
 
                             <div className="test_theme mt24">
@@ -507,7 +518,7 @@ const TerraPage = () => {
                                 <div className="bot_stat_name">
                                     {t.terra.stats.yearProfit}
                                 </div>
-                                <div className="bot_stat_num">+20%</div>
+                                <div className="bot_stat_num">+25%</div>
                             </div>
 
                             <div className="bot_stat_item">
@@ -528,7 +539,8 @@ const TerraPage = () => {
                         <div className="bot_stat_price">
                             {t.terra.buy.price}
                             <div className="price_block_bottom">
-                                499 <span>USD</span>
+                                <a className = "blur_price">499</a>
+                                <span>USD</span>
                             </div>
                         </div>
 
@@ -560,7 +572,7 @@ const TerraPage = () => {
                 {isMobile ?
                     <div className="society_block">
                         <div>
-                            <a href="https://t.me/+uKCqVOr1OAE2ZmQy" target="_blank" rel="noreferrer">
+                            <a href="https://t.me/algoworId" target="_blank" rel="noreferrer">
                                 <img src={tg_icon.src} alt=""/>
                             </a>
                         </div>
@@ -571,7 +583,7 @@ const TerraPage = () => {
                             </a>
                         </div>*/}
                         <div>
-                            <a href="https://www.youtube.com/@alg0_ofx" target="_blank" rel="noreferrer">
+                            <a href="https://www.youtube.com/channel/UCUdEXqsf87y8gSnz7FjxS8g" target="_blank" rel="noreferrer">
                                 <img src={youtube_icon.src} alt=""/>
                             </a>
                         </div>
@@ -582,13 +594,14 @@ const TerraPage = () => {
                            <a href="https://www.instagram.com/alg0_bots?igsh=NW82eGFuajRlYmpw">{t.terra.footer.instagram}</a>
                         </div>*/}
                         <div>
-                            <a href="https://www.youtube.com/@alg0_ofx">{t.terra.footer.youtube}</a>
+                            <a href="https://www.youtube.com/channel/UCUdEXqsf87y8gSnz7FjxS8g">{t.terra.footer.youtube}</a>
                         </div>
                         <div>
-                            <a href="https://t.me/+uKCqVOr1OAE2ZmQy">{t.terra.footer.telegram}</a>
+                            <a href="https://t.me/algoworId">{t.terra.footer.telegram}</a>
                         </div>
                     </div>}
             </motion.div>
+            <Image src={lines} alt="" className="bottom_lines" style={{ width: '100%', height: 'auto' }} loading="eager"/>
         </div>
     );
 };

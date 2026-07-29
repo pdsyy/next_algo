@@ -4,7 +4,8 @@ import advantageIcon1 from "./images/strategy_icon.svg"
 import advantageIcon2 from "./images/connection_icon.svg"
 import advantageIcon3 from "./images/connetction_icon2.svg"
 import advantageIcon4 from "./images/bot_icon.svg"
-import mt4_stat from "./images/mt4_stat.png"
+import mt4_stat from "./images/mt4_stat_s.png"
+import mt4_stat_2026 from "./images/2026mt4.png"
 import mt5_stat from "./images/mt5_stat.png"
 import how_to_image from "./images/how_to_image.png"
 import prev_arrow from "../images/prev-arrow.svg";
@@ -22,7 +23,7 @@ import logo from "../images/logo.svg";
 import PopupBot from "@/components/PopupBot";
 import {Pagination} from "swiper/modules";
 import {AnimatePresence, HTMLMotionProps, motion} from "framer-motion";
-import aeroPreview from "./images/aeroPreview.png";
+import aeroPreview from "./images/aero_preview_t.png";
 //import aeroVideo from "./images/aeroMainVideo.mp4";
 import preview from "../images/logo192.png"
 import {useLanguage} from "@/context/LanguageProvider";
@@ -113,8 +114,11 @@ const AeroClientComponent = () => {
     };
 
 
-    const [hoverMode, setHoverMode]:any = useState(null);
-    const [mode, setMode] = useState("mt5");
+    const [hoverMode, setHoverMode]: any = useState(null);
+    const [mode, setMode] = useState("mt4"); //reverse mt4 mt5
+    const [hoverModeYear, setHoverModeYear]: any = useState(null);
+    const [modeYear, setModeYear] = useState("2026");
+
 
 
     const [isPlaying, setIsPlaying] = useState(false);
@@ -169,10 +173,11 @@ const AeroClientComponent = () => {
                                     custom={4}>
                             {t.aero.hero.buy}
                         </motion.div>
-                        <motion.a href="https://www.mql5.com/en/market/product/176860?source=Site+Market+My+Products+Page#description"
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  {...fadeNumeric} custom={4} className="mql_link">
+                        <motion.a
+                            href="https://www.mql5.com/en/market/product/176860?source=Site+Market+My+Products+Page#description"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            {...fadeNumeric} custom={4} className="mql_link">
                             <div className="open_mql5">
                                 {t.buttons.openMql}
                                 <img src={mql5_button.src} alt=""/>
@@ -222,33 +227,69 @@ const AeroClientComponent = () => {
                         {/*<div className="product_name">
                             {t.aero.hero.botName}
                         </div>*/}
-                        <div className="mt_handler">
-                            <div
-                                className={`mt_top_handler ${
-                                    (hoverMode === "mt5" || (!hoverMode && mode === "mt5")) ? "active_mt5" : ""
-                                }`}
-                            ></div>
 
-                            <div
-                                className={`mt4 ${mode === "mt4" ? "active" : ""}`}
-                                onClick={() => {
-                                    setHoverMode("mt4")
-                                    setMode("mt4")
-                                }}
-                            >
-                                mt4
+                        <div className = "year_aero_handler">
+                            <div className="mt_handler">
+                                <div
+                                    className={`mt_top_handler ${
+                                        (hoverMode === "mt5" || (!hoverMode && mode === "mt5")) ? "active_mt5" : ""
+                                    }`}
+                                ></div>
+
+                                <div
+                                    className={`mt4 ${mode === "mt4" ? "active" : ""}`}
+                                    onClick={() => {
+                                        setHoverMode("mt4")
+                                        setHoverModeYear("2026")
+                                        setMode("mt4")
+                                        setModeYear("2026")
+                                    }}
+                                >
+                                    mt5
+                                </div>
+
+                                <div
+                                    className={`mt5 ${mode === "mt5" ? "active" : ""}`}
+                                    onClick={() => {
+                                        setHoverMode("mt5")
+                                        setMode("mt5")
+                                        setHoverModeYear("2025")
+                                    }}
+                                >
+                                    mt4
+                                </div>
                             </div>
 
-                            <div
-                                className={`mt5 ${mode === "mt5" ? "active" : ""}`}
-                                onClick={() => {
-                                    setHoverMode("mt5")
-                                    setMode("mt5")
-                                }}
-                            >
-                                mt5
+
+                            <div className={`mt_handler ${mode === "mt4" ? "only2026" : ""}`}>
+                                <div
+                                    className={`mt_top_handler ${
+                                        (hoverModeYear === "2026" || (!hoverModeYear && modeYear === "2026")) ? "" : "active_mt5"
+                                    }`}
+                                ></div>
+
+                                <div
+                                    className={`mt4 ${modeYear === "2025" ? "active" : ""}`}
+                                    onClick={() => {
+                                        setHoverModeYear("2026")
+                                        setModeYear("2025")
+                                    }}
+                                >
+                                    2025
+                                </div>
+
+                                <div
+                                    className={`mt5 ${modeYear === "2026" ? "active" : ""}`}
+                                    onClick={() => {
+                                        setHoverModeYear("2025")
+                                        setModeYear("2026")
+                                    }}
+                                >
+                                    2026
+                                </div>
                             </div>
                         </div>
+
                         <div className="result_block_name_aero">
                             {t.aero.results.subtitle}
                         </div>
@@ -263,7 +304,8 @@ const AeroClientComponent = () => {
                                 </div>
                             ))}
                         </div>
-                        <a href={mode === "mt4" ? "https://www.myfxbook.com/portfolio/aero-mt4--1year-live/12118216" : "https://www.myfxbook.com/portfolio/aero-mt5--7-months/12118223"} target="_blank"
+                        <a href={mode === "mt5" ? "https://www.myfxbook.com/portfolio/aero-mt4--1year-live/12118216" : "https://www.myfxbook.com/portfolio/aero-mt5--7-months/12118223"}
+                           target="_blank"
                            rel="noreferrer">
                             <div className="see_stat_button">
                                 {t.aero.results.button}
@@ -271,7 +313,7 @@ const AeroClientComponent = () => {
                         </a>
                     </motion.div>
                     <motion.div className="result_image" {...fadeNumeric} custom={2}>
-                        <img src={mode === "mt4" ? mt4_stat.src : mt5_stat.src} alt="Statistics"/>
+                        <img src={mode === "mt5" ? modeYear === "2026" ? mt4_stat_2026.src : mt4_stat.src : mt5_stat.src} alt="Statistics"/>
                     </motion.div>
                 </div>
             </div>
@@ -283,7 +325,13 @@ const AeroClientComponent = () => {
                 <motion.div className="video_block" {...fadeRight}>
                     <iframe
                         key={isPlaying ? "playing" : "stopped"}
-                        style={{width: '100%', height: '100%', border: 'none'}}
+                        style={{
+                            width: '100%',
+                            height: '100%',
+                            border: 'none',
+                            background: isPlaying ? "black" : "",
+                            borderRadius: isPlaying ? "24px" : "32px"
+                        }}
                         src={isPlaying
                             ? "https://www.youtube.com/embed/xesKDIFx0EM?autoplay=1&mute=0&si=stKJz6oasfygiEZk"
                             : "about:blank"
@@ -303,7 +351,7 @@ const AeroClientComponent = () => {
                                 className="video_cover_wrapper"
                                 onClick={handlePlay}
                             >
-                                <img src={aeroPreview.src} alt="Video Cover"/>
+                                <Image src={aeroPreview} priority style={{height: "100%"}} alt="Video Cover"/>
                             </motion.div>
                         )}
                     </AnimatePresence>
@@ -497,7 +545,7 @@ const AeroClientComponent = () => {
                             <div className="button_buy_bottom" onClick={() => setIsActive(true)}>
                                 {t.terra.buy.buy}
                             </div>
-                            <a className = "open_mql5_bottom"
+                            <a className="open_mql5_bottom"
                                href="https://www.mql5.com/en/market/product/176860?source=Site+Market+My+Products+Page#description"
                                target="_blank"
                                rel="noopener noreferrer">
@@ -532,7 +580,8 @@ const AeroClientComponent = () => {
                             </a>
                         </div>*/}
                         <div>
-                            <a href="https://www.youtube.com/channel/UCUdEXqsf87y8gSnz7FjxS8g" target="_blank" rel="noreferrer">
+                            <a href="https://www.youtube.com/channel/UCUdEXqsf87y8gSnz7FjxS8g" target="_blank"
+                               rel="noreferrer">
                                 <img src={youtube_icon.src} alt=""/>
                             </a>
                         </div>
@@ -550,7 +599,7 @@ const AeroClientComponent = () => {
                         </div>
                     </div>}
             </motion.div>
-            <Image src={lines} alt="" className="bottom_lines" style={{ width: '100%', height: 'auto' }} loading="eager"/>
+            <Image src={lines} alt="" className="bottom_lines" style={{width: '100%', height: 'auto'}} loading="eager"/>
         </div>
     );
 };

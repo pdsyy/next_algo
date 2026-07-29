@@ -291,6 +291,8 @@ h2 span{
     display: grid;
     grid-template-columns: 711fr 621fr;
     grid-gap: 12px;
+    max-width: 1344px;
+
 }
 
 .first_deal_image img{
@@ -367,6 +369,9 @@ h2 span{
 
 .effective_algorithm{
     margin-top: 85px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .effective_points{
@@ -374,6 +379,8 @@ h2 span{
     display: grid;
     grid-gap: 24px;
     padding: 0 48px;
+    max-width: 1440px;
+    width: 100%;
 }
 
 .effective_points.first{
@@ -421,7 +428,15 @@ h2 span{
     margin-top: 120px;
 }
 
+.bots_catalog{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .bots_list{
+    max-width: 1440px;
+    width: 100%;
     margin-top: 48px;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -633,13 +648,23 @@ h2 span{
 
 .algo_feedback_block{
     margin-top: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
+@media screen and (min-width: 1200px) and (max-width: 1439.9px){
+    .select_bot_info {
+        max-width: 552px !important;
+    }
+}
 .feedback_h2{
-    display: flex;
     justify-content: space-between;
-    padding: 0 48px;
     align-items: center;
+    max-width: 1440px;
+    padding: 0 48px;
+    display: flex;
+    width: 100%;
 }
 
 .feedback_h2 h2{
@@ -701,6 +726,8 @@ h2 span{
     padding: 0 48px;
     display: flex;
     margin-top: 48px;
+    max-width: 1440px;
+    width: 100%;
 }
 
 .more_reviews_button{
@@ -749,6 +776,7 @@ h2 span{
     position: absolute;
     top: 0;
     z-index: -1;
+    height: 100%;
 }
 
 .faq_questions_list{
@@ -805,6 +833,11 @@ h2 span{
     transition: 0.2s;
 }
 
+.year_aero_handler{
+    display: flex;
+
+}
+
 .faq_item_answer{
 
     color: #5C5C5C;
@@ -840,23 +873,32 @@ h2 span{
     width: 100%;
     padding: 0 48px;
     margin-top: 120px;
+    display: flex;
+    justify-content: center;
 }
 
 .select_bot_block{
+    max-width: 1344px;
     width: 100%;
-    background: #F1F1F1;
+    /*background: #F1F1F1;*/
     border-radius: 24px;
     display: flex;
     overflow: hidden;
     align-items: center;
+    height: 422px;
+    /*background: url("../images/p_block_mp.png") center / cover no-repeat, #F1F1F1;;*/
+    background: #ffffff;
 }
 
 .select_bot_block img{
+    margin-left: auto;
     width: 652px;
+    aspect-ratio: 652 / 421;
 }
 
 .select_bot_info{
     padding-left: 48px;
+    max-width: 668px;
 }
 
 .select_bot_theme{
@@ -1060,6 +1102,7 @@ h2 span{
     overflow: hidden;
     width: 554px;
     border-radius: 24px;
+    max-width: 100%;
 }
 
 .trailer_main_page{
@@ -1087,7 +1130,39 @@ h2 span{
     inset: 0;
 }
 
+.video_container_main{
+    height: calc(200vh - 200px);
+    position: relative;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.sticky_video_block{
+    position: sticky;
+    top: 0;
+    height: calc(100vh - 100px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
 @media screen and (max-width: 768px) {
+
+    .year_aero_handler{
+        gap: 12px;
+    }
+
+    .mt_handler {
+        overflow: hidden;
+        flex: 1;
+        margin-right: 0 !important;
+    }
+    .select_bot_block img{
+        aspect-ratio: 335 / 235;
+    }
     .trailer_video_block {
         width: calc(100% - 40px);
         max-width: 554px;
@@ -1414,6 +1489,7 @@ h2 span{
     }
     .select_bot_block{
         flex-direction: column-reverse;
+        height: auto;
     }
     .select_bot_block img {
         width: 100%;

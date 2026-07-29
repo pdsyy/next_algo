@@ -295,6 +295,7 @@
 }
 
 .main_page_mql5{
+    max-width: 1344px;
     width: 100%;
     display: flex;
     align-items: center;

@@ -96,7 +96,8 @@
 
 .product_advantages_list_aero{
     margin-top: 48px;
-    padding: 0 48px;
+    width: 1344px;
+    max-width: 100%;
     display: grid;
     grid-gap: 24px;
     grid-template-columns: 1fr 1fr;
@@ -875,26 +876,44 @@
 }
 
 
+.mt_handler.only2026{
+    gap:0;
+    width: 60px;
+}
 
+.mt_handler.only2026 .mt_top_handler{
+    width: calc(100% - 8px);
+}
+
+.mt_handler.only2026 .mt4{
+    overflow: hidden;
+    width: 0;
+    opacity: 0;
+}
+
+.mt_handler.only2026 .active{
+    padding: 0 4px;
+}
 
 .mt_handler {
-    margin-right: 24px;
+    margin-right: 12px;
     background: #EAEAEA;
     display: flex;
     align-items: center;
-    border-radius: 10px;
+    border-radius: 82px;
     text-align: center;
     gap: 4px;
     padding: 4px;
     height: 36px;
     position: relative;
-    width: 240px;
+    width: 133px;
+    transition: 0.5s all;
 
 }
 
 .mt_top_handler {
     background: #fff;
-    border-radius: 6px;
+    border-radius: 122px;
     height: calc(100% - 8px);
     left: 4px;
     position: absolute;
@@ -909,16 +928,16 @@
 }
 
 .mt5, .mt4 {
+    opacity: 1;
     cursor: pointer;
-    transition: .5s;
-    font-family: Geist;
-    font-weight: 600;
-    font-size: 14px;
-    line-height: 20px;
     text-align: center;
     text-transform: uppercase;
-
     width: 100%;
+    font-family: 'Inter';
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 20px;
+    transition: all .5s;
 }
 
 .mt5, .mt5 a, .mt4, .mt4 a {

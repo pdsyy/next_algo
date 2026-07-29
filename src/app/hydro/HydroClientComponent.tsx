@@ -6,7 +6,8 @@ import advantageIcon3 from "./images/connection_icon.svg"
 import advantageIcon4 from "./images/connetction_icon2.svg"
 import advantageIcon5 from "./images/bot_icon.svg"
 import mt5_stat from "./images/mt5_stat.png"
-import mt4_stat from "./images/mt4_stat.png"
+import mt4_stat from "./images/mt4_stat_s.png"
+import mt4_stat_2026 from "./images/mt4_2026.png"
 import hydroBuyImage from "./images/hydro_product_image.png"
 import how_to_image from "./images/how_to_image.png"
 import prev_arrow from "../images/prev-arrow.svg";
@@ -60,7 +61,7 @@ const HydroPage = () => {
     };
 
     const [hoverMode, setHoverMode]:any = useState(null);
-    const [mode, setMode] = useState("mt5");
+    const [mode, setMode] = useState("mt4");
 
 
 
@@ -124,6 +125,10 @@ const HydroPage = () => {
         viewport: baseViewport,
         transition: baseTransition
     };
+
+
+    const [hoverModeYear, setHoverModeYear]: any = useState(null);
+    const [modeYear, setModeYear] = useState("2026");
 
     return (
         <div className="product_page hydro">
@@ -227,31 +232,65 @@ const HydroPage = () => {
                         {/* <motion.div className="product_name" {...fadeNumeric} custom={1}>
                             {t.hydro.hero.botName}
                         </motion.div>*/}
-                        <div className="mt_handler">
-                            <div
-                                className={`mt_top_handler ${
-                                    (hoverMode === "mt5" || (!hoverMode && mode === "mt5")) ? "active_mt5" : ""
-                                }`}
-                            ></div>
+                        <div className = "year_aero_handler">
+                            <div className="mt_handler">
+                                <div
+                                    className={`mt_top_handler ${
+                                        (hoverMode === "mt5" || (!hoverMode && mode === "mt5")) ? "active_mt5" : ""
+                                    }`}
+                                ></div>
 
-                            <div
-                                className={`mt4 ${mode === "mt4" ? "active" : ""}`}
-                                onClick={() => {
-                                    setHoverMode("mt4")
-                                    setMode("mt4")
-                                }}
-                            >
-                                mt4
+                                <div
+                                    className={`mt4 ${mode === "mt4" ? "active" : ""}`}
+                                    onClick={() => {
+                                        setHoverMode("mt4")
+                                        setHoverModeYear("2026")
+                                        setMode("mt4")
+                                        setModeYear("2026")
+                                    }}
+                                >
+                                    mt5
+                                </div>
+
+                                <div
+                                    className={`mt5 ${mode === "mt5" ? "active" : ""}`}
+                                    onClick={() => {
+                                        setHoverMode("mt5")
+                                        setMode("mt5")
+                                        setHoverModeYear("2025")
+                                    }}
+                                >
+                                    mt4
+                                </div>
                             </div>
 
-                            <div
-                                className={`mt5 ${mode === "mt5" ? "active" : ""}`}
-                                onClick={() => {
-                                    setHoverMode("mt5")
-                                    setMode("mt5")
-                                }}
-                            >
-                                mt5
+
+                            <div className={`mt_handler ${mode === "mt4" ? "only2026" : ""}`}>
+                                <div
+                                    className={`mt_top_handler ${
+                                        (hoverModeYear === "2026" || (!hoverModeYear && modeYear === "2026")) ? "" : "active_mt5"
+                                    }`}
+                                ></div>
+
+                                <div
+                                    className={`mt4 ${modeYear === "2025" ? "active" : ""}`}
+                                    onClick={() => {
+                                        setHoverModeYear("2026")
+                                        setModeYear("2025")
+                                    }}
+                                >
+                                    2025
+                                </div>
+
+                                <div
+                                    className={`mt5 ${modeYear === "2026" ? "active" : ""}`}
+                                    onClick={() => {
+                                        setHoverModeYear("2025")
+                                        setModeYear("2026")
+                                    }}
+                                >
+                                    2026
+                                </div>
                             </div>
                         </div>
                         <motion.div className="result_block_name_aero" {...fadeNumeric} custom={2}>
@@ -269,7 +308,7 @@ const HydroPage = () => {
                             ))}
                         </motion.div>
 
-                        <motion.a href={mode === "mt4" ? "https://www.myfxbook.com/portfolio/hydro-mt4--1-year/12118207" : "https://www.myfxbook.com/portfolio/hydro-mt5--7-months/12118210"}
+                        <motion.a href={mode === "mt5" ? "https://www.myfxbook.com/portfolio/hydro-mt4--1-year/12118207" : "https://www.myfxbook.com/portfolio/hydro-mt5--7-months/12118210"}
                                   target="_blank" rel="noreferrer" {...fadeNumeric} custom={5}>
                             <div className="see_stat_button">
                                 {t.aero.results.button}
@@ -277,7 +316,7 @@ const HydroPage = () => {
                         </motion.a>
                     </div>
                     <motion.div className="result_image" {...fadeUp}>
-                        <img src={mode === "mt4" ? mt4_stat.src : mt5_stat.src} alt="Statistics"/>
+                        <img src={mode === "mt5" ? modeYear === "2025" ? mt4_stat.src : mt4_stat_2026.src : mt5_stat.src} alt="Statistics"/>
                     </motion.div>
                 </div>
             </div>

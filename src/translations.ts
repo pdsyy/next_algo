@@ -388,6 +388,7 @@ export const translations = {
         }, home: {
             bestOfferProp:"Найкращий вибір для проп-компаній",
             piecePay: "Доступна оплата частинами",
+            trailer:"Трейлер",
             botsList: [
                 {
                     name: "Terra EA",
@@ -1245,6 +1246,7 @@ export const translations = {
         }, home: {
             bestOfferProp:"Лучший выбор для проп-компаний",
             piecePay: "Доступная оплата частями",
+            trailer:"Трейлер",
             botsList: [
                 {
                     name: "Terra EA",
@@ -1972,6 +1974,7 @@ export const translations = {
         home: {
             bestOfferProp: "Best For Prop-Companies",
             piecePay: "Available payment in installments",
+            trailer:"Trailer",
             botsList: [
                 {
                     name: "Terra EA",

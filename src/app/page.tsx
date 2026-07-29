@@ -38,7 +38,7 @@ import review_image4 from "./images/review_image4.png"
 import review_image5 from "./images/review_image5.png"
 import review_image6 from "./images/review_image6.png"
 import circles_bg from "./images/circles.svg"
-import select_bot_img from "./images/select_bot_img1.png"
+import select_bot_img from "./images/algo_p_image.png"
 import select_bot_img_mob from "./images/select_bot_img_mob1.png"
 
 import {Swiper, SwiperSlide} from "swiper/react";
@@ -48,7 +48,7 @@ import 'swiper/css/pagination';
 import "swiper/css";
 import "swiper/css/navigation";
 import {useScroll} from "@/context/ScrollContext";
-import {AnimatePresence, HTMLMotionProps, motion} from "framer-motion"
+import {AnimatePresence, HTMLMotionProps, motion, useTransform, useScroll as useCustomScroll} from "framer-motion"
 import {useLanguage} from "@/context/LanguageProvider";
 import PopupBot from "@/components/PopupBot";
 import AnimatedNumber from "@/components/AnimatedNumber";
@@ -205,6 +205,16 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
         bot_price: t.prop.botInfoPopup.botPrice
     };
 
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    const {scrollYProgress} = useCustomScroll({
+        target: containerRef,
+        offset: ["start start", "end end"],
+    } as any);
+
+    const width = useTransform(scrollYProgress, [0, 0.9], ["554px", "1344px"]);
+
+
     return (
 
         <div className="main_page">
@@ -293,38 +303,93 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                     </motion.div>
                 </div>
 
-                <div className = "trailer_main_page">
-                    <motion.h2 {...fadeUp} dangerouslySetInnerHTML={{__html: t.home.effective.title}}/>
-                    <motion.div className="trailer_video_block" {...fadeRight}>
-                        <iframe
-                            key={isPlaying ? "playing" : "stopped"}
-                            style={{ width: '100%', height: '100%', border: 'none' }}
-                            src={
-                                isPlaying
-                                    ? "https://www.youtube.com/embed/zH1KVCrpSm0?autoplay=1&mute=0&si=oCgsWa31-1ZkLTj1"
-                                    : "about:blank"
-                            }
-                            title="YouTube video player"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                            allowFullScreen
-                        />
+                {isMobile ?
+                    <div className="trailer_main_page">
+                        <motion.h2 {...fadeUp}>
+                            {t.home.trailer}
+                        </motion.h2>
 
-                        <AnimatePresence>
-                            {!isPlaying && (
-                                <motion.div
-                                    key="cover"
-                                    initial={{ opacity: 1 }}
-                                    exit={{ opacity: 0, scale: 1.05 }}
-                                    transition={{ duration: 0.5, ease: "easeInOut" }}
-                                    className="video_cover_wrapper"
-                                    onClick={handlePlay}
-                                >
-                                    <img src={trailer_preview.src} alt="Video Cover" loading="lazy"/>
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
-                    </motion.div>
-                </div>
+                        <motion.div className="trailer_video_block" {...fadeRight}>
+
+                            <iframe
+                                key={isPlaying ? "playing" : "stopped"}
+                                style={{width: '100%', height: '100%', border: 'none'}}
+                                src={
+                                    isPlaying
+                                        ? "https://www.youtube.com/embed/zH1KVCrpSm0?autoplay=1&mute=0&si=oCgsWa31-1ZkLTj1"
+                                        : "about:blank"
+                                }
+                                title="YouTube video player"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                allowFullScreen
+                            />
+
+                            <AnimatePresence>
+                                {!isPlaying && (
+                                    <motion.div
+                                        key="cover"
+                                        initial={{opacity: 1}}
+                                        exit={{opacity: 0, scale: 1.05}}
+                                        transition={{duration: 0.5, ease: "easeInOut"}}
+                                        className="video_cover_wrapper"
+                                        onClick={handlePlay}
+                                    >
+                                        <img src={trailer_preview.src} alt="Video Cover" loading="lazy"/>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </motion.div>
+                    </div> : <div ref={containerRef} className="video_container_main">
+                        <div className="sticky_video_block">
+
+                            <motion.h2 {...fadeUp} style={{marginBottom: "20px"}}>
+                                {t.home.trailer}
+                            </motion.h2>
+
+                            <motion.div
+                                className="trailer_video_block"
+                                style={{
+                                    width,
+                                    overflow: "hidden",
+                                    aspectRatio: "16/9",
+                                    background: isPlaying ? "#000" : "none"
+                                }}
+                                {...fadeRight}
+                            >
+                                <iframe
+                                    key={isPlaying ? "playing" : "stopped"}
+                                    style={{width: '100%', height: '100%', border: 'none'}}
+                                    src={
+                                        isPlaying
+                                            ? "https://www.youtube.com/embed/zH1KVCrpSm0?autoplay=1&mute=0&si=oCgsWa31-1ZkLTj1"
+                                            : "about:blank"
+                                    }
+                                    title="YouTube video player"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    allowFullScreen
+                                />
+
+                                <AnimatePresence>
+                                    {!isPlaying && (
+                                        <motion.div
+                                            key="cover"
+                                            initial={{opacity: 1}}
+                                            exit={{opacity: 0, scale: 1.05}}
+                                            transition={{duration: 0.5, ease: "easeInOut"}}
+                                            className="video_cover_wrapper"
+                                            onClick={handlePlay}
+                                            style={{position: 'absolute', inset: 0, cursor: 'pointer'}}
+                                        >
+                                            <img src={trailer_preview.src} alt="Video Cover" loading="lazy"
+                                                 style={{width: '100%', height: '100%', objectFit: 'cover'}}/>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                            </motion.div>
+
+                        </div>
+                    </div>}
+
 
                 <motion.div className="main_page_mql5_fs" {...fadeUp}>
                     <div className="main_page_mql5">
@@ -439,20 +504,22 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                                                 <div className="bot_price_text">{t.terra.buy.price}</div>
                                                 <div className="bot_price">
 
-                                                    {el.name !== "Aero EA" ? <a className = "blur_price">{el.price}</a> : el.price}
+                                                    {el.name !== "Aero EA" ?
+                                                        <a className="blur_price">{el.price}</a> : el.price}
                                                     <span>USD</span>
                                                 </div>
                                             </div>
 
                                             {el.name === "Aero EA" ?
-                                                <div className = "aero_card_buttons">
+                                                <div className="aero_card_buttons">
                                                     <a href={el.href}>
                                                         <div className="bot_more_details">
                                                             {t.home.catalog.moreDetails}
                                                         </div>
                                                     </a>
-                                                    <a href="https://www.mql5.com/en/market/product/176860?source=Site+Market+My+Products+Page#description" target="_blank"
-                                                       rel="noopener noreferrer" className = "mql_card_button">
+                                                    <a href="https://www.mql5.com/en/market/product/176860?source=Site+Market+My+Products+Page#description"
+                                                       target="_blank"
+                                                       rel="noopener noreferrer" className="mql_card_button">
                                                         <div className="mql_aero_card_button">
                                                             {t.buttons.openMql}
                                                         </div>
@@ -498,20 +565,22 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                                                 <div className="bot_price_text">{t.terra.buy.price}</div>
                                                 <div className="bot_price">
 
-                                                    {el.name !== "Aero EA" ? <a className = "blur_price">{el.price}</a> : el.price}
+                                                    {el.name !== "Aero EA" ?
+                                                        <a className="blur_price">{el.price}</a> : el.price}
                                                     <span>USD</span>
                                                 </div>
                                             </div>
 
                                             {el.name === "Aero EA" ?
-                                                <div className = "aero_card_buttons">
+                                                <div className="aero_card_buttons">
                                                     <a href={el.href}>
                                                         <div className="bot_more_details">
                                                             {t.home.catalog.moreDetails}
                                                         </div>
                                                     </a>
-                                                    <a href="https://www.mql5.com/en/market/product/176860?source=Site+Market+My+Products+Page#description" target="_blank"
-                                                       rel="noopener noreferrer" className = "mql_card_button">
+                                                    <a href="https://www.mql5.com/en/market/product/176860?source=Site+Market+My+Products+Page#description"
+                                                       target="_blank"
+                                                       rel="noopener noreferrer" className="mql_card_button">
                                                         <div className="mql_aero_card_button">
                                                             {t.buttons.openMql}
                                                         </div>
@@ -641,11 +710,12 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                                 </div>
                             </a>
                         </div>
-                        <picture>
+                        {/*<picture>
                             <source media="(max-width: 767px)" srcSet={select_bot_img_mob.src}/>
                             <source media="(min-width: 768px)" srcSet={select_bot_img.src}/>
                             <img src={select_bot_img.src} alt="Consultation" className="main_img"/>
-                        </picture>
+                        </picture>*/}
+                        <img src={select_bot_img.src} alt="Consultation" className="main_img"/>
                     </div>
                 </motion.div>
 
@@ -669,7 +739,8 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                             </a>
                         </div>*/}
                             <div>
-                                <a href="https://www.youtube.com/channel/UCUdEXqsf87y8gSnz7FjxS8g" target="_blank" rel="noreferrer">
+                                <a href="https://www.youtube.com/channel/UCUdEXqsf87y8gSnz7FjxS8g" target="_blank"
+                                   rel="noreferrer">
                                     <img src={youtube_icon.src} alt=""/>
                                 </a>
                             </div>

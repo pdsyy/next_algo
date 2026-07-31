@@ -205,7 +205,7 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
         bot_price: t.prop.botInfoPopup.botPrice
     };
 
-    const containerRef = useRef<HTMLDivElement>(null);
+    /*const containerRef = useRef<HTMLDivElement>(null);
 
     const {scrollYProgress} = useCustomScroll({
         target: containerRef,
@@ -214,7 +214,7 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
 
     const width = useTransform(scrollYProgress, [0, 0.9], ["554px", "1344px"]);
 
-
+*/
     return (
 
         <div className="main_page">
@@ -303,7 +303,7 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                     </motion.div>
                 </div>
 
-                {isMobile ?
+                {/*isMobile ?
                     <div className="trailer_main_page">
                         <motion.h2 {...fadeUp}>
                             {t.home.trailer}
@@ -388,7 +388,7 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                             </motion.div>
 
                         </div>
-                    </div>}
+                    </div>*/}
 
 
                 <motion.div className="main_page_mql5_fs" {...fadeUp}>

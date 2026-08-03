@@ -229,7 +229,7 @@ export const translations = {
                     "Налаштування бота під проп-компанію"
                 ],
                 botName: "AERO EA",
-                botPrice: 699
+                botPrice: 1000
             }, hero: {
                 botName: "Aero EA",
                 theme: "Торговий бот з найнижчими просадками",
@@ -406,7 +406,7 @@ export const translations = {
                     name: "Aero EA",
                     description: "Бот з найнижчою просадкою в асортименті.",
                     advantages: {yearProfit: "+30%", maxDrawDown: "3.7%", winRate: "86.8%"},
-                    price: 699,
+                    price: 1000,
                     href: "/aero",
                     prop: true,
                     paying: true,
@@ -1090,7 +1090,7 @@ export const translations = {
                     "Настройка бота под проп-компанию"
                 ],
                 botName: "AERO EA",
-                botPrice: 699
+                botPrice: 1000
             }, hero: {
                 botName: "Aero EA",
                 theme: "Торговый бот с самыми низкими просадками",
@@ -1267,7 +1267,7 @@ export const translations = {
                     name: "Aero EA",
                     description: "Бот с самой низкой просадкой в ассортименте.",
                     advantages: {yearProfit: "+30%", maxDrawDown: "3.7%", winRate: "86.8%"},
-                    price: 699,
+                    price: 1000,
                     href: "/aero",
                     prop: true,
                     paying: true,
@@ -1810,7 +1810,7 @@ export const translations = {
                     "Bot configuration for prop firms"
                 ],
                 botName: "AERO EA",
-                botPrice: 699
+                botPrice: 1000
             },
             hero: {
                 botName: "Aero EA",
@@ -1998,7 +1998,7 @@ export const translations = {
                     name: "Aero EA",
                     description: "The bot with the lowest drawdown in the lineup.",
                     advantages: {yearProfit: "+30%", maxDrawDown: "3.7%", winRate: "86.8%"},
-                    price: 699,
+                    price: 1000,
                     href: "/aero",
                     prop: true,
                     paying: true,

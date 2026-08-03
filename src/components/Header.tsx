@@ -33,12 +33,12 @@ const Header = ({dark, visibleHeader, setVisibleHeader, initialLanguage}: Header
 
 
     const [activeBotList, setActiveBotList] = useState(false)
-    const {scrollToSection} = useScroll()!;
+
     const [activeMenu, setActiveMenu] = useState(false);
     useEffect(() => {
         setActiveMenu(false)
     }, [language])
-
+    const {scrollToSection} = useScroll()!;
     const handleMenuClick = (id: string) => {
         scrollToSection(id);
         setActiveMenu(false);

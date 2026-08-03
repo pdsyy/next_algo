@@ -389,6 +389,9 @@ export const translations = {
             bestOfferProp:"Найкращий вибір для проп-компаній",
             piecePay: "Доступна оплата частинами",
             trailer:"Трейлер",
+            mainVideoText:"Що ми робимо",
+            mainVideoDesc:"Наш офіційний тизер — філософія, елементи та стандарти, що лежать в основі кожної системи, яку ми випускаємо.",
+            mainVideoButton:"Дізнайтеся більше про Algo",
             botsList: [
                 {
                     name: "Terra EA",
@@ -1247,6 +1250,9 @@ export const translations = {
             bestOfferProp:"Лучший выбор для проп-компаний",
             piecePay: "Доступная оплата частями",
             trailer:"Трейлер",
+            mainVideoText:"Что мы создаем",
+            mainVideoDesc:"Наш официальный тизер — философия, элементы и стандарты, лежащие в основе каждой выпускаемой нами системы.",
+            mainVideoButton:"Изучите Algo",
             botsList: [
                 {
                     name: "Terra EA",
@@ -1975,6 +1981,9 @@ export const translations = {
             bestOfferProp: "Best For Prop-Companies",
             piecePay: "Available payment in installments",
             trailer:"Trailer",
+            mainVideoText:"See What We're Building",
+            mainVideoDesc:"Our official teaser — the philosophy, the elements, and the standard behind every system we release.",
+            mainVideoButton:"Explore Algo",
             botsList: [
                 {
                     name: "Terra EA",

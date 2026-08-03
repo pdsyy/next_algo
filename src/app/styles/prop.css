@@ -1265,6 +1265,23 @@
     left: 0 !important;
 }
 
+.main_page .video_demonstration{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 24px;
+}
+
+.main_page .video_block{
+    width: 100%;
+    aspect-ratio: 660 / 371;
+}
+
+@media screen and (max-width: 768px){
+    .main_page .video_demonstration{
+        grid-template-columns: 1fr;
+    }
+}
+
 
 .result_block_name_aero {
     margin-top: 24px;

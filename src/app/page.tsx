@@ -5,6 +5,7 @@ import Image from "next/image";
 import mainBlockBg from "./images/mainBlockBg.png"
 import mainBlockBgMobile from "./images/MainBlockBgMobile.png"
 import metalPackage from "./images/metalPackage.png"
+import video_preview_main from "./images/video_preview_main.png"
 import market_image1 from "./images/market_image1.png"
 import market_image2 from "./images/market_image2.png"
 import market_image3 from "./images/market_image3.png"
@@ -56,6 +57,7 @@ import logo from "@/app/images/logo.svg";
 import tg_icon from "@/app/images/tg_icon.svg";
 import youtube_icon from "@/app/images/youtube_icon.svg";
 import trailer_preview from "@/app/images/trailer_preview.png";
+import aeroPreview from "@/app/aero/images/aero_preview_t.png";
 
 const MainPage = ({activePopup, setActivePopup}: any) => {
 
@@ -215,6 +217,8 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
     const width = useTransform(scrollYProgress, [0, 0.9], ["554px", "1344px"]);
 
 */
+
+
     return (
 
         <div className="main_page">
@@ -300,6 +304,56 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                     </motion.div>
                     <motion.div className="in_management" {...fadeUp}>
                         {t.home.stats.management}
+                    </motion.div>
+                </div>
+
+                <div className="video_demonstration">
+                    <motion.div className="video_text" {...fadeLeft}>
+                        <h2>
+                            {t.home.mainVideoText}
+                        </h2>
+                        <div className="select_bot_desc">
+                            {t.home.mainVideoDesc}
+                        </div>
+                        <a onClick = {() => {
+                            scrollToSection("catalog")
+                        }}>
+                            <div className="consult_button">{t.home.mainVideoButton}</div>
+                        </a>
+                    </motion.div>
+                    <motion.div className="video_block" {...fadeRight}>
+                        <iframe
+                            key={isPlaying ? "playing" : "stopped"}
+                            style={{
+                                width: '100%',
+                                height: '100%',
+                                border: 'none',
+                                background: isPlaying ? "black" : "",
+                                borderRadius: isPlaying ? "24px" : "32px"
+                            }}
+                            src={isPlaying
+                                ? "https://www.youtube.com/embed/zH1KVCrpSm0?autoplay=1&mute=0&si=oCgsWa31-1ZkLTj1"
+                                : "about:blank"
+                            }
+                            title="YouTube video player"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowFullScreen
+                        ></iframe>
+
+                        <AnimatePresence>
+                            {!isPlaying && (
+                                <motion.div
+                                    key="cover"
+                                    initial={{opacity: 1}}
+                                    exit={{opacity: 0, scale: 1.05}}
+                                    transition={{duration: 0.5, ease: "easeInOut"}}
+                                    className="video_cover_wrapper"
+                                    onClick={handlePlay}
+                                >
+                                    <Image src={video_preview_main} priority style={{height: "100%"}} alt="Video Cover"/>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
                     </motion.div>
                 </div>
 

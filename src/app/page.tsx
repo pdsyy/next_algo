@@ -344,7 +344,7 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                 </div>
 
                 <MainVideoComponent/>
-                <TestPaymentButton/>
+                {/*<TestPaymentButton/>*/}
 
 
                 {/*<div className="money_in_management">

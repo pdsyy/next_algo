@@ -4,19 +4,29 @@ import {
 } from "next/server";
 
 import {
-    getNowPaymentStatus
+    getNowPaymentStatus,
 } from "@/lib/nowpayments";
 
-export async function GET(req: NextRequest) {
+
+export async function GET(
+    req: NextRequest
+) {
+
     try {
+
         const paymentId =
-            req.nextUrl.searchParams.get(
-                "paymentId"
-            );
+            req.nextUrl
+                .searchParams
+                .get(
+                    "paymentId"
+                );
+
 
         if (!paymentId) {
+
             return NextResponse.json(
                 {
+                    success: false,
                     error:
                         "paymentId is required",
                 },
@@ -26,22 +36,34 @@ export async function GET(req: NextRequest) {
             );
         }
 
+
         const payment =
             await getNowPaymentStatus(
                 paymentId
             );
 
+
         return NextResponse.json(
             payment
         );
 
+
     } catch (error) {
-        console.error(error);
+
+        console.error(
+            "NOWPAYMENTS STATUS ROUTE ERROR:",
+            error
+        );
+
 
         return NextResponse.json(
             {
+                success: false,
+
                 error:
-                    "Unable to get payment status",
+                    error instanceof Error
+                        ? error.message
+                        : "Unable to get payment status",
             },
             {
                 status: 500,

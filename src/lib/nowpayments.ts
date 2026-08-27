@@ -1,4 +1,30 @@
-const NOWPAYMENTS_API_URL = "https://api.nowpayments.io/v1";
+const IS_SANDBOX =
+    process.env.NOWPAYMENTS_MODE === "sandbox";
+
+
+const NOWPAYMENTS_API_URL =
+    IS_SANDBOX
+        ? "https://api-sandbox.nowpayments.io/v1"
+        : "https://api.nowpayments.io/v1";
+
+
+function getNowPaymentsApiKey() {
+    const apiKey =
+        IS_SANDBOX
+            ? process.env.NOWPAYMENTS_SANDBOX_API_KEY
+            : process.env.NOWPAYMENTS_API_KEY;
+
+    if (!apiKey) {
+        throw new Error(
+            IS_SANDBOX
+                ? "NOWPAYMENTS_SANDBOX_API_KEY is missing"
+                : "NOWPAYMENTS_API_KEY is missing"
+        );
+    }
+
+    return apiKey;
+}
+
 
 export interface CreatePaymentParams {
     priceAmount: number;
@@ -8,6 +34,11 @@ export interface CreatePaymentParams {
     description?: string;
 }
 
+
+/* =========================
+   CREATE PAYMENT
+========================= */
+
 export async function createNowPayment({
                                            priceAmount,
                                            priceCurrency,
@@ -15,66 +46,157 @@ export async function createNowPayment({
                                            orderId,
                                            description,
                                        }: CreatePaymentParams) {
+
+    const siteUrl =
+        process.env.NEXT_PUBLIC_SITE_URL;
+
+    if (!siteUrl) {
+        throw new Error(
+            "NEXT_PUBLIC_SITE_URL is missing"
+        );
+    }
+
+
     const response = await fetch(
         `${NOWPAYMENTS_API_URL}/payment`,
         {
             method: "POST",
 
             headers: {
-                "Content-Type": "application/json",
-                "x-api-key": process.env.NOWPAYMENTS_API_KEY!,
+                "Content-Type":
+                    "application/json",
+
+                "x-api-key":
+                    getNowPaymentsApiKey(),
             },
 
             body: JSON.stringify({
-                price_amount: priceAmount,
-                price_currency: priceCurrency,
-                pay_currency: payCurrency,
+                price_amount:
+                priceAmount,
 
-                order_id: orderId,
+                price_currency:
+                    priceCurrency.toLowerCase(),
+
+                pay_currency:
+                    payCurrency.toLowerCase(),
+
+                order_id:
+                orderId,
 
                 order_description:
-                    description || `Algo Bots order ${orderId}`,
+                    description ??
+                    `Algo Bots order ${orderId}`,
 
                 ipn_callback_url:
-                    `${process.env.NEXT_PUBLIC_SITE_URL}/api/payments/nowpayments/webhook`,
+                    `${siteUrl}/api/payments/nowpayments/webhook`,
             }),
+
+            cache: "no-store",
         }
     );
 
-    const data = await response.json();
+
+    const text =
+        await response.text();
+
+
+    let data: any;
+
+    try {
+        data =
+            JSON.parse(text);
+    } catch {
+        data = text;
+    }
+
 
     if (!response.ok) {
-        console.error("NOWPayments:", data);
+
+        console.error(
+            "NOWPAYMENTS CREATE ERROR:",
+            response.status,
+            data
+        );
+
 
         throw new Error(
-            data?.message || "NOWPayments payment creation failed"
+            data?.message ??
+            data?.error ??
+            `NOWPayments payment creation failed: ${response.status}`
         );
     }
+
+
+    console.log(
+        `NOWPayments ${IS_SANDBOX ? "SANDBOX" : "PRODUCTION"} payment created:`,
+        data
+    );
+
 
     return data;
 }
 
+
+/* =========================
+   GET PAYMENT STATUS
+========================= */
+
 export async function getNowPaymentStatus(
     paymentId: string
 ) {
+
+    if (!paymentId) {
+        throw new Error(
+            "paymentId is required"
+        );
+    }
+
+
     const response = await fetch(
         `${NOWPAYMENTS_API_URL}/payment/${paymentId}`,
         {
+            method: "GET",
+
             headers: {
-                "x-api-key": process.env.NOWPAYMENTS_API_KEY!,
+                "x-api-key":
+                    getNowPaymentsApiKey(),
             },
 
             cache: "no-store",
         }
     );
 
-    const data = await response.json();
+
+    const text =
+        await response.text();
+
+
+    let data: any;
+
+    try {
+        data =
+            JSON.parse(text);
+    } catch {
+        data = text;
+    }
+
 
     if (!response.ok) {
+
+        console.error(
+            "NOWPAYMENTS STATUS ERROR:",
+            response.status,
+            data
+        );
+
+
         throw new Error(
-            data?.message || "Unable to get payment status"
+            data?.message ??
+            data?.error ??
+            `Unable to get payment status: ${response.status}`
         );
     }
+
 
     return data;
 }

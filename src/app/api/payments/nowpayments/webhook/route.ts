@@ -12,7 +12,7 @@ import {
 
 
 /* =========================
-   SORT OBJECT RECURSIVELY
+   SORT OBJECT
 ========================= */
 
 function sortObject(
@@ -20,8 +20,11 @@ function sortObject(
 ): any {
 
     if (Array.isArray(value)) {
-        return value.map(sortObject);
+        return value.map(
+            sortObject
+        );
     }
+
 
     if (
         value !== null &&
@@ -49,12 +52,46 @@ function sortObject(
             );
     }
 
+
     return value;
 }
 
 
 /* =========================
-   VERIFY NOWPAYMENTS IPN
+   GET IPN SECRET
+========================= */
+
+function getNowPaymentsIpnSecret() {
+
+    const isSandbox =
+        process.env
+            .NOWPAYMENTS_MODE ===
+        "sandbox";
+
+
+    const secret =
+        isSandbox
+            ? process.env
+                .NOWPAYMENTS_SANDBOX_IPN_SECRET
+            : process.env
+                .NOWPAYMENTS_IPN_SECRET;
+
+
+    if (!secret) {
+        throw new Error(
+            isSandbox
+                ? "NOWPAYMENTS_SANDBOX_IPN_SECRET is missing"
+                : "NOWPAYMENTS_IPN_SECRET is missing"
+        );
+    }
+
+
+    return secret;
+}
+
+
+/* =========================
+   VERIFY SIGNATURE
 ========================= */
 
 function verifyNowPaymentsSignature(
@@ -63,14 +100,7 @@ function verifyNowPaymentsSignature(
 ) {
 
     const secret =
-        process.env
-            .NOWPAYMENTS_IPN_SECRET;
-
-    if (!secret) {
-        throw new Error(
-            "NOWPAYMENTS_IPN_SECRET is missing"
-        );
-    }
+        getNowPaymentsIpnSecret();
 
 
     const sortedBody =
@@ -95,16 +125,12 @@ function verifyNowPaymentsSignature(
             .digest("hex");
 
 
-    /*
-     * timingSafeEqual требует
-     * одинаковую длину buffer.
-     */
-
     const receivedBuffer =
         Buffer.from(
             receivedSignature,
             "hex"
         );
+
 
     const calculatedBuffer =
         Buffer.from(
@@ -129,7 +155,7 @@ function verifyNowPaymentsSignature(
 
 
 /* =========================
-   NORMALIZE CML AMOUNT
+   NORMALIZE AMOUNT
 ========================= */
 
 function normalizeAmount(
@@ -161,11 +187,19 @@ export async function POST(
     try {
 
         /* =========================
-           1. READ BODY
+           1. BODY
         ========================= */
 
         const body =
             await req.json();
+
+
+        console.log(
+            "NOWPAYMENTS IPN MODE:",
+            process.env
+                .NOWPAYMENTS_MODE ??
+            "production"
+        );
 
 
         console.log(
@@ -179,7 +213,7 @@ export async function POST(
 
 
         /* =========================
-           2. GET SIGNATURE
+           2. SIGNATURE
         ========================= */
 
         const signature =
@@ -207,10 +241,6 @@ export async function POST(
             );
         }
 
-
-        /* =========================
-           3. VERIFY SIGNATURE
-        ========================= */
 
         const signatureValid =
             verifyNowPaymentsSignature(
@@ -245,24 +275,27 @@ export async function POST(
 
 
         /* =========================
-           4. REQUIRED VALUES
+           3. VALUES
         ========================= */
 
         const paymentId =
             String(
-                body.payment_id ?? ""
+                body.payment_id ??
+                ""
             );
 
 
         const orderCode =
             String(
-                body.order_id ?? ""
+                body.order_id ??
+                ""
             );
 
 
         const paymentStatus =
             String(
-                body.payment_status ?? ""
+                body.payment_status ??
+                ""
             );
 
 
@@ -271,16 +304,6 @@ export async function POST(
             !orderCode ||
             !paymentStatus
         ) {
-
-            console.error(
-                "NOWPAYMENTS IPN: missing values",
-                {
-                    paymentId,
-                    orderCode,
-                    paymentStatus,
-                }
-            );
-
 
             return NextResponse.json(
                 {
@@ -306,7 +329,7 @@ export async function POST(
 
 
         /* =========================
-           5. IGNORE NON-FINAL STATES
+           4. NON FINAL STATES
         ========================= */
 
         if (
@@ -314,19 +337,11 @@ export async function POST(
             "finished"
         ) {
 
-            /*
-             * waiting
-             * confirming
-             * confirmed
-             * sending
-             *
-             * Ничего в CML пока
-             * не записываем.
-             */
-
             return NextResponse.json({
                 success: true,
+
                 ignored: true,
+
                 status:
                 paymentStatus,
             });
@@ -334,7 +349,7 @@ export async function POST(
 
 
         /* =========================
-           6. GET CML ORDER
+           5. CML ORDER
         ========================= */
 
         const cmlResponse =
@@ -347,42 +362,22 @@ export async function POST(
             cmlResponse
                 ?.success?.order ??
             cmlResponse
-                ?.success
-                ?.data?.order ??
+                ?.success?.data?.order ??
             cmlResponse
                 ?.data?.order ??
             cmlResponse?.order;
 
 
         if (!order) {
-
             throw new Error(
                 `CML order ${orderCode} not found`
             );
         }
 
 
-        console.log(
-            "NOWPAYMENTS → CML ORDER:",
-            JSON.stringify(
-                order,
-                null,
-                2
-            )
-        );
-
-
         /* =========================
-           7. IDEMPOTENCY
+           6. ALREADY PAID
         ========================= */
-
-        /*
-         * Если CML уже Paid,
-         * повторно payment не пишем.
-         *
-         * NOWPayments может прислать
-         * IPN несколько раз.
-         */
 
         if (
             Number(order.status) === 3
@@ -402,7 +397,7 @@ export async function POST(
 
 
         /* =========================
-           8. VERIFY ORDER STATUS
+           7. VERIFY CML STATUS
         ========================= */
 
         if (
@@ -417,7 +412,7 @@ export async function POST(
 
 
         /* =========================
-           9. VERIFY AMOUNT
+           8. VERIFY AMOUNT
         ========================= */
 
         const orderAmount =
@@ -425,15 +420,6 @@ export async function POST(
                 order.final_amount
             );
 
-
-        /*
-         * Важно:
-         *
-         * price_amount — исходная
-         * fiat цена заказа.
-         *
-         * Не pay_amount BTC.
-         */
 
         const nowPaymentsAmount =
             Number(
@@ -474,16 +460,11 @@ export async function POST(
                 nowPaymentsAmount
             )
         ) {
-
             throw new Error(
                 "Invalid payment amount"
             );
         }
 
-
-        /*
-         * Float tolerance.
-         */
 
         const difference =
             Math.abs(
@@ -514,7 +495,7 @@ export async function POST(
 
 
         /* =========================
-           10. RECORD CML PAYMENT
+           9. RECORD CML PAYMENT
         ========================= */
 
         const paymentMethod =
@@ -533,10 +514,6 @@ export async function POST(
                 providerTransactionId:
                 paymentId,
 
-                /*
-                 * CML хранит fiat amount:
-                 * 799.83 EUR
-                 */
                 amount:
                 orderAmount,
 
@@ -558,7 +535,7 @@ export async function POST(
 
 
         /* =========================
-           11. SUCCESS
+           SUCCESS
         ========================= */
 
         return NextResponse.json({

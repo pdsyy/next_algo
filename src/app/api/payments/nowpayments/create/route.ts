@@ -12,12 +12,31 @@ import {
 } from "@/lib/cml";
 
 
+function normalizeAmount(
+    value: unknown
+) {
+    const normalized =
+        String(value)
+            .replace(
+                /[^\d.-]/g,
+                ""
+            );
+
+    return parseFloat(
+        normalized
+    );
+}
+
+
 export async function POST(
     req: NextRequest
 ) {
+
     try {
+
         const body =
             await req.json();
+
 
         const {
             orderCode,
@@ -33,6 +52,7 @@ export async function POST(
             !orderCode ||
             !payCurrency
         ) {
+
             return NextResponse.json(
                 {
                     success: false,
@@ -47,13 +67,14 @@ export async function POST(
 
 
         /* =========================
-           1. GET ORDER FROM CML
+           1. GET CML ORDER
         ========================= */
 
         const orderResponse =
             await getCmlOrder(
                 orderCode
             );
+
 
         console.log(
             "NOWPAYMENTS CML ORDER:",
@@ -72,8 +93,7 @@ export async function POST(
                 ?.success?.data?.order ??
             orderResponse
                 ?.data?.order ??
-            orderResponse
-                ?.order;
+            orderResponse?.order;
 
 
         if (!order) {
@@ -84,10 +104,13 @@ export async function POST(
 
 
         /* =========================
-           2. CHECK ORDER STATUS
+           2. CHECK STATUS
         ========================= */
 
-        if (Number(order.status) !== 1) {
+        if (
+            Number(order.status) !== 1
+        ) {
+
             throw new Error(
                 `CML order is not awaiting payment. Status: ${order.status}`
             );
@@ -95,28 +118,21 @@ export async function POST(
 
 
         /* =========================
-           3. GET PRICE FROM CML
+           3. GET AUTHORITATIVE PRICE
         ========================= */
 
-        const rawAmount =
-            order.final_amount ??
-            order.total ??
-            order.amount;
-
-
-        const normalizedAmount =
-            String(rawAmount)
-                .replace(/[^\d.-]/g, "");
-
-
         const amount =
-            parseFloat(
-                normalizedAmount
+            normalizeAmount(
+                order.final_amount ??
+                order.total ??
+                order.amount
             );
 
 
         const currency =
-            order.currency;
+            String(
+                order.currency ?? ""
+            ).toUpperCase();
 
 
         if (
@@ -124,7 +140,7 @@ export async function POST(
             amount <= 0
         ) {
             throw new Error(
-                `Invalid CML order amount: ${rawAmount}`
+                `Invalid CML order amount: ${order.final_amount}`
             );
         }
 
@@ -139,6 +155,10 @@ export async function POST(
         console.log(
             "CREATING NOWPAYMENTS:",
             {
+                mode:
+                process.env
+                    .NOWPAYMENTS_MODE,
+
                 orderCode,
                 amount,
                 currency,
@@ -153,16 +173,18 @@ export async function POST(
 
         const payment =
             await createNowPayment({
+
                 priceAmount:
                 amount,
 
                 priceCurrency:
-                    currency.toLowerCase(),
+                currency,
 
-                payCurrency,
+                payCurrency:
+                    String(
+                        payCurrency
+                    ),
 
-                // ВАЖНО:
-                // CML order code
                 orderId:
                 orderCode,
 
@@ -171,18 +193,18 @@ export async function POST(
             });
 
 
-        console.log(
-            "NOWPAYMENTS CREATED:",
-            payment
-        );
-
-
         /* =========================
-           5. RESPONSE
+           RESPONSE
         ========================= */
 
         return NextResponse.json({
+
             success: true,
+
+            mode:
+                process.env
+                    .NOWPAYMENTS_MODE ??
+                "production",
 
             order: {
                 code:
@@ -194,6 +216,7 @@ export async function POST(
             },
 
             payment: {
+
                 id:
                     String(
                         payment.payment_id
@@ -219,11 +242,14 @@ export async function POST(
             },
         });
 
+
     } catch (error) {
+
         console.error(
             "CREATE NOWPAYMENTS ERROR:",
             error
         );
+
 
         return NextResponse.json(
             {

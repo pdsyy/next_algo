@@ -11,6 +11,10 @@ import {
 } from "@/lib/cml";
 
 
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+
 /* =========================
    SORT OBJECT
 ========================= */
@@ -78,6 +82,7 @@ function getNowPaymentsIpnSecret() {
 
 
     if (!secret) {
+
         throw new Error(
             isSandbox
                 ? "NOWPAYMENTS_SANDBOX_IPN_SECRET is missing"
@@ -125,6 +130,21 @@ function verifyNowPaymentsSignature(
             .digest("hex");
 
 
+    console.log(
+        "NOWPAYMENTS SIGNATURE CHECK:",
+        {
+            received:
+            receivedSignature,
+
+            calculated:
+            calculatedSignature,
+
+            body:
+            stringifiedBody,
+        }
+    );
+
+
     const receivedBuffer =
         Buffer.from(
             receivedSignature,
@@ -143,6 +163,7 @@ function verifyNowPaymentsSignature(
         receivedBuffer.length !==
         calculatedBuffer.length
     ) {
+
         return false;
     }
 
@@ -177,17 +198,69 @@ function normalizeAmount(
 
 
 /* =========================
-   WEBHOOK
+   POST WEBHOOK
 ========================= */
 
 export async function POST(
     req: NextRequest
 ) {
 
+    console.log(
+        "=================================="
+    );
+
+    console.log(
+        "NOWPAYMENTS WEBHOOK POST RECEIVED"
+    );
+
+    console.log(
+        "TIME:",
+        new Date().toISOString()
+    );
+
+    console.log(
+        "MODE:",
+        process.env
+            .NOWPAYMENTS_MODE ??
+        "production"
+    );
+
+
     try {
 
         /* =========================
-           1. BODY
+           1. HEADERS
+        ========================= */
+
+        const signature =
+            req.headers.get(
+                "x-nowpayments-sig"
+            );
+
+
+        console.log(
+            "NOWPAYMENTS WEBHOOK HEADERS:",
+            {
+                signaturePresent:
+                    Boolean(
+                        signature
+                    ),
+
+                contentType:
+                    req.headers.get(
+                        "content-type"
+                    ),
+
+                userAgent:
+                    req.headers.get(
+                        "user-agent"
+                    ),
+            }
+        );
+
+
+        /* =========================
+           2. BODY
         ========================= */
 
         const body =
@@ -195,15 +268,7 @@ export async function POST(
 
 
         console.log(
-            "NOWPAYMENTS IPN MODE:",
-            process.env
-                .NOWPAYMENTS_MODE ??
-            "production"
-        );
-
-
-        console.log(
-            "NOWPAYMENTS IPN:",
+            "NOWPAYMENTS IPN BODY:",
             JSON.stringify(
                 body,
                 null,
@@ -213,25 +278,20 @@ export async function POST(
 
 
         /* =========================
-           2. SIGNATURE
+           3. SIGNATURE EXISTS
         ========================= */
-
-        const signature =
-            req.headers.get(
-                "x-nowpayments-sig"
-            );
-
 
         if (!signature) {
 
             console.error(
-                "NOWPAYMENTS IPN: signature missing"
+                "NOWPAYMENTS IPN: SIGNATURE MISSING"
             );
 
 
             return NextResponse.json(
                 {
                     success: false,
+
                     error:
                         "Missing signature",
                 },
@@ -241,6 +301,10 @@ export async function POST(
             );
         }
 
+
+        /* =========================
+           4. VERIFY SIGNATURE
+        ========================= */
 
         const signatureValid =
             verifyNowPaymentsSignature(
@@ -252,13 +316,14 @@ export async function POST(
         if (!signatureValid) {
 
             console.error(
-                "NOWPAYMENTS IPN: invalid signature"
+                "NOWPAYMENTS IPN: INVALID SIGNATURE"
             );
 
 
             return NextResponse.json(
                 {
                     success: false,
+
                     error:
                         "Invalid signature",
                 },
@@ -275,7 +340,7 @@ export async function POST(
 
 
         /* =========================
-           3. VALUES
+           5. VALUES
         ========================= */
 
         const paymentId =
@@ -299,15 +364,43 @@ export async function POST(
             );
 
 
+        console.log(
+            "NOWPAYMENTS IPN DATA:",
+            {
+                paymentId,
+                orderCode,
+                paymentStatus,
+
+                priceAmount:
+                body.price_amount,
+
+                priceCurrency:
+                body.price_currency,
+
+                payAmount:
+                body.pay_amount,
+
+                payCurrency:
+                body.pay_currency,
+            }
+        );
+
+
         if (
             !paymentId ||
             !orderCode ||
             !paymentStatus
         ) {
 
+            console.error(
+                "NOWPAYMENTS IPN: INVALID PAYLOAD"
+            );
+
+
             return NextResponse.json(
                 {
                     success: false,
+
                     error:
                         "Invalid IPN payload",
                 },
@@ -318,24 +411,20 @@ export async function POST(
         }
 
 
-        console.log(
-            "NOWPAYMENTS IPN STATUS:",
-            {
-                paymentId,
-                orderCode,
-                paymentStatus,
-            }
-        );
-
-
         /* =========================
-           4. NON FINAL STATES
+           6. IGNORE NON FINAL
         ========================= */
 
         if (
             paymentStatus !==
             "finished"
         ) {
+
+            console.log(
+                "NOWPAYMENTS IPN IGNORED:",
+                paymentStatus
+            );
+
 
             return NextResponse.json({
                 success: true,
@@ -348,14 +437,29 @@ export async function POST(
         }
 
 
+        console.log(
+            "NOWPAYMENTS PAYMENT FINISHED"
+        );
+
+
         /* =========================
-           5. CML ORDER
+           7. GET CML ORDER
         ========================= */
 
         const cmlResponse =
             await getCmlOrder(
                 orderCode
             );
+
+
+        console.log(
+            "CML ORDER RESPONSE:",
+            JSON.stringify(
+                cmlResponse,
+                null,
+                2
+            )
+        );
 
 
         const order =
@@ -369,18 +473,42 @@ export async function POST(
 
 
         if (!order) {
+
             throw new Error(
                 `CML order ${orderCode} not found`
             );
         }
 
 
+        console.log(
+            "CML ORDER FOUND:",
+            {
+                id:
+                order.id,
+
+                code:
+                order.code,
+
+                status:
+                order.status,
+
+                amount:
+                order.final_amount,
+
+                currency:
+                order.currency,
+            }
+        );
+
+
         /* =========================
-           6. ALREADY PAID
+           8. ALREADY PAID
         ========================= */
 
         if (
-            Number(order.status) === 3
+            Number(
+                order.status
+            ) === 3
         ) {
 
             console.log(
@@ -391,18 +519,23 @@ export async function POST(
 
             return NextResponse.json({
                 success: true,
+
                 alreadyPaid: true,
             });
         }
 
 
         /* =========================
-           7. VERIFY CML STATUS
+           9. ORDER STATUS CHECK
         ========================= */
 
         if (
-            Number(order.status) !== 1 &&
-            Number(order.status) !== 2
+            Number(
+                order.status
+            ) !== 1 &&
+            Number(
+                order.status
+            ) !== 2
         ) {
 
             throw new Error(
@@ -412,7 +545,7 @@ export async function POST(
 
 
         /* =========================
-           8. VERIFY AMOUNT
+           10. VERIFY AMOUNT
         ========================= */
 
         const orderAmount =
@@ -445,8 +578,11 @@ export async function POST(
             "PAYMENT VALIDATION:",
             {
                 orderAmount,
+
                 nowPaymentsAmount,
+
                 nowPaymentsCurrency,
+
                 cmlCurrency,
             }
         );
@@ -460,6 +596,7 @@ export async function POST(
                 nowPaymentsAmount
             )
         ) {
+
             throw new Error(
                 "Invalid payment amount"
             );
@@ -494,8 +631,13 @@ export async function POST(
         }
 
 
+        console.log(
+            "PAYMENT VALIDATION: OK"
+        );
+
+
         /* =========================
-           9. RECORD CML PAYMENT
+           11. RECORD PAYMENT
         ========================= */
 
         const paymentMethod =
@@ -504,6 +646,21 @@ export async function POST(
                     body.pay_currency
                 )
                 : "crypto";
+
+
+        console.log(
+            "RECORDING PAYMENT IN CML:",
+            {
+                orderCode,
+
+                paymentId,
+
+                amount:
+                orderAmount,
+
+                paymentMethod,
+            }
+        );
 
 
         const recordResponse =
@@ -537,6 +694,11 @@ export async function POST(
         /* =========================
            SUCCESS
         ========================= */
+
+        console.log(
+            "NOWPAYMENTS WEBHOOK COMPLETED SUCCESSFULLY"
+        );
+
 
         return NextResponse.json({
             success: true,

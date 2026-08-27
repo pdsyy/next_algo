@@ -57,43 +57,82 @@ export async function createNowPayment({
     }
 
 
-    const response = await fetch(
-        `${NOWPAYMENTS_API_URL}/payment`,
+    const cleanSiteUrl =
+        siteUrl.replace(/\/+$/, "");
+
+
+    const ipnCallbackUrl =
+        `${cleanSiteUrl}/api/payments/nowpayments/webhook`;
+
+
+    console.log(
+        "NOWPAYMENTS CREATE CONFIG:",
         {
-            method: "POST",
+            mode:
+                IS_SANDBOX
+                    ? "sandbox"
+                    : "production",
 
-            headers: {
-                "Content-Type":
-                    "application/json",
+            apiUrl:
+            NOWPAYMENTS_API_URL,
 
-                "x-api-key":
-                    getNowPaymentsApiKey(),
-            },
+            orderId,
 
-            body: JSON.stringify({
-                price_amount:
-                priceAmount,
+            priceAmount,
 
-                price_currency:
-                    priceCurrency.toLowerCase(),
+            priceCurrency,
 
-                pay_currency:
-                    payCurrency.toLowerCase(),
+            payCurrency,
 
-                order_id:
-                orderId,
-
-                order_description:
-                    description ??
-                    `Algo Bots order ${orderId}`,
-
-                ipn_callback_url:
-                    `${siteUrl}/api/payments/nowpayments/webhook`,
-            }),
-
-            cache: "no-store",
+            ipnCallbackUrl,
         }
     );
+
+
+    const requestBody = {
+        price_amount:
+        priceAmount,
+
+        price_currency:
+            priceCurrency.toLowerCase(),
+
+        pay_currency:
+            payCurrency.toLowerCase(),
+
+        order_id:
+        orderId,
+
+        order_description:
+            description ??
+            `Algo Bots order ${orderId}`,
+
+        ipn_callback_url:
+        ipnCallbackUrl,
+    };
+
+
+    const response =
+        await fetch(
+            `${NOWPAYMENTS_API_URL}/payment`,
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type":
+                        "application/json",
+
+                    "x-api-key":
+                        getNowPaymentsApiKey(),
+                },
+
+                body:
+                    JSON.stringify(
+                        requestBody
+                    ),
+
+                cache: "no-store",
+            }
+        );
 
 
     const text =
@@ -106,7 +145,8 @@ export async function createNowPayment({
         data =
             JSON.parse(text);
     } catch {
-        data = text;
+        data =
+            text;
     }
 
 
@@ -114,8 +154,12 @@ export async function createNowPayment({
 
         console.error(
             "NOWPAYMENTS CREATE ERROR:",
-            response.status,
-            data
+            {
+                status:
+                response.status,
+
+                data,
+            }
         );
 
 
@@ -128,7 +172,11 @@ export async function createNowPayment({
 
 
     console.log(
-        `NOWPayments ${IS_SANDBOX ? "SANDBOX" : "PRODUCTION"} payment created:`,
+        `NOWPayments ${
+            IS_SANDBOX
+                ? "SANDBOX"
+                : "PRODUCTION"
+        } payment created:`,
         data
     );
 
@@ -152,19 +200,20 @@ export async function getNowPaymentStatus(
     }
 
 
-    const response = await fetch(
-        `${NOWPAYMENTS_API_URL}/payment/${paymentId}`,
-        {
-            method: "GET",
+    const response =
+        await fetch(
+            `${NOWPAYMENTS_API_URL}/payment/${paymentId}`,
+            {
+                method: "GET",
 
-            headers: {
-                "x-api-key":
-                    getNowPaymentsApiKey(),
-            },
+                headers: {
+                    "x-api-key":
+                        getNowPaymentsApiKey(),
+                },
 
-            cache: "no-store",
-        }
-    );
+                cache: "no-store",
+            }
+        );
 
 
     const text =
@@ -177,7 +226,8 @@ export async function getNowPaymentStatus(
         data =
             JSON.parse(text);
     } catch {
-        data = text;
+        data =
+            text;
     }
 
 
@@ -185,8 +235,14 @@ export async function getNowPaymentStatus(
 
         console.error(
             "NOWPAYMENTS STATUS ERROR:",
-            response.status,
-            data
+            {
+                status:
+                response.status,
+
+                paymentId,
+
+                data,
+            }
         );
 
 
@@ -196,6 +252,22 @@ export async function getNowPaymentStatus(
             `Unable to get payment status: ${response.status}`
         );
     }
+
+
+    console.log(
+        "NOWPAYMENTS PAYMENT STATUS:",
+        {
+            paymentId,
+
+            mode:
+                IS_SANDBOX
+                    ? "sandbox"
+                    : "production",
+
+            status:
+            data?.payment_status,
+        }
+    );
 
 
     return data;

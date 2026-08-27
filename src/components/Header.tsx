@@ -110,7 +110,7 @@ const Header = ({dark, visibleHeader, setVisibleHeader, initialLanguage}: Header
                 </div>
 
                 <div className="lang_select_block">
-                    {/*<div className="languages_block">
+                    <div className="languages_block">
                         <div
                             className={language === "UA" ? "active" : ""}
                             onClick={() => setLanguage("UA")}
@@ -129,7 +129,7 @@ const Header = ({dark, visibleHeader, setVisibleHeader, initialLanguage}: Header
                         >
                             EN
                         </div>
-                    </div>*/}
+                    </div>
                     <div className="select_bot_button" onClick={() => handleMenuClick("catalog")}>
                         {t.home.hero.button}
                     </div>

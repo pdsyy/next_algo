@@ -2,10 +2,8 @@
 import React, {useEffect, useRef, useState} from 'react';
 import lines from "./images/bottom_lines.svg"
 import Image from "next/image";
-import mainBlockBg from "./images/mainBlockBg.png"
-import mainBlockBgMobile from "./images/MainBlockBgMobile.png"
-import metalPackage from "./images/metalPackage.png"
-import video_preview_main from "./images/video_preview_main.png"
+import track_record_main from "./images/track_record_main.png"
+import first_step_bg from "./images/first_trade_bg.png"
 import market_image1 from "./images/market_image1.png"
 import market_image2 from "./images/market_image2.png"
 import market_image3 from "./images/market_image3.png"
@@ -13,12 +11,18 @@ import market_image4 from "./images/market_image4.png"
 import market_image5 from "./images/market_image5.png"
 import market_image6 from "./images/market_image6.png"
 import market_image7 from "./images/market_image7.png"
+import market_image8 from "./images/market_image8.png"
+import market_image9 from "./images/market_image9.png"
+import market_image10 from "./images/market_image10.png"
+import market_image11 from "./images/market_image11.png"
 import mql_pl from "./images/mql_pl.svg"
 import mql5_2x from "./images/mql_f.png"
 import metaTrader_icon from "./images/metaTrader_icon_light.svg"
 import mql5_light from "./images/mql5_light.svg"
 import users_profit from "./images/users_profit_img.png"
-import firstDealImage from "./images/firstDealImage.png"
+import t_record_image1 from "./images/t_record_image1.svg"
+import t_record_image2 from "./images/t_record_image2.svg"
+import t_record_image3 from "./images/t_record_image3.svg"
 import firstDealItem1 from "./images/firstDealItem1.svg"
 import firstDealItem2 from "./images/firstDealImage2.svg"
 import firstDealItem3 from "./images/firstDealImage3.svg"
@@ -40,7 +44,10 @@ import review_image5 from "./images/review_image5.png"
 import review_image6 from "./images/review_image6.png"
 import circles_bg from "./images/circles.svg"
 import select_bot_img from "./images/algo_p_image.png"
+import avatars_icon from "./images/avatars_icon.png"
 import select_bot_img_mob from "./images/select_bot_img_mob1.png"
+import lines_top from "./images/top_lines.svg"
+import algo_main_image from "./images/algo_main_image.png"
 
 import {Swiper, SwiperSlide} from "swiper/react";
 import {Pagination} from "swiper/modules";
@@ -58,6 +65,13 @@ import tg_icon from "@/app/images/tg_icon.svg";
 import youtube_icon from "@/app/images/youtube_icon.svg";
 import trailer_preview from "@/app/images/trailer_preview.png";
 import aeroPreview from "@/app/aero/images/aero_preview_t.png";
+import HeroBlock from "@/app/Hero";
+import AlgoReveal from "@/app/AlgoReveal";
+import MainVideoComponent from "@/app/MainVideoComponent";
+import TestButton from "@/app/TestButton";
+import TestPaymentButton from "@/app/TestButton";
+
+const MotionImage = motion.create(Image);
 
 const MainPage = ({activePopup, setActivePopup}: any) => {
 
@@ -196,7 +210,11 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
         market_image4,
         market_image5,
         market_image6,
-        market_image7
+        market_image7,
+        market_image8,
+        market_image9,
+        market_image10,
+        market_image11,
     ];
 
     const [isActive, setIsActive] = useState(false)
@@ -219,6 +237,25 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
 */
 
 
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    const handleMouseMoveAlgo = (
+        e: React.MouseEvent<HTMLDivElement>
+    ) => {
+        const el = containerRef.current;
+
+        if (!el) return;
+
+        const rect = el.getBoundingClientRect();
+
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        el.style.setProperty("--mouse-x", `${x}px`);
+        el.style.setProperty("--mouse-y", `${y}px`);
+    };
+
+
     return (
 
         <div className="main_page">
@@ -239,11 +276,16 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                 setActiveThx={setActivePopup}
                 isDark={true}
             />
-            <div className="main_block" onMouseMove={handleMouseMove}>
-                <img
-                    src={!isMobile ? mainBlockBg.src : mainBlockBgMobile.src}
+
+
+            <HeroBlock linesTopSrc={lines_top} avatarsSrc={avatars_icon} scrollToSection={scrollToSection}/>
+            {/*<div className="main_block" onMouseMove={handleMouseMove}>
+                <Image
+                    src={!isMobile ? mainBlockBg : mainBlockBgMobile}
                     alt="Background"
                     className="main_block_bg"
+                    style = {{height:"auto"}}
+                    priority
                 />
                 <motion.div className="main_info_block" {...fadeLeft}>
                     <div className="algo_block">
@@ -260,23 +302,26 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                     </div>
                 </motion.div>
 
-                <motion.img
-                    src={metalPackage.src}
+                <MotionImage
+                    src={metalPackage}
                     alt="Metal Package"
                     className="metalPackage"
                     ref={boxRef}
+                    style = {{height:"auto"}}
                     {...fadeRight}
+
                 />
             </div>
+            */}
             <div className="main_page_content">
 
 
                 <div className="about_us_block">
                     <motion.div className="market_list" {...fadeUp}>
-                        {[...Array(isMobile ? 14 : 7)].map((_, i) => (
+                        {[...Array(isMobile ? 22 : 11)].map((_, i) => (
                             <img
                                 key={i}
-                                src={marketImages[i % 7].src}
+                                src={marketImages[i % 11].src}
                                 alt={`market-${i}`}
                                 className={`market-${i}`}
                             />
@@ -298,7 +343,11 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                     </div>
                 </div>
 
-                <div className="money_in_management">
+                <MainVideoComponent/>
+                <TestPaymentButton/>
+
+
+                {/*<div className="money_in_management">
                     <motion.div className="money_in_management_number" {...fadeUp}>
                         {isMobile ? "200 000$" : <AnimatedNumber value="200 000$" duration={2.5}/>}
                     </motion.div>
@@ -355,7 +404,7 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                             )}
                         </AnimatePresence>
                     </motion.div>
-                </div>
+                </div>*/}
 
                 {/*isMobile ?
                     <div className="trailer_main_page">
@@ -445,7 +494,7 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                     </div>*/}
 
 
-                <motion.div className="main_page_mql5_fs" {...fadeUp}>
+                {/*<motion.div className="main_page_mql5_fs" {...fadeUp}>
                     <div className="main_page_mql5">
                         <div className="mql_info">
                             <div className="meta_trader_badge">
@@ -466,7 +515,59 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                         </div>
                         <Image src={mql5_2x} className="mql5_big_image" alt="mql5_logo"/>
                     </div>
-                </motion.div>
+                </motion.div>*/}
+                <div className="track_record_container_gradient">
+                    <div className="track_record_container">
+                        <div className="track_record_container_grid">
+                            <div className="track_record_info">
+                                <div className="track_record_caption">
+                                    Proven track record
+                                </div>
+                                <div className="track_record_desc">
+                                    Our bots have a proven track record of delivering consistent results.
+                                    You can see for yourself
+                                </div>
+                                <div className="track_record_item">
+                                    <div className="track_record_item_name">
+                                        <Image src={t_record_image1} alt=""/>
+                                        Consistent results
+                                    </div>
+                                    <div className="track_record_item_desc">
+                                        With Algo World, you can expect safe and consistent monthly profits.
+                                    </div>
+                                </div>
+                                <div className="track_record_item">
+                                    <div className="track_record_item_name">
+                                        <Image src={t_record_image2} alt=""/>
+                                        Low drawdown
+                                    </div>
+                                    <div className="track_record_item_desc">
+                                        We designed our bot to be as low-risk as possible while still delivering strong
+                                        results,
+                                    </div>
+                                </div>
+                                <div className="track_record_item">
+                                    <div className="track_record_item_name">
+                                        <Image src={t_record_image3} alt=""/>
+                                        Verified by Myfxbook
+                                    </div>
+                                    <div className="track_record_item_desc">
+                                        Our track record is fully transparent and verified by Myfxbook. Check it out for
+                                        yourself.
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="track_record_image_container">
+                                <Image src={track_record_main} alt="" className="track_record_main"/>
+
+                            </div>
+                        </div>
+                        <a className="myfxbook_button" href="#" target="_blank">
+                            Myfxbook
+                        </a>
+
+                    </div>
+                </div>
 
                 <div className="effective_algorithm" id="advantages">
                     <motion.h2 {...fadeUp} dangerouslySetInnerHTML={{__html: t.home.effective.title}}/>
@@ -497,7 +598,45 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
 
                 <div className="first_deal_block" id="how-it-works">
                     <motion.h2 {...fadeUp} dangerouslySetInnerHTML={{__html: t.home.steps.title}}/>
-                    <div className="first_deal_details">
+
+                    <Image src={first_step_bg} alt="" className="first_step_bg"/>
+                    <div className="step_container choose_algorithm">
+                        <div className="step_name">
+                            Вибір алгоритму
+                        </div>
+                        <div className="step_desc">
+                            Ви визначаєте свої цілі та допустимий ризик. У нашому каталозі є рішення як для
+                            консервативного накопичення, так і для активної торгівлі.
+                        </div>
+                    </div>
+
+                    <div className="step_container connect">
+                        <div className="step_name">
+                            Підключення
+                        </div>
+                        <div className="step_desc">
+                            Бот встановлюється на ваш акаунт за кілька кліків. Ви отримуєте всі необхідні інструкції по підключенню разом з індивідуальною ліцензією для активації, після чого обраний бот починає свою роботу.
+                        </div>
+                    </div>
+
+                    <div className="step_container autonomous_trading">
+                        <div className="step_name">
+                            Автономна торгівля
+                        </div>
+                        <div className="step_desc">
+                            Алгоритм сканує ринок 24/7. Як тільки умови стратегії збігаються (ціна, індикатори, обсяги), бот миттєво відкриває позицію.
+                        </div>
+                    </div>
+
+                    <div className="step_container monitoring">
+                        <div className="step_name">
+                            Моніторинг і результат
+                        </div>
+                        <div className="step_desc">
+                            Ви слідкуєте за статистикою в реальному часі. У будь-який момент роботу бота можна призупинити або скоригувати налаштування.
+                        </div>
+                    </div>
+                    {/*<div className="first_deal_details">
                         <motion.div className="first_deal_image" {...fadeLeft}>
                             <img src={users_profit.src} alt=""/>
                         </motion.div>
@@ -518,7 +657,9 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                                 </div>
                             ))}
                         </motion.div>
-                    </div>
+                    </div>*/}
+
+
                 </div>
 
                 <div className="bots_catalog" id="catalog">

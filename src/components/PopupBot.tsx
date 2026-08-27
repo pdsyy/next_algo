@@ -45,6 +45,29 @@ const PopupBot = ({bot_info = [], bot_name, price, isActive, setIsActive, active
     console.log(pathname)
     const isMainPage = pathname === "/"
     console.log('Props check:', { setIsActive, setActiveThx });
+
+    const buyBot = async () => {
+        const response = await fetch(
+            "/api/payments/nowpayments/create",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json",
+                },
+
+                body: JSON.stringify({
+                    productId: "bot_pro",
+                    payCurrency: "usdttrc20",
+                }),
+            }
+        );
+
+        const data = await response.json();
+
+        console.log(data);
+    };
+
     return (
         <div className={`popup_fs ${isActive ? "active_popup" : ""} ${isMainPage ? "prop_bot" : ""}`} onClick={() => setIsActive(false)}>
             <div className="popup_container_gradient" onClick={(e) => e.stopPropagation()}>

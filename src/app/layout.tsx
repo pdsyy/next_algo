@@ -36,6 +36,7 @@ const inter = Inter({
 const manrope = Manrope({
     subsets: ["latin", "cyrillic"],
     variable: "--font-manrope",
+    preload: true
 });
 
 export const metadata: Metadata = {

@@ -24,8 +24,8 @@ export const LanguageProvider = ({children, initialLanguage}: {children: ReactNo
         Cookies.set("algo_lang", newLang, {expires: 365})
     };
 
-    //const t = translations[language as keyof typeof translations];
-    const t = translations["EN"];
+    //const t = translations["EN"];
+    const t = translations[language as keyof typeof translations];
 
     return (
         <LanguageContext.Provider value={{ language, setLanguage, t }}>

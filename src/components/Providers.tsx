@@ -1,34 +1,60 @@
 "use client";
 
-import React, {useState, ReactNode} from "react";
-import {LanguageProvider} from "@/context/LanguageProvider";
-import {ScrollProvider} from "@/context/ScrollContext";
-import Header from "@/components/Header";
-import {ThemeContext} from "@/context/ThemeContext";
-import ThxPopup from "@/components/ThxPopup";
-import {ThxProvider} from "@/context/ThxContext";
+import React, {
+    ReactNode,
+    useState,
+} from "react";
 
-export default function Providers({children, initialLanguage}: { children: ReactNode, initialLanguage: string }) {
+import {LanguageProvider,} from "@/context/LanguageProvider";
+
+import type {Language,} from "@/context/LanguageProvider";
+
+import {ScrollProvider,} from "@/context/ScrollContext";
+
+import {ThemeContext,} from "@/context/ThemeContext";
+
+import {ThxProvider,} from "@/context/ThxContext";
+
+import Header from "@/components/Header";
+import ThxPopup from "@/components/ThxPopup";
+
+
+interface ProvidersProps {
+    children: ReactNode;
+    initialLanguage: Language;
+}
+
+
+export default function Providers({children, initialLanguage,}: ProvidersProps) {
     const [darkTheme, setDarkTheme] = useState(false);
+
     const [visibleHeader, setVisibleHeader] = useState(false);
-    console.log(initialLanguage)
 
     return (
-        <LanguageProvider initialLanguage={initialLanguage}>
+        <LanguageProvider
+            initialLanguage={initialLanguage}
+        >
             <ScrollProvider>
                 <ThxProvider>
-                    <ThemeContext.Provider value={{setDarkTheme}}>
+                    <ThemeContext.Provider
+                        value={{
+                            setDarkTheme,
+                        }}
+                    >
                         <div className="App">
-
-
                             <Header
                                 dark={darkTheme}
-                                visibleHeader={visibleHeader}
-                                setVisibleHeader={setVisibleHeader}
-                                initialLanguage={initialLanguage}
+                                visibleHeader={
+                                    visibleHeader
+                                }
+                                setVisibleHeader={
+                                    setVisibleHeader
+                                }
                             />
+
                             {children}
-                            <ThxPopup/>
+
+                            <ThxPopup />
                         </div>
                     </ThemeContext.Provider>
                 </ThxProvider>

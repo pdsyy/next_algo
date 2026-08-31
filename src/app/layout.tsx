@@ -12,6 +12,7 @@ import "./styles/hydro.css"
 import "./styles/prop.css"
 import Providers from "@/components/Providers";
 import React from "react";
+import {Language, LanguageProvider} from "@/context/LanguageProvider";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -76,10 +77,23 @@ export const metadata: Metadata = {
     },
 };
 
+const supportedLanguages: Language[] = [
+    "UA",
+    "RU",
+    "EN",
+];
+
+const isLanguage = (value: string | undefined): value is Language => {
+    return supportedLanguages.includes(
+        value as Language
+    );
+};
+
 export default async function RootLayout({children}: Readonly<{ children: React.ReactNode }>) {
 
     const cookieStore = await cookies();
-    const savedLang = cookieStore.get('algo_lang')?.value || "EN";
+    const savedLanguage = cookieStore.get("algo_lang")?.value;
+    const initialLanguage: Language = isLanguage(savedLanguage) ? savedLanguage : "EN";
 
     return (
         <html lang="en" className={`
@@ -91,7 +105,7 @@ export default async function RootLayout({children}: Readonly<{ children: React.
          `}>
 
         <body>
-        <Providers initialLanguage={savedLang}>
+        <Providers initialLanguage={initialLanguage}>
             {children}
         </Providers>
         <SpeedInsights/>

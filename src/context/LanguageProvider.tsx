@@ -1,37 +1,72 @@
-"use client"
-import {createContext, useState, useContext, useEffect, ReactNode} from 'react';
-import { translations } from '@/translations';
-import Cookies from 'js-cookie';
+"use client";
+
+import {
+    createContext,
+    ReactNode,
+    useContext,
+    useMemo,
+    useState,
+} from "react";
+
+import Cookies from "js-cookie";
+import {translations} from "@/translations";
+
+export type Language = "UA" | "RU" | "EN";
 
 interface LanguageContextType {
-    language: string,
-    setLanguage: (lang: string) => void,
-    t: any
+    language: Language;
+    setLanguage: (language: Language) => void;
+    t: (typeof translations)[Language];
 }
-const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
-export const LanguageProvider = ({children, initialLanguage}: {children: ReactNode, initialLanguage: string}) => {
-    const [language, setLang] = useState<string>(initialLanguage);
-    useEffect(() => {
-        const savedLang = localStorage.getItem("algo_lang");
-        if (savedLang && savedLang !== language) {
-            setLang(savedLang);
-        }
-    }, []);
-    const setLanguage = (newLang: string) => {
-        setLang(newLang);
-        localStorage.setItem("algo_lang", newLang);
-        Cookies.set("algo_lang", newLang, {expires: 365})
+const LanguageContext =
+    createContext<LanguageContextType | undefined>(
+        undefined
+    );
+
+interface LanguageProviderProps {
+    children: ReactNode;
+    initialLanguage: Language;
+}
+
+export const LanguageProvider = ({children, initialLanguage,}: LanguageProviderProps) => {
+    const [language, setLanguageState] =
+        useState<Language>(initialLanguage);
+
+    const setLanguage = (newLanguage: Language) => {
+        setLanguageState(newLanguage);
+
+        Cookies.set("algo_lang", newLanguage, {
+                expires: 365,
+                path: "/",
+                sameSite: "lax",
+            }
+        );
     };
 
-    //const t = translations["EN"];
-    const t = translations[language as keyof typeof translations];
+    const t = translations[language];
+
+    const contextValue =
+        useMemo(() => ({language, setLanguage, t}), [language, t]);
 
     return (
-        <LanguageContext.Provider value={{ language, setLanguage, t }}>
+        <LanguageContext.Provider
+            value={contextValue}
+        >
             {children}
         </LanguageContext.Provider>
     );
 };
 
-export const useLanguage = () => useContext(LanguageContext);
+export const useLanguage = () => {
+    const context =
+        useContext(LanguageContext);
+
+    if (!context) {
+        throw new Error(
+            "useLanguage must be used inside LanguageProvider"
+        );
+    }
+
+    return context;
+};

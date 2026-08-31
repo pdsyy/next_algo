@@ -38,7 +38,7 @@ import bottom_product_image from "@/app/aero/images/aero_product_image.png";
 
 const HydroPage = () => {
     const {activePopup, setActivePopup} = useThxContext()
-    const { t } = useLanguage()!;
+    const {t, language, setLanguage} = useLanguage();
     const [isMobile, setIsMobile] = useState(false);
     useEffect(() => {
         setIsMobile(window.innerWidth < 768);
@@ -558,7 +558,7 @@ const HydroPage = () => {
                 {isMobile ?
                     <div className="society_block">
                         <div>
-                            <a href="https://t.me/algoworId" target="_blank" rel="noreferrer">
+                            <a href={language === "EN" ? "https://t.me/algoworId" : "https://t.me/+uKCqVOr1OAE2ZmQy"} target="_blank" rel="noreferrer">
                                 <img src={tg_icon.src} alt=""/>
                             </a>
                         </div>
@@ -569,7 +569,7 @@ const HydroPage = () => {
                             </a>
                         </div>*/}
                         <div>
-                            <a href="https://www.youtube.com/channel/UCUdEXqsf87y8gSnz7FjxS8g" target="_blank" rel="noreferrer">
+                            <a href={language === "EN" ? "https://www.youtube.com/channel/UCUdEXqsf87y8gSnz7FjxS8g" : "https://www.youtube.com/@alg0_ofx"} target="_blank" rel="noreferrer">
                                 <img src={youtube_icon.src} alt=""/>
                             </a>
                         </div>
@@ -580,10 +580,10 @@ const HydroPage = () => {
                            <a href="https://www.instagram.com/alg0_bots?igsh=NW82eGFuajRlYmpw">{t.terra.footer.instagram}</a>
                         </div>*/}
                         <div>
-                            <a href="https://www.youtube.com/channel/UCUdEXqsf87y8gSnz7FjxS8g">{t.terra.footer.youtube}</a>
+                            <a href={language === "EN" ? "https://www.youtube.com/channel/UCUdEXqsf87y8gSnz7FjxS8g" : "https://www.youtube.com/@alg0_ofx"}>{t.terra.footer.youtube}</a>
                         </div>
                         <div>
-                            <a href="https://t.me/algoworId">{t.terra.footer.telegram}</a>
+                            <a href={language === "EN" ? "https://t.me/algoworId" : "https://t.me/+uKCqVOr1OAE2ZmQy"}>{t.terra.footer.telegram}</a>
                         </div>
                     </div>}
             </motion.div>

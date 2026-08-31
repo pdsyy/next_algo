@@ -7,9 +7,7 @@ interface TripleHandlerTypes {
 }
 
 const TripleHandler = ({ items, handleValue, setHandleValue }:TripleHandlerTypes) => {
-    // items = ["EN", "UA", "RU"]
-    const {t, language, setLanguage} = useLanguage()!;
-    const [activeIndex, setActiveIndex] = useState(items.indexOf(language));
+    const [activeIndex, setActiveIndex] = useState(items.indexOf(handleValue));
 
 
     const handleClick = (item:string, index:number) => {

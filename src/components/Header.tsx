@@ -10,26 +10,17 @@ interface HeaderProps {
     dark: boolean,
     visibleHeader: boolean,
     setVisibleHeader: (visible: boolean) => void
-    initialLanguage: string
 }
 
-const Header = ({dark, visibleHeader, setVisibleHeader, initialLanguage}: HeaderProps) => {
+const Header = ({dark, visibleHeader, setVisibleHeader}: HeaderProps) => {
 
 
 
     const pathname = usePathname();
 
-    const changeLanguage = (newLang: string) => {
-        const segments = pathname.split('/');
-        segments[1] = newLang;
-
-        const newPath = segments.join('/');
-
-        window.location.assign(newPath);
-    };
 
 
-    const {t, language, setLanguage} = useLanguage()!;
+    const {t, language, setLanguage} = useLanguage();
 
 
     const [activeBotList, setActiveBotList] = useState(false)
@@ -213,7 +204,7 @@ const Header = ({dark, visibleHeader, setVisibleHeader, initialLanguage}: Header
 
                 </div>
 
-                {/*<TripleHandler items={["UA", "RU", "EN"]} setHandleValue={setLanguage} handleValue={language}/>*/}
+                <TripleHandler items={["UA", "RU", "EN"]} setHandleValue={setLanguage} handleValue={language}/>
                 <div className="select_bot_button_mobile" onClick={() => handleMenuClick("catalog")}>
                     {t.home.hero.button}
                 </div>

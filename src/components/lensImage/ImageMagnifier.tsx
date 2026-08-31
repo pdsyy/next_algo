@@ -19,19 +19,10 @@ type LensPosition = {
     y: number;
 };
 
-const ImageMagnifier = ({
-                            src,
-                            alt = "",
-                            zoom = 1.8,
-                            lensSize = 160,
-                        }: ImageMagnifierProps) => {
+const ImageMagnifier = ({src, alt = "", zoom = 1.8, lensSize = 160,}: ImageMagnifierProps) => {
     const containerRef = useRef<HTMLDivElement>(null);
 
-    const [lensPosition, setLensPosition] =
-        useState<LensPosition>({
-            x: 70,
-            y: 106,
-        });
+    const [lensPosition, setLensPosition] = useState<LensPosition>({x: 70, y: 106});
 
     const [isMoving, setIsMoving] =
         useState(false);
@@ -55,26 +46,13 @@ const ImageMagnifier = ({
         const rawY =
             event.clientY - rect.top;
 
-        /*
-            Центр линзы теперь может доходить
-            непосредственно до краёв изображения.
-        */
         const x =
-            Math.max(
-                0,
-                Math.min(rawX, rect.width)
-            );
+            Math.max(0, Math.min(rawX, rect.width));
 
         const y =
-            Math.max(
-                0,
-                Math.min(rawY, rect.height)
-            );
+            Math.max(0, Math.min(rawY, rect.height));
 
-        setLensPosition({
-            x,
-            y,
-        });
+        setLensPosition({x, y,});
     };
 
     const handlePointerDown = (
@@ -88,17 +66,11 @@ const ImageMagnifier = ({
         updateLensPosition(event);
     };
 
-    const handlePointerMove = (
-        event: PointerEvent<HTMLDivElement>
-    ) => {
-
-
+    const handlePointerMove = (event: PointerEvent<HTMLDivElement>) => {
         updateLensPosition(event);
     };
 
-    const handlePointerUp = (
-        event: PointerEvent<HTMLDivElement>
-    ) => {
+    const handlePointerUp = (event: PointerEvent<HTMLDivElement>) => {
         event.currentTarget.releasePointerCapture(
             event.pointerId
         );
@@ -106,28 +78,13 @@ const ImageMagnifier = ({
         setIsMoving(false);
     };
 
-    const container =
-        containerRef.current;
-
-    const containerWidth =
-        container?.clientWidth ?? 1;
-
-    const containerHeight =
-        container?.clientHeight ?? 1;
-
-    const backgroundWidth =
-        containerWidth * zoom;
-
-    const backgroundHeight =
-        containerHeight * zoom;
-
-    const backgroundX =
-        lensSize / 2 -
-        lensPosition.x * zoom;
-
-    const backgroundY =
-        lensSize / 2 -
-        lensPosition.y * zoom;
+    const container = containerRef.current;
+    const containerWidth = container?.clientWidth ?? 1;
+    const containerHeight = container?.clientHeight ?? 1;
+    const backgroundWidth = containerWidth * zoom;
+    const backgroundHeight = containerHeight * zoom;
+    const backgroundX = lensSize / 2 - lensPosition.x * zoom;
+    const backgroundY = lensSize / 2 - lensPosition.y * zoom;
 
     return (
         <div

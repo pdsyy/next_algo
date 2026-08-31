@@ -573,7 +573,7 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
 
                         <a
                             className="myfxbook_button"
-                            href="#"
+                            href="https://www.myfxbook.com/members/alg0_o"
                             target="_blank"
                         >
                             {t.trackRecord.button}

@@ -3,8 +3,12 @@
 ========================================================= */
 
 :root {
-    --hero-bottom-space: 36px;
-    --hero-extra-bottom-space: 80px;
+    --algo-image-top: 402px;
+    --algo-image-bottom-space: 102px;
+    --algo-image-width: 70%;
+    --algo-image-offset-x: 0px;
+    --algo-video-box-offset-y: -25px;
+    --algo-content-image-gap: 12px;
 }
 
 .main_page {
@@ -18,18 +22,16 @@
 
 .main_block_new {
     position: relative;
-
     width: 100%;
-    min-height: calc(
-            100vh +
-            var(--hero-bottom-space) +
-            var(--hero-extra-bottom-space)
-    );
-
+    /*
+       Значение автоматически задаёт AlgoReveal:
+       top картинки + высота картинки + нижний отступ.
+       570px используется только до первого JS-расчёта.
+    */
+    height: var(--hero-calculated-height, 570px);
+    min-height: 0;
     margin: 0;
-
     overflow: hidden;
-
     background: #F0F0F0;
 }
 
@@ -41,46 +43,34 @@
 .algo_reveal {
     position: absolute;
     inset: 0;
-
     width: 100%;
     height: 100%;
-
     overflow: hidden;
-
     pointer-events: none;
-
     z-index: 0;
 }
 
 .algo_reveal_canvas {
     position: absolute;
     inset: 0;
-
     width: 100%;
     height: 100%;
-
     display: block;
-
     pointer-events: none;
-
     z-index: 2;
 }
 
 .algo_reveal_base_image {
     position: absolute;
-
-    left: 50%;
-
-    width: min(1057px, 70%);
+    top: var(--algo-image-top-resolved, var(--algo-image-top));
+    bottom: auto;
+    left: calc(50% + var(--algo-image-offset-x));
+    width: min(1057px, var(--algo-image-width));
     height: auto;
-
     transform: translateX(-50%);
-
     display: block;
-
     pointer-events: none;
     user-select: none;
-
     z-index: 0;
 }
 
@@ -90,22 +80,15 @@
 ========================================================= */
 
 .hero_blend_layer {
-    margin-bottom: 20px;
     position: relative;
-
     width: 100%;
-    min-height: calc(
-            100vh +
-            var(--hero-bottom-space) +
-            var(--hero-extra-bottom-space)
-    );
-
+    height: 100%;
+    min-height: 0;
+    margin-bottom: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
-
     mix-blend-mode: difference;
-
     z-index: 1;
 }
 
@@ -116,20 +99,14 @@
 
 .top_lines_images {
     position: absolute;
-
     top: -40px;
     left: 50%;
-
     transform: translateX(-50%);
-
     height: 441px;
     width: auto;
     max-width: none;
-
     pointer-events: none;
-
     filter: brightness(0) invert(1);
-
     mix-blend-mode: normal;
 }
 
@@ -140,18 +117,13 @@
 
 .main_block_info {
     position: relative;
-
     z-index: 3;
-
     margin-top: 116px;
-
     width: 555px;
     max-width: calc(100% - 32px);
-
     display: flex;
     flex-direction: column;
     align-items: center;
-
     flex-shrink: 0;
 }
 
@@ -162,42 +134,29 @@
 
 .algo_label {
     position: relative;
-
     z-index: 4;
-
     height: 32px;
     padding: 0 16px;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     border-radius: 200px;
-
     background: #000000;
-
     box-shadow: 0 4px 12px rgba(182, 182, 182, 0.18);
-
     font-family: Inter, sans-serif;
     font-weight: 400;
     font-size: 16px;
     line-height: 1;
-
     letter-spacing: -0.04em;
     text-transform: uppercase;
-
     white-space: nowrap;
-
     pointer-events: none;
 }
 
 .algo_label_text {
     position: relative;
-
     z-index: 1;
-
     color: #FFFFFF;
-
     pointer-events: none;
 }
 
@@ -208,22 +167,15 @@
 
 .main_block_theme {
     position: relative;
-
     z-index: 4;
-
     width: 100%;
-
     margin-top: 24px;
-
     color: #FFFFFF;
-
     font-family: Inter, sans-serif;
     font-size: 48px;
     font-weight: 700;
     line-height: 1;
-
     letter-spacing: -0.01em;
-
     text-align: center;
 }
 
@@ -234,22 +186,15 @@
 
 .main_block_description {
     position: relative;
-
     z-index: 4;
-
     width: 100%;
-
     margin-top: 24px;
-
     color: #FFFFFF;
-
     font-family: Inter, sans-serif;
     font-size: 18px;
     font-weight: 400;
     line-height: 1;
-
     letter-spacing: -0.01em;
-
     text-align: center;
 }
 
@@ -260,128 +205,83 @@
 
 .main_block_button {
     position: relative;
-
     z-index: 4;
-
     margin-top: 24px;
-
     height: 48px;
     padding: 0 16px;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     border: 0;
     border-radius: 200px;
-
     background: #FFFFFF;
-
     font-family: Inter, sans-serif;
     font-size: 16px;
     font-weight: 500;
     line-height: 20px;
-
     letter-spacing: -0.006em;
-
     white-space: nowrap;
-
     cursor: pointer;
     user-select: none;
-
     pointer-events: auto;
-
     -webkit-tap-highlight-color: transparent;
-
     transform-origin: center;
-
-    transition: transform 0.3s ease,
-    height 220ms ease,
-    padding 220ms ease,
-    font-size 220ms ease;
+    transition: transform 0.3s ease, height 220ms ease, padding 220ms ease, font-size 220ms ease;
 }
 
 .main_button_text {
     position: relative;
-
     color: #000000;
-
     pointer-events: none;
 }
 
 
 /* =========================================================
-   AVATAR SLOT
-   Invisible source inside the button, used only for layout.
+   AVATARS
 ========================================================= */
 
 .avatars_slot {
     position: relative;
-
     height: 32px;
-
     margin-left: 16px;
     margin-right: 12px;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     flex-shrink: 0;
-
     pointer-events: none;
-
     transform-origin: center;
-
     transition: transform 0.3s ease;
 }
 
 .avatars_measure {
     display: block;
-
     height: 32px;
     width: auto;
-
     opacity: 0;
-
     pointer-events: none;
 }
 
-
-/* =========================================================
-   REAL AVATARS OVERLAY
-   IMPORTANT: must stay absolute and above blend layer.
-========================================================= */
-
 .avatars_overlay {
     position: absolute;
-
     display: block;
-
     object-fit: contain;
-
     pointer-events: none;
-
     z-index: 10;
-
     transform-origin: center;
-
     transition: transform 0.3s ease;
 }
 
 
 /* =========================================================
-   BUTTON HOVER / ACTIVE / FOCUS
+   BUTTON STATES
 ========================================================= */
 
 .main_block_button:hover {
     transform: scale(1.01);
 }
 
-.main_block_new:has(.main_block_button:hover) .avatars_overlay {
-    transform: scale(1.05);
-}
-
+.main_block_new:has(.main_block_button:hover) .avatars_overlay,
 .main_block_button:hover .avatars_slot {
     transform: scale(1.05);
 }
@@ -401,6 +301,9 @@
 ========================================================= */
 
 @media (max-width: 1024px) {
+    :root {
+        --algo-image-top: 402px;
+    }
 
     .main_block_info {
         width: 560px;
@@ -426,43 +329,47 @@
 ========================================================= */
 
 @media (max-width: 768px) {
+    :root {
+        --algo-image-top: 336px;
+        --algo-image-bottom-space: 96px;
+        --algo-image-width: 100%;
+        --algo-image-offset-x: 5px;
+        --algo-video-box-offset-y: -13px;
+        --algo-content-image-gap: 16px;
+    }
 
-    .main_block_new,
-    .hero_blend_layer {
-        min-height: calc(
-                100svh +
-                var(--hero-bottom-space) +
-                var(--hero-extra-bottom-space)
-        );
+    .algo_reveal_base_image {
+        width: min(1057px, var(--algo-image-width));
     }
 
     .main_block_info {
         width: calc(100% - 32px);
-        margin-top: 110px;
+        margin-top: 94px;
     }
 
     .algo_label {
-        height: 28px;
-        padding: 0 14px;
-        font-size: 13px;
+        height: 24px;
+        padding: 0 12px;
+        font-size: 12px;
     }
 
     .main_block_theme {
-        margin-top: 18px;
-        font-size: 36px;
-        line-height: 0.98;
+        margin-top: 16px;
+        font-size: 24px !important;
+        line-height: 1;
     }
 
     .main_block_description {
-        margin-top: 18px;
-        font-size: 15px;
-        line-height: 1.15;
+        margin-top: 16px;
+        max-width: 335px;
+        font-size: 16px;
+        line-height: 120%;
     }
 
     .main_block_button {
-        margin-top: 20px;
-        height: 46px;
-        padding: 0 14px;
+        margin-top: 16px !important;
+        height: 42px !important;
+        padding: 0 17px;
         font-size: 14px;
     }
 
@@ -477,7 +384,7 @@
     }
 
     .top_lines_images {
-        height: 300px;
+        height: 260px;
     }
 }
 
@@ -487,23 +394,25 @@
 ========================================================= */
 
 @media (max-width: 480px) {
+    :root {
+        --algo-image-top: 336px;
+        --algo-image-bottom-space: 96px;
+        --algo-image-width: 100%;
+        --algo-image-offset-x: 5px;
+        --algo-video-box-offset-y: -13px;
+        --algo-content-image-gap: 16px;
+    }
+
+    .algo_reveal_base_image {
+        width: min(1057px, var(--algo-image-width));
+    }
 
     .main_block_info {
-        margin-top: 100px;
+        margin-top: 94px;
     }
 
     .main_block_theme {
-        font-size: 31px;
-    }
-
-    .main_block_description {
-        font-size: 14px;
-    }
-
-    .main_block_button {
-        height: 44px;
-        padding: 0 12px;
-        font-size: 13px;
+        font-size: 24px;
     }
 
     .avatars_slot,
@@ -1031,7 +940,7 @@ h2 {
 }
 
 .our_main_advantages span {
-    color: #7E7E7E;
+    color: #232323;
 }
 
 .our_advantages_list {
@@ -1205,7 +1114,7 @@ h2 {
 }
 
 h2 span {
-    color: #7E7E7E;
+    color: #232323;
 }
 
 .first_deal_details {
@@ -2085,6 +1994,147 @@ h2 span {
 
 @media screen and (max-width: 768px) {
 
+    .step_container {
+        position: absolute;
+        left: 122px !important;
+        right: unset !important;
+        bottom: unset !important;
+        top: unset !important;
+
+        max-width: 62.13% !important;
+
+    }
+
+    .step_container.choose_algorithm{
+        top: 125px !important;
+    }
+
+    .step_container.connect{
+        top: 272px !important;
+    }
+
+    .step_container.autonomous_trading{
+        top: 419px !important;
+    }
+
+    .step_container.monitoring{
+        top: 579px !important;
+    }
+
+    .step_name{
+        font-size: 16px;
+    }
+
+    .step_desc{
+        margin-top: 6px;
+        font-size: 12px;
+    }
+
+
+    .first_step_bg.desk_none{
+        width: 479px;
+        height: unset;
+        aspect-ratio: 479 / 852;
+        left: -182px;
+        top: 17px;
+    }
+
+    .first_deal_block{
+        aspect-ratio: auto;
+        height: 810px;
+        width: 100%;
+        max-width: 100%;
+        display: block;
+        overflow: hidden;
+    }
+
+    .market-8, .market-19{
+        height: 160% !important;
+        max-height: unset !important;
+        width: auto !important;
+    }
+
+    .market-9, .market-20{
+        width: 136px !important;
+        max-height: unset !important;
+        height: auto !important;
+    }
+
+
+    .top_lines_wrapper, .bottom_lines_wrapper{
+        display: none;
+    }
+
+    .main_video_container{
+        margin-top: 16px;
+        padding: 0 20px;
+        margin-bottom: 48px;
+    }
+
+
+
+    .track_record_container_gradient {
+        border-radius: 22px;
+        width: calc(100% - 40px);
+        padding: 3px;
+    }
+
+    .track_record_container {
+        border-radius: 19px;
+        padding: 9px 6px 17px 6px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .track_record_info{
+        order: 2;
+        padding: 0 11px;
+    }
+
+    .track_record_caption{
+        font-family: Inter;
+        font-weight: 500;
+        font-size: 20px;
+        line-height: 120%;
+        letter-spacing: -2%;
+        color: #232323;
+
+    }
+
+    .track_record_desc{
+        font-family: Inter;
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 120%;
+        letter-spacing: -2%;
+        color: #727272;
+
+    }
+
+    .track_record_item_name img{
+        width: 20px;
+        height: 20px;
+    }
+
+    .myfxbook_button{
+        width: calc(100% - 22px);
+    }
+
+    .track_record_item_name{
+        color: #232323;
+        font-family: Inter;
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 120%;
+        letter-spacing: -2%;
+
+    }
+
+    .track_record_container_grid{
+        grid-template-columns: 1fr;
+    }
+
     .year_aero_handler {
         gap: 12px;
     }
@@ -2118,8 +2168,8 @@ h2 span {
         margin-right: 0;
     }
 
-    .market-2, .market-9 {
-        height: 25.5px !important;
+    .market_list img:last-child{
+        display: none;
     }
 
     .active_menu .liquidGlass-effect {
@@ -2220,7 +2270,7 @@ h2 span {
 
     .market_list {
         display: flex;
-        width: max-content;
+        width: 100%;
         height: 36px;
         animation: marquee 40s linear infinite;
         overflow-x: visible;
@@ -3347,7 +3397,7 @@ h2 span {
 
 
 .product_description span {
-    color: #7E7E7E;
+    color: #232323;
 }
 
 

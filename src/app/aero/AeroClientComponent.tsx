@@ -514,11 +514,14 @@ const AeroClientComponent = () => {
 
             <div className="buy_block_fs">
                 <div className="buy_block">
-                    <div className="buy_block_image">
-                        <img src={bottom_product_image.src} alt="Aero EA"/>
-                    </div>
-                    <div className="buy_block_info">
+
+                    <motion.div className="buy_block_image mob_none" {...fadeNumeric} custom={1}>
+                        <img src={bottom_product_image.src} alt="Aero EA" />
+                    </motion.div>
+
+                    <motion.div className="buy_block_info" {...fadeNumeric} custom={2}>
                         <div className="product_name_bottom">
+                            <img src={bottom_product_image.src} alt="" className = "desk_none"/>
                             {t.aero.hero.botName}
                         </div>
                         <div className="product_desc_bottom">
@@ -556,7 +559,7 @@ const AeroClientComponent = () => {
                                 {t.terra.buy.parts}
                             </div>*/}
                         </div>
-                    </div>
+                    </motion.div>
                 </div>
             </div>
 

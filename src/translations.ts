@@ -1,6 +1,55 @@
 export const translations = {
     UA: {
 
+        automaticTrade:"Автоматизована<br />торгівля нового рівня",
+        heroDescription:"Торгові боти, які торгують 24/7<br />Чіткі стратегії. Прогнозована дохідність. Роки живої торгівлі.",
+        qWithUs:"+200 вже з нами",
+
+        trackRecord: {
+            title: "Підтверджена історія результатів",
+
+            desc: "Наші боти мають підтверджену історію стабільних результатів. Ви можете переконатися в цьому самостійно.",
+
+            consistentResults: {
+                title: "Стабільні результати",
+                desc: "З Algo World ви можете розраховувати на стабільні результати щомісяця завдяки системному підходу до автоматизованої торгівлі."
+            },
+
+            lowDrawdown: {
+                title: "Низька просадка",
+                desc: "Ми розробили наших ботів з акцентом на контроль ризиків і мінімізацію просадки, зберігаючи при цьому високий потенціал результативності."
+            },
+
+            verified: {
+                title: "Підтверджено Myfxbook",
+                desc: "Наша торгова статистика повністю прозора та підтверджена через Myfxbook. Перевірте результати самостійно."
+            },
+
+            button: "Myfxbook"
+        },
+
+        steps: {
+            chooseAlgorithm: {
+                title: "Вибір алгоритму",
+                desc: "Ви визначаєте свої цілі та допустимий ризик. У нашому каталозі є рішення як для консервативного накопичення, так і для активної торгівлі."
+            },
+
+            connect: {
+                title: "Підключення",
+                desc: "Бот встановлюється на ваш акаунт за кілька кліків. Ви отримуєте всі необхідні інструкції з підключення разом з індивідуальною ліцензією для активації, після чого обраний бот починає свою роботу."
+            },
+
+            autonomousTrading: {
+                title: "Автономна торгівля",
+                desc: "Алгоритм сканує ринок 24/7. Щойно умови стратегії збігаються — ціна, індикатори та обсяги — бот миттєво відкриває позицію."
+            },
+
+            monitoring: {
+                title: "Моніторинг і результат",
+                desc: "Ви стежите за статистикою в реальному часі. У будь-який момент роботу бота можна призупинити або скоригувати налаштування."
+            }
+        },
+
         mql5: {
             title: "Ми офіційно на маркетплейсі MQL5",
             description: "Тепер наші торгові алгоритми доступні на найбільшому незалежному майданчику для трейдерів.<br/><br/>Ми за абсолютну прозорість результатів. Перевіряйте реальну статистику, історію угод та підключайте ботів у безпечному середовищі.",
@@ -714,6 +763,56 @@ export const translations = {
     },
 
     RU: {
+
+        automaticTrade:"Автоматизированная<br />торговля нового уровня",
+        heroDescription:"Торговые боты, которые торгуют 24/7<br />Чёткие стратегии. Прогнозируемая доходность. Годы реальной торговли.",
+        qWithUs: "+200 уже с нами",
+
+        trackRecord: {
+            title: "Подтверждённая история результатов",
+
+            desc: "Наши боты имеют подтверждённую историю стабильных результатов. Вы можете убедиться в этом самостоятельно.",
+
+            consistentResults: {
+                title: "Стабильные результаты",
+                desc: "С Algo World вы можете рассчитывать на стабильные результаты каждый месяц благодаря системному подходу к автоматизированной торговле."
+            },
+
+            lowDrawdown: {
+                title: "Низкая просадка",
+                desc: "Мы разработали наших ботов с акцентом на контроль рисков и минимизацию просадки, сохраняя при этом высокий потенциал результативности."
+            },
+
+            verified: {
+                title: "Подтверждено Myfxbook",
+                desc: "Наша торговая статистика полностью прозрачна и подтверждена через Myfxbook. Проверьте результаты самостоятельно."
+            },
+
+            button: "Myfxbook"
+        },
+
+        steps: {
+            chooseAlgorithm: {
+                title: "Выбор алгоритма",
+                desc: "Вы определяете свои цели и допустимый уровень риска. В нашем каталоге есть решения как для консервативного накопления, так и для активной торговли."
+            },
+
+            connect: {
+                title: "Подключение",
+                desc: "Бот устанавливается на ваш аккаунт за несколько кликов. Вы получаете все необходимые инструкции по подключению вместе с индивидуальной лицензией для активации, после чего выбранный бот начинает свою работу."
+            },
+
+            autonomousTrading: {
+                title: "Автономная торговля",
+                desc: "Алгоритм сканирует рынок 24/7. Как только условия стратегии совпадают — цена, индикаторы и объёмы — бот мгновенно открывает позицию."
+            },
+
+            monitoring: {
+                title: "Мониторинг и результат",
+                desc: "Вы следите за статистикой в реальном времени. В любой момент работу бота можно приостановить или скорректировать настройки."
+            }
+        },
+
         mql5: {
             title: "Мы официально на маркетплейсе MQL5",
             description: "Теперь наши торговые алгоритмы доступны на крупнейшей независимой площадке для трейдеров.<br/><br/>Мы за абсолютную прозрачность результатов. Проверяйте реальную статистику, историю сделок и подключайте ботов в безопасной среде.",
@@ -1433,6 +1532,56 @@ export const translations = {
     },
 
     EN:{
+        automaticTrade:"Next-Level<br />Automated Trading",
+        heroDescription:"Trading bots that trade 24/7<br />Clear strategies. Predictable returns. Years of live trading.",
+        qWithUs: "+200 already with us",
+
+        steps: {
+            title: "From Setup to Live Trading",
+            chooseAlgorithm: {
+                title: "Choose an Algorithm",
+                desc: "You define your goals and acceptable risk level. Our catalog includes solutions for both conservative capital growth and active trading."
+            },
+
+            connect: {
+                title: "Connection",
+                desc: "The bot is installed on your account in just a few clicks. You receive all the necessary setup instructions along with a personal activation license, after which the selected bot starts trading."
+            },
+
+            autonomousTrading: {
+                title: "Autonomous Trading",
+                desc: "The algorithm scans the market 24/7. As soon as the strategy conditions align — price, indicators, and volume — the bot instantly opens a position."
+            },
+
+            monitoring: {
+                title: "Monitoring and Results",
+                desc: "You can track performance statistics in real time. At any moment, you can pause the bot or adjust its settings."
+            }
+        },
+
+        trackRecord: {
+            title: "Proven Track Record",
+
+            desc: "Our bots have a proven track record of delivering consistent results. See the performance for yourself.",
+
+            consistentResults: {
+                title: "Consistent Results",
+                desc: "With Algo World, you can expect consistent monthly performance driven by a systematic approach to automated trading."
+            },
+
+            lowDrawdown: {
+                title: "Low Drawdown",
+                desc: "Our bots are designed with a strong focus on risk control and minimizing drawdown while maintaining solid performance potential."
+            },
+
+            verified: {
+                title: "Verified by Myfxbook",
+                desc: "Our trading performance is fully transparent and verified through Myfxbook. Check the results for yourself."
+            },
+
+            button: "Myfxbook"
+        },
+
         prop: {
             calculationWords:{
                 days: "days",

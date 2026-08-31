@@ -9,6 +9,7 @@ import {
 } from "react";
 
 import AlgoReveal from "./AlgoReveal";
+import {useLanguage} from "@/context/LanguageProvider";
 
 type MainHeroProps = {
     linesTopSrc: string;
@@ -29,28 +30,10 @@ const MainHero = ({
                       scrollToSection,
                   }: MainHeroProps) => {
 
-    const heroRef =
-        useRef<HTMLDivElement>(null);
-
-    const avatarsSlotRef =
-        useRef<HTMLSpanElement>(null);
-
-    const buttonRef =
-        useRef<HTMLButtonElement>(null);
-
-    const [avatarPosition, setAvatarPosition] =
-        useState<AvatarPosition | null>(null);
-
-
-    /*
-        Настоящие avatars находятся ВНЕ difference-layer.
-
-        Внутри кнопки остаётся только невидимая копия,
-        которая резервирует правильное место.
-
-        По её реальному DOM-положению располагаем
-        нормальную картинку поверх blend-layer.
-    */
+    const heroRef = useRef<HTMLDivElement>(null);
+    const avatarsSlotRef = useRef<HTMLSpanElement>(null);
+    const buttonRef = useRef<HTMLButtonElement>(null);
+    const [avatarPosition, setAvatarPosition] = useState<AvatarPosition | null>(null);
 
     const updateAvatarPosition =
         useCallback(() => {
@@ -94,21 +77,11 @@ const MainHero = ({
 
 
     useLayoutEffect(() => {
+        const hero = heroRef.current;
+        const slot = avatarsSlotRef.current;
+        const button = buttonRef.current;
 
-        const hero =
-            heroRef.current;
-
-        const slot =
-            avatarsSlotRef.current;
-
-        const button =
-            buttonRef.current;
-
-        if (
-            !hero ||
-            !slot ||
-            !button
-        ) {
+        if (!hero || !slot || !button) {
             return;
         }
 
@@ -116,66 +89,29 @@ const MainHero = ({
         let raf = 0;
 
 
-        const scheduleUpdate =
-            () => {
-
-                cancelAnimationFrame(
-                    raf
-                );
-
-                raf =
-                    requestAnimationFrame(
-                        updateAvatarPosition
-                    );
-
-            };
+        const scheduleUpdate = () => {
+            cancelAnimationFrame(raf);
+            raf = requestAnimationFrame(updateAvatarPosition);
+        };
 
 
         const resizeObserver =
-            new ResizeObserver(
-                scheduleUpdate
-            );
+            new ResizeObserver(scheduleUpdate);
 
 
-        resizeObserver.observe(
-            hero
-        );
-
-        resizeObserver.observe(
-            slot
-        );
-
-        resizeObserver.observe(
-            button
-        );
+        resizeObserver.observe(hero);
+        resizeObserver.observe(slot);
+        resizeObserver.observe(button);
 
 
-        window.addEventListener(
-            "resize",
-            scheduleUpdate,
-            {
-                passive: true,
-            }
-        );
+        window.addEventListener("resize", scheduleUpdate, {passive: true,});
 
-
-        /*
-            После загрузки шрифта размеры текста
-            и кнопки могут немного измениться.
-        */
-
-        if (
-            document.fonts?.ready
-        ) {
+        if (document.fonts?.ready) {
 
             document.fonts
                 .ready
-                .then(
-                    scheduleUpdate
-                )
-                .catch(
-                    () => {}
-                );
+                .then(scheduleUpdate)
+                .catch(() => {});
         }
 
 
@@ -183,23 +119,16 @@ const MainHero = ({
 
 
         return () => {
-
-            cancelAnimationFrame(
-                raf
-            );
-
+            cancelAnimationFrame(raf);
             resizeObserver.disconnect();
 
-            window.removeEventListener(
-                "resize",
-                scheduleUpdate
-            );
-
+            window.removeEventListener("resize", scheduleUpdate);
         };
-
     }, [
         updateAvatarPosition,
     ]);
+
+    const {t} = useLanguage()!;
 
 
     return (
@@ -209,26 +138,7 @@ const MainHero = ({
             className="main_block_new"
         >
 
-            {/* =========================
-                FLUID
-            ========================== */}
-
             <AlgoReveal />
-
-
-            {/* =========================
-                ЕДИНЫЙ DIFFERENCE LAYER
-
-                Внутри:
-                - реальная картинка сетки
-                - ALGO
-                - заголовок
-                - описание
-                - кнопка
-
-                Поэтому сетка больше не прорезает
-                текст отдельным blend-слоем.
-            ========================== */}
 
             <div className="hero_blend_layer">
 
@@ -241,48 +151,17 @@ const MainHero = ({
 
 
                 <div className="main_block_info">
-
-                    {/* ALGO */}
-
                     <div className="algo_label">
-
                         <span className="algo_label_text">
                             ALGO
                         </span>
-
                     </div>
 
-
-                    {/* TITLE */}
-
-                    <div className="main_block_theme">
-
-                        Автоматизована
-
-                        <br />
-
-                        торгівля нового рівня
-
-                    </div>
+                    <div className="main_block_theme" dangerouslySetInnerHTML = {{__html: t.automaticTrade}}/>
 
 
-                    {/* DESCRIPTION */}
 
-                    <div className="main_block_description">
-
-                        Торгові боти, які торгують 24/7
-
-                        <br />
-
-                        Чіткі стратегії.
-                        Прогнозована дохідність.
-                        Роки живої торгівлі.
-
-                    </div>
-
-
-                    {/* BUTTON */}
-
+                    <div className="main_block_description" dangerouslySetInnerHTML = {{__html: t.heroDescription}}/>
                     <button
                         ref={buttonRef}
                         type="button"
@@ -295,77 +174,29 @@ const MainHero = ({
                     >
 
                         <span className="main_button_text">
-                            Обери бота
+                           {t.buttons.selectBot}
                         </span>
 
-
-                        {/*
-                            Невидимая копия только резервирует
-                            точный размер твоего изображения.
-
-                            Она находится внутри difference,
-                            но opacity:0, поэтому визуально
-                            ничего не рисует.
-                        */}
-
-                        <span
-                            ref={avatarsSlotRef}
-                            className="avatars_slot"
-                        >
-
-                            <Image
-                                src={avatarsSrc}
-                                alt=""
-                                className="avatars_measure"
-                            />
-
+                        <span ref={avatarsSlotRef} className="avatars_slot">
+                            <Image src={avatarsSrc} alt="" className="avatars_measure"/>
                         </span>
-
 
                         <span className="main_button_text">
-                            +200 вже з нами
+                          {t.qWithUs}
                         </span>
-
                     </button>
-
                 </div>
-
             </div>
-
-
-            {/* =========================
-                НАСТОЯЩИЕ AVATARS
-
-                Они находятся ВНЕ hero_blend_layer,
-                следовательно difference их вообще
-                не касается.
-            ========================== */}
 
             {
                 avatarPosition && (
-
                     <Image
                         src={avatarsSrc}
                         alt=""
                         className="avatars_overlay"
-
-                        style={{
-                            left:
-                            avatarPosition.left,
-
-                            top:
-                            avatarPosition.top,
-
-                            width:
-                            avatarPosition.width,
-
-                            height:
-                            avatarPosition.height,
-                        }}
+                        style={{left: avatarPosition.left, top: avatarPosition.top, width: avatarPosition.width, height: avatarPosition.height,}}
                     />
-
-                )
-            }
+                )}
 
         </div>
     );

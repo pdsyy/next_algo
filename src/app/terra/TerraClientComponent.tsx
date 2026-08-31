@@ -502,12 +502,12 @@ const TerraPage = () => {
 
             <div className="buy_block_fs">
                 <div className="buy_block">
-                    <motion.div className="buy_block_image" {...fadeNumeric} custom={1}>
-                        <img src={bottom_product_image.src} alt="" />
+                    <motion.div className="buy_block_image mob_none" {...fadeNumeric} custom={1}>
+                        <img src={bottom_product_image.src} alt="Terra EA" />
                     </motion.div>
 
                     <motion.div className="buy_block_info" {...fadeNumeric} custom={2}>
-                        <div className="product_name_bottom">Terra EA</div>
+                        <div className="product_name_bottom"><img src={bottom_product_image.src} alt="Terra EA" className = "desk_none"/>Terra EA</div>
 
                         <div className="product_desc_bottom">
                             {t.terra.buy.desc}

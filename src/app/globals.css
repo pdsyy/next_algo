@@ -401,11 +401,21 @@
 
 
 }
+@media screen and (width > 768px) {
+    .desk_none{
+        display: none !important;
+    }
+}
 
 @media screen and (max-width: 768px) {
+    .mob_none{
+        display: none !important;
+    }
+
     .aero_card_buttons{
         grid-template-columns: 1fr;
     }
+
     .main_page_mql5{
         flex-direction: column-reverse;
         border-radius: 21px;

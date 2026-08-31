@@ -10,11 +10,12 @@ import * as THREE from "three";
 import algoImage from "./images/Gemini_Generated_Image_ufalucufalucufal 3 (1).png";
 
 
-const HERO_BOTTOM_SPACE = 36;
-const HERO_EXTRA_BOTTOM_SPACE = 80; // меняй это число для дополнительного отступа снизу
-const ALGO_IMAGE_BOTTOM = 22;
-const ALGO_IMAGE_BOTTOM_WITH_SPACE =
-    ALGO_IMAGE_BOTTOM + HERO_BOTTOM_SPACE + HERO_EXTRA_BOTTOM_SPACE;
+/*
+    Положение ALGO-картинки и видео считается от верхней границы hero.
+    Поэтому оно больше не зависит от высоты окна браузера.
+*/
+const ALGO_IMAGE_TOP_FALLBACK = 402;
+const ALGO_IMAGE_BOTTOM_SPACE_FALLBACK = 102;
 
 
 /* =========================================================
@@ -96,7 +97,8 @@ const SETTINGS = {
         Отдельное физическое смещение всего VIDEO BOX в пикселях.
         Это НЕ меняет videoOffsetY и не смешивается с UV-настройкой.
     */
-    videoBoxOffsetYPx: HERO_BOTTOM_SPACE,
+    /* Резервное значение. Основное задаётся CSS-переменной. */
+    videoBoxOffsetYPx: -25,
 };
 
 
@@ -1973,14 +1975,43 @@ const AlgoReveal = () => {
                 ========================================= */
 
                 const algoAspect =
-                    1057 / 273;
+                    algoImage.width /
+                    algoImage.height;
+
+
+                const cssAlgoImageWidth =
+                    getComputedStyle(container)
+                        .getPropertyValue("--algo-image-width")
+                        .trim();
+
+
+                const cssAlgoImageWidthPercent =
+                    parseFloat(cssAlgoImageWidth);
+
+
+                const cssAlgoImageOffsetX =
+                    parseFloat(
+                        getComputedStyle(container)
+                            .getPropertyValue("--algo-image-offset-x")
+                    );
+
+
+                const imageOffsetX =
+                    Number.isFinite(cssAlgoImageOffsetX)
+                        ? cssAlgoImageOffsetX
+                        : 0;
 
 
                 const boxWidth =
 
                     Math.min(
                         1057,
-                        renderWidth * 0.70
+                        renderWidth *
+                        (
+                            Number.isFinite(cssAlgoImageWidthPercent)
+                                ? cssAlgoImageWidthPercent / 100
+                                : 0.70
+                        )
                     );
 
 
@@ -1990,16 +2021,15 @@ const AlgoReveal = () => {
                     algoAspect;
 
 
-                /*
-                    Центрируем ALGO по горизонтали
-                    и ставим к низу hero.
+                const hero =
+                    container.parentElement;
 
-                    Если позже захочешь поднять его выше —
-                    меняй только boxBottomOffset.
-                */
 
-                const boxBottomOffset =
-                    ALGO_IMAGE_BOTTOM_WITH_SPACE;
+                const cssAlgoImageBottomSpace =
+                    parseFloat(
+                        getComputedStyle(container)
+                            .getPropertyValue("--algo-image-bottom-space")
+                    );
 
 
                 const boxLeft =
@@ -2007,14 +2037,99 @@ const AlgoReveal = () => {
                     (
                         renderWidth -
                         boxWidth
-                    ) / 2;
+                    ) / 2 +
+                    imageOffsetX;
 
 
+                const cssAlgoImageTop =
+                    parseFloat(
+                        getComputedStyle(container)
+                            .getPropertyValue("--algo-image-top")
+                    );
+
+                const configuredBoxTop =
+                    Number.isFinite(cssAlgoImageTop)
+                        ? cssAlgoImageTop
+                        : ALGO_IMAGE_TOP_FALLBACK;
+
+
+                const cssContentImageGap =
+                    parseFloat(
+                        getComputedStyle(container)
+                            .getPropertyValue("--algo-content-image-gap")
+                    );
+
+
+                const contentImageGap =
+                    Number.isFinite(cssContentImageGap)
+                        ? cssContentImageGap
+                        : 12;
+
+
+                const mainInfo =
+                    hero?.querySelector<HTMLElement>(".main_block_info") ??
+                    null;
+
+
+                const heroRect =
+                    hero?.getBoundingClientRect();
+
+
+                const mainInfoRect =
+                    mainInfo?.getBoundingClientRect();
+
+
+                const contentBasedBoxTop =
+                    heroRect && mainInfoRect
+                        ? mainInfoRect.bottom - heroRect.top + contentImageGap
+                        : configuredBoxTop;
+
+
+                /*
+                    Для короткого текста сохраняем позицию из Figma.
+                    Если перевод стал выше, картинка и видео автоматически
+                    уходят под кнопку с заданным промежутком.
+                */
                 const boxTop =
+                    Math.max(
+                        configuredBoxTop,
+                        Math.ceil(contentBasedBoxTop)
+                    );
 
-                    renderHeight -
-                    boxHeight -
-                    boxBottomOffset;
+
+                if (hero) {
+                    hero.style.setProperty(
+                        "--algo-image-top-resolved",
+                        `${boxTop}px`
+                    );
+                }
+
+
+                const boxBottomSpace =
+                    Number.isFinite(cssAlgoImageBottomSpace)
+                        ? cssAlgoImageBottomSpace
+                        : ALGO_IMAGE_BOTTOM_SPACE_FALLBACK;
+
+
+                /*
+                    Hero всегда заканчивается после картинки:
+                    top картинки + её реальная адаптивная высота
+                    + заданный нижний отступ.
+                */
+                const calculatedHeroHeight =
+                    Math.ceil(
+                        boxTop +
+                        boxHeight +
+                        boxBottomSpace
+                    );
+
+
+                if (hero) {
+                    hero.style.setProperty(
+                        "--hero-calculated-height",
+                        `${calculatedHeroHeight}px`
+                    );
+                }
 
 
                 const minX =
@@ -2078,17 +2193,25 @@ const AlgoReveal = () => {
                     Двигаем весь video/reveal слой физически на нужное
                     количество пикселей, НЕ меняя SETTINGS.videoOffsetY.
 
-                    Положительное videoBoxOffsetYPx = выше.
-                    Отрицательное = ниже.
+                    Положительное videoBoxOffsetYPx = ниже.
+                    Отрицательное = выше.
                 */
-                const videoBoxBottomOffset =
-                    boxBottomOffset +
-                    SETTINGS.videoBoxOffsetYPx;
+                const cssVideoBoxOffsetY =
+                    parseFloat(
+                        getComputedStyle(container)
+                            .getPropertyValue("--algo-video-box-offset-y")
+                    );
+
+
+                const videoBoxOffsetY =
+                    Number.isFinite(cssVideoBoxOffsetY)
+                        ? cssVideoBoxOffsetY
+                        : SETTINGS.videoBoxOffsetYPx;
+
 
                 const videoBoxTop =
-                    renderHeight -
-                    boxHeight -
-                    videoBoxBottomOffset;
+                    boxTop +
+                    videoBoxOffsetY;
 
                 const videoMinY =
                     (
@@ -2142,6 +2265,16 @@ const AlgoReveal = () => {
         resizeObserver.observe(
             container
         );
+
+
+        const mainInfo =
+            container.parentElement
+                ?.querySelector<HTMLElement>(".main_block_info");
+
+
+        if (mainInfo) {
+            resizeObserver.observe(mainInfo);
+        }
 
 
 
@@ -2965,9 +3098,10 @@ const AlgoReveal = () => {
                 className="algo_reveal_base_image"
                 style={{
                     position: "absolute",
-                    left: "50%",
-                    bottom: ALGO_IMAGE_BOTTOM_WITH_SPACE,
-                    width: "min(1057px, 70%)",
+                    left: "calc(50% + var(--algo-image-offset-x, 0px))",
+                    top: "var(--algo-image-top-resolved, var(--algo-image-top, 402px))",
+                    bottom: "auto",
+                    width: "min(1057px, var(--algo-image-width, 70%))",
                     height: "auto",
                     transform: "translateX(-50%)",
                     display: "block",

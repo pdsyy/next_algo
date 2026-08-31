@@ -1280,6 +1280,8 @@
     .main_page .video_demonstration{
         grid-template-columns: 1fr;
     }
+
+
 }
 
 
@@ -2371,8 +2373,15 @@
     }
 
     .product_name_bottom {
-        font-size: 20px;
+        font-size: 32px;
         line-height: 120%;
+        display: flex;
+        align-items: center;
+    }
+
+    .product_name_bottom img{
+        width: 54px;
+        margin-right: 8px;
     }
 
     .product_desc_bottom {

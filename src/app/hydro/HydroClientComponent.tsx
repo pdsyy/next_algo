@@ -34,6 +34,7 @@ import youtube_icon from "../images/youtube_icon.svg";
 import {useThxContext} from "@/context/ThxContext";
 import lines from "@/app/images/bottom_lines.svg";
 import Image from "next/image";
+import bottom_product_image from "@/app/aero/images/aero_product_image.png";
 
 const HydroPage = () => {
     const {activePopup, setActivePopup} = useThxContext()
@@ -508,11 +509,12 @@ const HydroPage = () => {
 
             <div className="buy_block_fs">
                 <div className="buy_block">
-                    <motion.div className="buy_block_image" {...fadeLeft}>
+                    <motion.div className="buy_block_image mob_none" {...fadeLeft}>
                         <img src={hydroBuyImage.src} alt="Hydro EA"/>
                     </motion.div>
                     <motion.div className="buy_block_info" {...fadeRight}>
                         <div className="product_name_bottom">
+                            <img src={hydroBuyImage.src} alt="Hydro EA" className = "desk_none"/>
                             {t.hydro.hero.botName}
                         </div>
                         <div className="product_desc_bottom">

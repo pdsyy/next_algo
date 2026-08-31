@@ -4,6 +4,7 @@ import lines from "./images/bottom_lines.svg"
 import Image from "next/image";
 import track_record_main from "./images/track_record_main.png"
 import first_step_bg from "./images/first_trade_bg.png"
+import first_step_bg_mobile from "./images/first_step_bg_mobile.png"
 import market_image1 from "./images/market_image1.png"
 import market_image2 from "./images/market_image2.png"
 import market_image3 from "./images/market_image3.png"
@@ -63,13 +64,12 @@ import AnimatedNumber from "@/components/AnimatedNumber";
 import logo from "@/app/images/logo.svg";
 import tg_icon from "@/app/images/tg_icon.svg";
 import youtube_icon from "@/app/images/youtube_icon.svg";
-import trailer_preview from "@/app/images/trailer_preview.png";
-import aeroPreview from "@/app/aero/images/aero_preview_t.png";
 import HeroBlock from "@/app/Hero";
 import AlgoReveal from "@/app/AlgoReveal";
 import MainVideoComponent from "@/app/MainVideoComponent";
 import TestButton from "@/app/TestButton";
 import TestPaymentButton from "@/app/TestButton";
+import ImageMagnifier from "@/components/lensImage/ImageMagnifier";
 
 const MotionImage = motion.create(Image);
 
@@ -519,53 +519,69 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                 <div className="track_record_container_gradient">
                     <div className="track_record_container">
                         <div className="track_record_container_grid">
+
                             <div className="track_record_info">
                                 <div className="track_record_caption">
-                                    Proven track record
+                                    {t.trackRecord.title}
                                 </div>
+
                                 <div className="track_record_desc">
-                                    Our bots have a proven track record of delivering consistent results.
-                                    You can see for yourself
+                                    {t.trackRecord.desc}
                                 </div>
+
                                 <div className="track_record_item">
                                     <div className="track_record_item_name">
                                         <Image src={t_record_image1} alt=""/>
-                                        Consistent results
+                                        {t.trackRecord.consistentResults.title}
                                     </div>
+
                                     <div className="track_record_item_desc">
-                                        With Algo World, you can expect safe and consistent monthly profits.
+                                        {t.trackRecord.consistentResults.desc}
                                     </div>
                                 </div>
+
                                 <div className="track_record_item">
                                     <div className="track_record_item_name">
                                         <Image src={t_record_image2} alt=""/>
-                                        Low drawdown
+                                        {t.trackRecord.lowDrawdown.title}
                                     </div>
+
                                     <div className="track_record_item_desc">
-                                        We designed our bot to be as low-risk as possible while still delivering strong
-                                        results,
+                                        {t.trackRecord.lowDrawdown.desc}
                                     </div>
                                 </div>
+
                                 <div className="track_record_item">
                                     <div className="track_record_item_name">
                                         <Image src={t_record_image3} alt=""/>
-                                        Verified by Myfxbook
+                                        {t.trackRecord.verified.title}
                                     </div>
+
                                     <div className="track_record_item_desc">
-                                        Our track record is fully transparent and verified by Myfxbook. Check it out for
-                                        yourself.
+                                        {t.trackRecord.verified.desc}
                                     </div>
                                 </div>
                             </div>
+
                             <div className="track_record_image_container">
-                                <Image src={track_record_main} alt="" className="track_record_main"/>
 
+                                <ImageMagnifier
+                                    src={track_record_main.src}
+                                    alt="Myfxbook trading statistics"
+                                    zoom={1.8}
+                                    lensSize={160}
+                                />
                             </div>
-                        </div>
-                        <a className="myfxbook_button" href="#" target="_blank">
-                            Myfxbook
-                        </a>
 
+                        </div>
+
+                        <a
+                            className="myfxbook_button"
+                            href="#"
+                            target="_blank"
+                        >
+                            {t.trackRecord.button}
+                        </a>
                     </div>
                 </div>
 
@@ -599,41 +615,45 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                 <div className="first_deal_block" id="how-it-works">
                     <motion.h2 {...fadeUp} dangerouslySetInnerHTML={{__html: t.home.steps.title}}/>
 
-                    <Image src={first_step_bg} alt="" className="first_step_bg"/>
+                    <Image src={first_step_bg} alt="" className="first_step_bg mob_none"/>
+                    <Image src={first_step_bg_mobile} alt="" className="first_step_bg desk_none"/>
                     <div className="step_container choose_algorithm">
                         <div className="step_name">
-                            Вибір алгоритму
+                            {t.steps.chooseAlgorithm.title}
                         </div>
+
                         <div className="step_desc">
-                            Ви визначаєте свої цілі та допустимий ризик. У нашому каталозі є рішення як для
-                            консервативного накопичення, так і для активної торгівлі.
+                            {t.steps.chooseAlgorithm.desc}
                         </div>
                     </div>
 
                     <div className="step_container connect">
                         <div className="step_name">
-                            Підключення
+                            {t.steps.connect.title}
                         </div>
+
                         <div className="step_desc">
-                            Бот встановлюється на ваш акаунт за кілька кліків. Ви отримуєте всі необхідні інструкції по підключенню разом з індивідуальною ліцензією для активації, після чого обраний бот починає свою роботу.
+                            {t.steps.connect.desc}
                         </div>
                     </div>
 
                     <div className="step_container autonomous_trading">
                         <div className="step_name">
-                            Автономна торгівля
+                            {t.steps.autonomousTrading.title}
                         </div>
+
                         <div className="step_desc">
-                            Алгоритм сканує ринок 24/7. Як тільки умови стратегії збігаються (ціна, індикатори, обсяги), бот миттєво відкриває позицію.
+                            {t.steps.autonomousTrading.desc}
                         </div>
                     </div>
 
                     <div className="step_container monitoring">
                         <div className="step_name">
-                            Моніторинг і результат
+                            {t.steps.monitoring.title}
                         </div>
+
                         <div className="step_desc">
-                            Ви слідкуєте за статистикою в реальному часі. У будь-який момент роботу бота можна призупинити або скоригувати налаштування.
+                            {t.steps.monitoring.desc}
                         </div>
                     </div>
                     {/*<div className="first_deal_details">

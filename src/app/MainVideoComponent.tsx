@@ -99,7 +99,7 @@ const MainVideoComponent = () => {
                     src="/Algo%20World%20—%20Official%20Teaser%20Trailer.mp4"
                     muted
                     playsInline
-                    preload="metadata"
+                    preload="auto"
                     className="main_video"
                     onPlay={() => setIsPlaying(true)}
                     onPause={() => setIsPlaying(false)}

@@ -98,7 +98,7 @@ const SETTINGS = {
         Это НЕ меняет videoOffsetY и не смешивается с UV-настройкой.
     */
     /* Резервное значение. Основное задаётся CSS-переменной. */
-    videoBoxOffsetYPx: -25,
+    videoBoxOffsetYPx: -35,
 };
 
 

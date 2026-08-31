@@ -7,7 +7,7 @@
     --algo-image-bottom-space: 102px;
     --algo-image-width: 70%;
     --algo-image-offset-x: 0px;
-    --algo-video-box-offset-y: -25px;
+    --algo-video-box-offset-y: -35px;
     --algo-content-image-gap: 12px;
 }
 
@@ -100,14 +100,15 @@
 .top_lines_images {
     position: absolute;
     top: -40px;
-    left: 50%;
-    transform: translateX(-50%);
     height: 441px;
-    width: auto;
     max-width: none;
     pointer-events: none;
     filter: brightness(0) invert(1);
     mix-blend-mode: normal;
+    width: 100%;
+    transform-origin: center;
+    left: 50%;
+    transform: translateX(-50%) scaleX(1.1);
 }
 
 

@@ -58,8 +58,11 @@ export default function PaymentPage() {
         const successItems=checkout?.items ?? [];
         sessionStorage.setItem(SUCCESS_KEY,JSON.stringify({
             orderCode:payment.orderCode || "",
-            productNames:successItems.map(item=>item.name),
-            imageSrc:successItems[0]?.imageSrc,
+            products:successItems.map(item=>({
+                id:item.id,
+                name:item.name,
+                imageSrc:item.imageSrc,
+            })),
             completedAt:Date.now(),
         }));
         window.location.replace("/?payment=success");

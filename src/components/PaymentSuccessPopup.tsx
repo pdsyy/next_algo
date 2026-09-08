@@ -9,8 +9,11 @@ const SUCCESS_KEY = "algo_world_payment_success_v1";
 
 type SuccessData = {
     orderCode: string;
-    productNames: string[];
-    imageSrc?: string;
+    products: Array<{
+        id: string;
+        name: string;
+        imageSrc?: string;
+    }>;
     completedAt: number;
 };
 
@@ -19,7 +22,12 @@ function readSuccess(): SuccessData | null {
         const raw = sessionStorage.getItem(SUCCESS_KEY);
         if (!raw) return null;
         const value = JSON.parse(raw) as Partial<SuccessData>;
-        if (!value.orderCode || !Array.isArray(value.productNames) || value.productNames.length === 0 || typeof value.completedAt !== "number") return null;
+        if (
+            !value.orderCode ||
+            !Array.isArray(value.products) ||
+            value.products.length === 0 ||
+            typeof value.completedAt !== "number"
+        ) return null;
         return value as SuccessData;
     } catch {
         return null;
@@ -51,13 +59,33 @@ export default function PaymentSuccessPopup() {
 
     if (!data) return null;
 
+    const productNames = data.products.map(product => product.name);
+
     return (
         <div className={styles.overlay} role="presentation">
             <section className={styles.dialog} role="dialog" aria-modal="true" aria-labelledby="payment-success-title">
-                {data.imageSrc ? <img className={styles.image} src={data.imageSrc} alt="" /> : <div className={styles.placeholder}>◇</div>}
+                <div
+                    className={`${styles.products} ${
+                        data.products.length === 1 ? styles.singleProduct : ""
+                    }`}
+                    aria-label="Purchased products"
+                >
+                    {data.products.map(product => (
+                        <div className={styles.product} key={product.id}>
+                            {product.imageSrc ? (
+                                <img className={styles.image} src={product.imageSrc} alt={product.name} />
+                            ) : (
+                                <div className={styles.placeholder} aria-hidden="true">◇</div>
+                            )}
+                            {data.products.length > 1 && (
+                                <strong className={styles.productName}>{product.name}</strong>
+                            )}
+                        </div>
+                    ))}
+                </div>
                 <h2 id="payment-success-title">Payment Successful!</h2>
                 <p>
-                    Your {data.productNames.join(", ")} {data.productNames.length === 1 ? "license is" : "licenses are"} being generated.
+                    Your {productNames.join(", ")} {productNames.length === 1 ? "license is" : "licenses are"} being generated.
                     Check your email for activation instructions and setup guide.
                 </p>
                 <small>Order #{data.orderCode}</small>

@@ -19,7 +19,9 @@
     gap: 24px;
     width: 100%;
     max-width: 1200px;
-    margin: 0 auto
+    margin: 0 auto;
+    z-index: 2;
+    position: relative;
 }
 
 .payment_home {

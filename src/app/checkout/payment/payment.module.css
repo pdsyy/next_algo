@@ -263,7 +263,12 @@
 
 @media (max-width: 760px) {
     .page {
-        padding: 62px 16px 24px
+        padding: 16px 16px 24px
+    }
+
+    .home{
+        position: relative;
+        transform: none;
     }
 
     .shell {
@@ -278,7 +283,12 @@
 @media (max-width: 480px) {
     .page {
         padding-right: 10px;
-        padding-left: 10px
+        padding-left: 10px;
+        width: 100%;
+    }
+
+    .back{
+        width: 100%;
     }
 
     .actions {

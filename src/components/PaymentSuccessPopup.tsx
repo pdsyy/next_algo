@@ -88,7 +88,7 @@ export default function PaymentSuccessPopup() {
                     Your {productNames.join(", ")} {productNames.length === 1 ? "license is" : "licenses are"} being generated.
                     Check your email for activation instructions and setup guide.
                 </p>
-                <small>Order #{data.orderCode}</small>
+                {/*<small>Order #{data.orderCode}</small>*/}
                 <div className={styles.actions}>
                     <button type="button" className={styles.done} onClick={close}>Done</button>
                     <a className={styles.help} href="mailto:support@algo-world.com">Need help?</a>

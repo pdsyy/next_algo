@@ -468,9 +468,13 @@
 }
 
 @media (max-width: 760px) {
+
+    .back{
+        width: 100%;
+    }
     .page {
         min-height: 100vh;
-        padding: 62px 16px 24px;
+        padding: 16px 16px 24px;
         overflow: visible;
     }
 

@@ -460,21 +460,21 @@
     }
 
     .back {
-        position: absolute;
-        top: 0;
-        left: 0;
-        transform: translateY(calc(-100% - 12px));
+        position: relative;
     }
 }
 
-@media (max-width: 760px) {
+
+
+@media (max-width: 768px) {
 
     .back{
         width: 100%;
+        order: 1;
     }
     .page {
         min-height: 100vh;
-        padding: 16px 16px 24px;
+        padding: 16px 16px 79px;
         overflow: visible;
     }
 
@@ -484,7 +484,7 @@
     }
 
     .customerCard {
-        order: 1;
+        order: 3;
     }
 
     .summaryCard {

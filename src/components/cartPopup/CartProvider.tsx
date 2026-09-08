@@ -11,6 +11,7 @@ import {
 } from "react";
 
 import type { CartItem } from "./CartPopup";
+import {usePathname} from "next/navigation";
 
 const CART_STORAGE_KEY = "algo_world_cart_v1";
 
@@ -73,6 +74,17 @@ export function CartProvider({ children }: { children: ReactNode }) {
     const [items, setItemsState] = useState<CartItem[]>([]);
     const [isOpen, setIsOpen] = useState(false);
     const [isHydrated, setIsHydrated] = useState(false);
+    const pathname = usePathname();
+    useEffect(() => {
+        if (
+            pathname === "/checkout" ||
+            pathname.startsWith("/checkout/") ||
+            pathname === "/payment" ||
+            pathname.startsWith("/payment/")
+        ) {
+            setIsOpen(false);
+        }
+    }, [pathname]);
 
     useEffect(() => {
         try {

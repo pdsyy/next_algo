@@ -151,8 +151,7 @@
 
 .dataField button:hover,
 .dataField button:focus-visible {
-    border-color: #8aaaf5;
-    box-shadow: 0 0 0 3px rgb(39 103 240 / 10%);
+    box-shadow: 0 1px 2px 0 #0A0D1408;
 }
 
 .dataField button strong {
@@ -218,14 +217,8 @@
 }
 
 .cryptoIcon {
-    display: grid;
-    place-items: center;
-    width: 36px;
-    height: 36px;
-    clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
-    background: #50af95;
-    color: #ffffff;
-    font: 700 22px/1 Inter, sans-serif;
+   width: 48px;
+    height: 48px;
 }
 
 .cardBrands {
@@ -281,15 +274,9 @@
     border-radius: 50%;
 }
 
-.paymentOptionActive .radioMark { border-color: #262626; }
+.paymentOptionActive .radioMark { border: 4px solid #262626; }
 
-.paymentOptionActive .radioMark::after {
-    position: absolute;
-    inset: 3px;
-    border-radius: 50%;
-    background: #262626;
-    content: "";
-}
+
 
 .actions {
     display: grid;
@@ -507,9 +494,13 @@
 }
 
 @media (max-width: 760px) {
+    .back{
+        width: 100%;
+        order: 1;
+    }
     .page {
         min-height: 100vh;
-        padding: 62px 16px 24px;
+        padding: 16px 16px 24px;
         overflow: visible;
     }
 
@@ -518,9 +509,14 @@
         gap: 16px;
     }
 
-    .reviewCard { order: 1; }
+    .reviewCard { order: 3; }
     .summaryCard { order: 2; }
     .twoColumns { grid-template-columns: 1fr; }
+}
+
+.disabled_payment_method{
+    pointer-events: none;
+    filter: grayscale(1);
 }
 
 @media (max-width: 520px) {

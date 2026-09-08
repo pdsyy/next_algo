@@ -2,16 +2,17 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-
+import editIcon from "./images/edit-line.svg"
 import cloudIcon from "./images/cloude.svg";
 import closeIcon from "./images/close_cross.svg";
 import deleteIcon from "./images/delete_icon.svg";
-
+import tether_icon from "./images/tether.svg"
 import { useCart } from "@/components/cartPopup/CartProvider";
 import Mql5PaymentFlow from "./Mql5PaymentFlow";
 import topLines from "@/app/images/video_block_top_lines.svg";
 import bottomLines from "@/app/images/bottom_lines_video_block.svg";
 import styles from "./review.module.css";
+import "../checkout.css"
 
 const CUSTOMER_STORAGE_KEY = "checkoutCustomer";
 const REVIEW_STORAGE_KEY = "checkoutReview";
@@ -59,24 +60,6 @@ function isStoredReview(value: unknown): value is StoredReview {
     );
 }
 
-function EditIcon() {
-    return (
-        <svg
-            viewBox="0 0 20 20"
-            aria-hidden="true"
-            className={styles.editIcon}
-        >
-            <path
-                d="M4.25 13.9 3.7 16.3l2.4-.55L14.75 7.1l-1.85-1.85L4.25 13.9Zm9.55-9.55 1.85 1.85.85-.85a1.31 1.31 0 0 0 0-1.85 1.31 1.31 0 0 0-1.85 0l-.85.85Z"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.35"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-            />
-        </svg>
-    );
-}
 
 export default function ReviewPage() {
     const router = useRouter();
@@ -84,7 +67,7 @@ export default function ReviewPage() {
 
     const [customer, setCustomer] = useState<StoredCustomer | null>(null);
     const [paymentMethod, setPaymentMethod] =
-        useState<PaymentMethod>("card");
+        useState<PaymentMethod>("crypto");
     const [isStorageLoaded, setIsStorageLoaded] = useState(false);
     const [isMql5Open, setIsMql5Open] = useState(false);
 
@@ -225,7 +208,7 @@ export default function ReviewPage() {
                                 </span>
                                 <button type="button" onClick={editCustomer}>
                                     <strong>{customer.firstName}</strong>
-                                    <EditIcon />
+                                    <img src = {editIcon.src}  alt = "" className = {styles.editIcon}/>
                                 </button>
                             </div>
 
@@ -235,7 +218,7 @@ export default function ReviewPage() {
                                 </span>
                                 <button type="button" onClick={editCustomer}>
                                     <strong>{customer.lastName}</strong>
-                                    <EditIcon />
+                                    <img src = {editIcon.src}  alt = "" className = {styles.editIcon}/>
                                 </button>
                             </div>
                         </div>
@@ -246,7 +229,7 @@ export default function ReviewPage() {
                             </span>
                             <button type="button" onClick={editCustomer}>
                                 <strong>{customer.email}</strong>
-                                <EditIcon />
+                                <img src = {editIcon.src}  alt = "" className = {styles.editIcon}/>
                             </button>
                         </div>
 
@@ -254,7 +237,7 @@ export default function ReviewPage() {
                             <span>Referral / discount code</span>
                             <button type="button" onClick={editCustomer}>
                                 <strong>{customer.referralCode || "—"}</strong>
-                                <EditIcon />
+                                <img src = {editIcon.src}  alt = "" className = {styles.editIcon}/>
                             </button>
                         </div>
                     </div>
@@ -280,13 +263,13 @@ export default function ReviewPage() {
                                 checked={paymentMethod === "crypto"}
                                 onChange={() => setPaymentMethod("crypto")}
                             />
-                            <span className={styles.cryptoIcon}>₮</span>
+                            <img className={styles.cryptoIcon} src = {tether_icon.src} alt = ""/>
                             <strong>Crypto</strong>
                             <span className={styles.radioMark} aria-hidden="true" />
                         </label>
 
                         <label
-                            className={`${styles.paymentOption} ${
+                            className={`${styles.disabled_payment_method} ${styles.paymentOption} ${
                                 paymentMethod === "card"
                                     ? styles.paymentOptionActive
                                     : ""
@@ -298,6 +281,7 @@ export default function ReviewPage() {
                                 value="card"
                                 checked={paymentMethod === "card"}
                                 onChange={() => setPaymentMethod("card")}
+                                disabled={true}
                             />
                             <span className={styles.cardBrands} aria-hidden="true">
                                 <span className={styles.visa}>VISA</span>

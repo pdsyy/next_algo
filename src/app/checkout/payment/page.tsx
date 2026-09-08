@@ -6,6 +6,7 @@ import { useCart } from "@/components/cartPopup/CartProvider";
 import styles from "./payment.module.css";
 import bottom_lines from "@/app/images/bottom_lines_video_block.svg";
 import top_lines from "@/app/images/video_block_top_lines.svg";
+import "../checkout.css"
 
 const CUSTOMER_STORAGE_KEY = "checkoutCustomer";
 const PENDING_ORDER_KEY = "algo_world_pending_crypto_order_v1";

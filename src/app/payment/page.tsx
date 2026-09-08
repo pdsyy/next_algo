@@ -10,6 +10,7 @@ const PAYMENT_KEY = "currentPayment";
 const CHECKOUT_KEY = "algo_world_checkout_v1";
 const SUCCESS_KEY = "algo_world_payment_success_v1";
 const FINAL_STATUSES = new Set(["finished", "failed", "expired", "refunded"]);
+import "../checkout/checkout.css"
 
 type Payment = {
     id: string;

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -11,6 +11,7 @@ export type CartItem = {
     name: string;
     subtitle?: string;
     imageSrc?: string;
+    /** Price for one item in the selected currency, e.g. 1200 = $1,200. */
     unitPrice: number;
     quantity: number;
 };
@@ -31,7 +32,9 @@ export type CartPopupProps = {
     onCheckout: (cart: CartCheckout) => void | Promise<void>;
     language?: CartLanguage;
     currency?: string;
+    /** Fixed discount in the selected currency, not a percentage. */
     discount?: number;
+    /** Optional real order number and ISO date. Omit for an unplaced order. */
     orderNumber?: string;
     orderDate?: string;
 };
@@ -42,24 +45,24 @@ const copy = {
         subtotal: "Сума", discount: "Знижка", total: "Разом", close: "Закрити",
         buy: "Купити", processing: "Зачекайте…", empty: "Ваш кошик порожній",
         emptyText: "Додайте торгового бота, щоб оформити замовлення.",
-        less: "Зменшити кількість", more: "Збільшити кількість", remove: "Видалити",
-        quantity: "Кількість", error: "Не вдалося перейти до оплати. Спробуйте ще раз.",
+        remove: "Видалити",
+        error: "Не вдалося перейти до оплати. Спробуйте ще раз.",
     },
     RU: {
         title: "Корзина", order: "Заказ", summary: "ВАШ ЗАКАЗ",
         subtotal: "Сумма", discount: "Скидка", total: "Итого", close: "Закрыть",
         buy: "Купить", processing: "Подождите…", empty: "Ваша корзина пуста",
         emptyText: "Добавьте торгового бота, чтобы оформить заказ.",
-        less: "Уменьшить количество", more: "Увеличить количество", remove: "Удалить",
-        quantity: "Количество", error: "Не удалось перейти к оплате. Попробуйте ещё раз.",
+        remove: "Удалить",
+        error: "Не удалось перейти к оплате. Попробуйте ещё раз.",
     },
     EN: {
         title: "Cart", order: "Order", summary: "ORDER SUMMARY",
         subtotal: "Subtotal", discount: "Discount", total: "Total", close: "Close",
         buy: "Buy", processing: "Please wait…", empty: "Your cart is empty",
         emptyText: "Add a trading bot to place your order.",
-        less: "Decrease quantity", more: "Increase quantity", remove: "Remove",
-        quantity: "Quantity", error: "Could not proceed to checkout. Please try again.",
+        remove: "Remove",
+        error: "Could not proceed to checkout. Please try again.",
     },
 };
 
@@ -88,9 +91,9 @@ function TrashIcon() {
 }
 
 function CartDialog({
-                        onClose, items, onItemsChange, onCheckout, isClosing,
+                        onClose, items, onItemsChange, onCheckout,
                         language = "EN", currency = "USD", discount = 0, orderNumber, orderDate,
-                    }: Omit<CartPopupProps, "isOpen"> & { isClosing: boolean }) {
+                    }: Omit<CartPopupProps, "isOpen">) {
     const text = copy[language];
     const titleId = useId();
     const panelRef = useRef<HTMLDivElement>(null);
@@ -101,6 +104,7 @@ function CartDialog({
     const [error, setError] = useState(false);
     closeRef.current = onClose;
 
+    // Respect currencies with 0 or 3 fractional digits as well as USD/EUR.
     const formatter = new Intl.NumberFormat(locales[language], {
         style: "currency", currency,
     });
@@ -110,7 +114,7 @@ function CartDialog({
     const scale = 10 ** fractionDigits;
     const money = (minor: number) => formatter.format(minor / scale);
     const subtotalMinor = items.reduce((sum, item) =>
-        sum + Math.round(item.unitPrice * scale) * item.quantity, 0);
+        sum + Math.round(item.unitPrice * scale), 0);
     const discountMinor = Math.min(subtotalMinor, Math.max(0,
         Number.isFinite(discount) ? Math.round(discount * scale) : 0));
     const totalMinor = subtotalMinor - discountMinor;
@@ -175,65 +179,39 @@ function CartDialog({
         };
     }, []);
 
-    const changeQuantity = (id: string, delta: number) => {
-        if (busyRef.current) return;
-        setError(false);
-        onItemsChange(items.map(item => item.id === id
-            ? { ...item, quantity: Math.min(99, Math.max(1, item.quantity + delta)) }
-            : item));
-    };
     const remove = (id: string) => {
         if (busyRef.current) return;
         setError(false);
+        // Move focus before removing the row that contains the focused button.
         panelRef.current?.focus();
         onItemsChange(items.filter(item => item.id !== id));
     };
     const checkout = async () => {
         if (busyRef.current || items.length === 0) return;
-
         busyRef.current = true;
         setBusy(true);
         setError(false);
-
         try {
             await onCheckout({
-                items: items.map(item => ({ ...item })),
-                currency,
+                items: items.map(item => ({ ...item })), currency,
                 subtotal: subtotalMinor / scale,
                 discount: discountMinor / scale,
                 total: totalMinor / scale,
             });
-
-            // Закрываем корзину после сохранения заказа
-            onClose();
-        } catch (error) {
-            console.error("CHECKOUT ERROR:", error);
-
-            if (aliveRef.current) {
-                setError(true);
-            }
+        } catch {
+            if (aliveRef.current) setError(true);
         } finally {
             busyRef.current = false;
-
-            if (aliveRef.current) {
-                setBusy(false);
-            }
+            if (aliveRef.current) setBusy(false);
         }
     };
 
     return createPortal(
-        <div
-            className={`${styles.overlay} ${isClosing ? styles.overlayClosing : ""}`}
-            onClick={event => {
-                if (event.target === event.currentTarget) onClose();
-            }}
-        >
-            <div
-                ref={panelRef}
-                className={`${styles.panel} ${isClosing ? styles.panelClosing : ""}`}
-                role="dialog"
-                aria-modal="true"
-                aria-labelledby={titleId} tabIndex={-1} lang={htmlLanguages[language]}>
+        <div className={styles.overlay} onClick={event => {
+            if (event.target === event.currentTarget) onClose();
+        }}>
+            <div ref={panelRef} className={styles.panel} role="dialog" aria-modal="true"
+                 aria-labelledby={titleId} tabIndex={-1} lang={htmlLanguages[language]}>
                 <header className={styles.header}>
                     <h2 id={titleId} className={styles.title}>
                         {orderNumber ? `${text.order} #${orderNumber}` : text.title}
@@ -268,13 +246,6 @@ function CartDialog({
                                             {item.subtitle && <p className={styles.subtitle}>{item.subtitle}</p>}
                                         </div>
                                         <div className={styles.controls}>
-                                            <div className={styles.quantity} role="group" aria-label={`${text.quantity}: ${item.name}`}>
-                                                <button type="button" onClick={() => changeQuantity(item.id, -1)}
-                                                        disabled={busy || item.quantity <= 1} aria-label={`${text.less}: ${item.name}`}>−</button>
-                                                <span aria-live="polite" aria-atomic="true">{item.quantity}</span>
-                                                <button type="button" onClick={() => changeQuantity(item.id, 1)}
-                                                        disabled={busy || item.quantity >= 99} aria-label={`${text.more}: ${item.name}`}>+</button>
-                                            </div>
                                             <button type="button" className={styles.remove} onClick={() => remove(item.id)}
                                                     disabled={busy} aria-label={`${text.remove}: ${item.name}`}><TrashIcon /></button>
                                         </div>
@@ -307,33 +278,7 @@ function CartDialog({
 
 export default function CartPopup(props: CartPopupProps) {
     const [mounted, setMounted] = useState(false);
-    const [shouldRender, setShouldRender] = useState(false);
-    const [isClosing, setIsClosing] = useState(false);
-
     useEffect(() => setMounted(true), []);
-
-    useEffect(() => {
-        if (!mounted) return;
-
-        if (props.isOpen) {
-            setShouldRender(true);
-            setIsClosing(false);
-            return;
-        }
-
-        if (!shouldRender) return;
-
-        setIsClosing(true);
-
-        const closeTimer = window.setTimeout(() => {
-            setShouldRender(false);
-            setIsClosing(false);
-        }, 240);
-
-        return () => window.clearTimeout(closeTimer);
-    }, [mounted, props.isOpen, shouldRender]);
-
-    if (!mounted || !shouldRender) return null;
-
-    return <CartDialog {...props} isClosing={isClosing} />;
+    if (!mounted || !props.isOpen) return null;
+    return <CartDialog {...props} />;
 }

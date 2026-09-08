@@ -55,11 +55,11 @@ export default function PaymentPage() {
     useEffect(()=>{
         if(payment?.status!=="finished" || redirected.current) return;
         redirected.current=true;
-        const item=checkout?.items[0];
+        const successItems=checkout?.items ?? [];
         sessionStorage.setItem(SUCCESS_KEY,JSON.stringify({
             orderCode:payment.orderCode || "",
-            productName:item?.name || "trading bot",
-            imageSrc:item?.imageSrc,
+            productNames:successItems.map(item=>item.name),
+            imageSrc:successItems[0]?.imageSrc,
             completedAt:Date.now(),
         }));
         window.location.replace("/?payment=success");
@@ -87,8 +87,8 @@ export default function PaymentPage() {
             <div className="checkout_summary_label">ORDER SUMMARY</div>
             <ul className="checkout_items">{checkout.items.map(item=><li key={item.id} className="checkout_item">
                 <div className="checkout_item_image">{item.imageSrc?<img src={item.imageSrc} alt=""/>:<div className="checkout_image_placeholder"/>}</div>
-                <div className="checkout_item_info"><strong>{item.name}</strong>{item.subtitle&&<span>{item.subtitle}</span>}<span>Quantity: {item.quantity}</span></div>
-                <div className="checkout_item_price">{formatter.format(item.unitPrice*item.quantity)}</div>
+                <div className="checkout_item_info"><strong>{item.name}</strong>{item.subtitle&&<span>{item.subtitle}</span>}</div>
+                <div className="checkout_item_price">{formatter.format(item.unitPrice)}</div>
             </li>)}</ul>
             <div className="checkout_totals"><div><span>Subtotal</span><span>{formatter.format(checkout.subtotal)}</span></div><div><span>Discount</span><span>{formatter.format(checkout.discount)}</span></div><div className="checkout_total"><span>Total</span><strong>{formatter.format(checkout.total)}</strong></div></div>
         </aside>}

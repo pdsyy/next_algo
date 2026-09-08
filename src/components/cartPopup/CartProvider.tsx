@@ -10,7 +10,7 @@ import {
     useState,
 } from "react";
 
-import type {CartItem} from "./CartPopup";
+import type { CartItem } from "./CartPopup";
 
 const CART_STORAGE_KEY = "algo_world_cart_v1";
 
@@ -38,26 +38,38 @@ const CartContext = createContext<CartContextValue | null>(null);
 function normalizeItems(value: unknown): CartItem[] {
     if (!Array.isArray(value)) return [];
 
-    return value.flatMap((candidate): CartItem[] => {
-        if (!candidate || typeof candidate !== "object") return [];
+    const uniqueItems = new Map<string, CartItem>();
+
+    for (const candidate of value) {
+        if (!candidate || typeof candidate !== "object") continue;
 
         const item = candidate as Partial<CartItem>;
-        if (typeof item.id !== "string" || !item.id.trim() || typeof item.name !== "string" || !item.name.trim() || typeof item.unitPrice !== "number" || !Number.isFinite(item.unitPrice) || item.unitPrice < 0) {
-            return [];
+        if (
+            typeof item.id !== "string" ||
+            !item.id.trim() ||
+            typeof item.name !== "string" ||
+            !item.name.trim() ||
+            typeof item.unitPrice !== "number" ||
+            !Number.isFinite(item.unitPrice) ||
+            item.unitPrice < 0
+        ) {
+            continue;
         }
 
-        return [{
+        uniqueItems.set(item.id, {
             id: item.id,
             name: item.name,
             subtitle: typeof item.subtitle === "string" ? item.subtitle : undefined,
             imageSrc: typeof item.imageSrc === "string" ? item.imageSrc : undefined,
             unitPrice: item.unitPrice,
-            quantity: Math.min(99, Math.max(1, Math.floor(item.quantity ?? 1))),
-        }];
-    });
+            quantity: 1,
+        });
+    }
+
+    return [...uniqueItems.values()];
 }
 
-export function CartProvider({children}: { children: ReactNode }) {
+export function CartProvider({ children }: { children: ReactNode }) {
     const [items, setItemsState] = useState<CartItem[]>([]);
     const [isOpen, setIsOpen] = useState(false);
     const [isHydrated, setIsHydrated] = useState(false);
@@ -74,7 +86,6 @@ export function CartProvider({children}: { children: ReactNode }) {
     }, []);
 
     useEffect(() => {
-        // Do not overwrite a saved cart with [] before it has been restored.
         if (!isHydrated) return;
 
         try {
@@ -84,7 +95,7 @@ export function CartProvider({children}: { children: ReactNode }) {
                 window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
             }
         } catch {
-            // The cart remains usable in memory when storage is blocked/full.
+            // Cart remains available in memory if storage is unavailable.
         }
     }, [isHydrated, items]);
 
@@ -93,28 +104,24 @@ export function CartProvider({children}: { children: ReactNode }) {
     }, []);
 
     const addItem = useCallback((newItem: AddToCartItem) => {
-        const normalized = normalizeItems([{...newItem, quantity: newItem.quantity ?? 1}])[0];
+        const normalized = normalizeItems([{ ...newItem, quantity: 1 }])[0];
         if (!normalized) return;
 
         setItemsState(current => {
-            const existing = current.find(item => item.id === normalized.id);
-            if (!existing) return [...current, normalized];
+            const exists = current.some(item => item.id === normalized.id);
+            if (!exists) return [...current, normalized];
 
-            return current.map(item => item.id === normalized.id
-                ? {
-                    ...item,
-                    ...normalized,
-                    quantity: Math.min(99, item.quantity + normalized.quantity),
-                }
-                : item);
+            return current.map(item =>
+                item.id === normalized.id ? { ...item, ...normalized, quantity: 1 } : item,
+            );
         });
     }, []);
 
-    const setQuantity = useCallback((id: string, quantity: number) => {
-        if (!Number.isFinite(quantity)) return;
-        setItemsState(current => current.map(item => item.id === id
-            ? {...item, quantity: Math.min(99, Math.max(1, Math.floor(quantity)))}
-            : item));
+    // Kept for compatibility with existing components. Every product is always quantity 1.
+    const setQuantity = useCallback((id: string, _quantity: number) => {
+        setItemsState(current =>
+            current.map(item => (item.id === id ? { ...item, quantity: 1 } : item)),
+        );
     }, []);
 
     const removeItem = useCallback((id: string) => {
@@ -126,10 +133,7 @@ export function CartProvider({children}: { children: ReactNode }) {
     const closeCart = useCallback(() => setIsOpen(false), []);
     const toggleCart = useCallback(() => setIsOpen(current => !current), []);
 
-    const itemCount = useMemo(
-        () => items.reduce((sum, item) => sum + item.quantity, 0),
-        [items],
-    );
+    const itemCount = useMemo(() => items.length, [items]);
 
     const value = useMemo<CartContextValue>(() => ({
         items,

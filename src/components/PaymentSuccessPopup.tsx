@@ -9,7 +9,7 @@ const SUCCESS_KEY = "algo_world_payment_success_v1";
 
 type SuccessData = {
     orderCode: string;
-    productName: string;
+    productNames: string[];
     imageSrc?: string;
     completedAt: number;
 };
@@ -19,7 +19,7 @@ function readSuccess(): SuccessData | null {
         const raw = sessionStorage.getItem(SUCCESS_KEY);
         if (!raw) return null;
         const value = JSON.parse(raw) as Partial<SuccessData>;
-        if (!value.orderCode || !value.productName || typeof value.completedAt !== "number") return null;
+        if (!value.orderCode || !Array.isArray(value.productNames) || value.productNames.length === 0 || typeof value.completedAt !== "number") return null;
         return value as SuccessData;
     } catch {
         return null;
@@ -57,8 +57,8 @@ export default function PaymentSuccessPopup() {
                 {data.imageSrc ? <img className={styles.image} src={data.imageSrc} alt="" /> : <div className={styles.placeholder}>◇</div>}
                 <h2 id="payment-success-title">Payment Successful!</h2>
                 <p>
-                    Your {data.productName} license is being generated. Check your email for activation
-                    instructions and setup guide.
+                    Your {data.productNames.join(", ")} {data.productNames.length === 1 ? "license is" : "licenses are"} being generated.
+                    Check your email for activation instructions and setup guide.
                 </p>
                 <small>Order #{data.orderCode}</small>
                 <div className={styles.actions}>

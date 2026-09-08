@@ -3,6 +3,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import styles from "./CartPopup.module.css";
+import { useLanguage } from "@/context/LanguageProvider";
 
 export type CartLanguage = "UA" | "RU" | "EN";
 
@@ -39,33 +40,6 @@ export type CartPopupProps = {
     orderDate?: string;
 };
 
-const copy = {
-    UA: {
-        title: "Кошик", order: "Замовлення", summary: "ВАШЕ ЗАМОВЛЕННЯ",
-        subtotal: "Сума", discount: "Знижка", total: "Разом", close: "Закрити",
-        buy: "Купити", processing: "Зачекайте…", empty: "Ваш кошик порожній",
-        emptyText: "Додайте торгового бота, щоб оформити замовлення.",
-        remove: "Видалити",
-        error: "Не вдалося перейти до оплати. Спробуйте ще раз.",
-    },
-    RU: {
-        title: "Корзина", order: "Заказ", summary: "ВАШ ЗАКАЗ",
-        subtotal: "Сумма", discount: "Скидка", total: "Итого", close: "Закрыть",
-        buy: "Купить", processing: "Подождите…", empty: "Ваша корзина пуста",
-        emptyText: "Добавьте торгового бота, чтобы оформить заказ.",
-        remove: "Удалить",
-        error: "Не удалось перейти к оплате. Попробуйте ещё раз.",
-    },
-    EN: {
-        title: "Cart", order: "Order", summary: "ORDER SUMMARY",
-        subtotal: "Subtotal", discount: "Discount", total: "Total", close: "Close",
-        buy: "Buy", processing: "Please wait…", empty: "Your cart is empty",
-        emptyText: "Add a trading bot to place your order.",
-        remove: "Remove",
-        error: "Could not proceed to checkout. Please try again.",
-    },
-};
-
 const locales = { UA: "uk-UA", RU: "ru-RU", EN: "en-US" };
 const htmlLanguages = { UA: "uk", RU: "ru", EN: "en" };
 
@@ -73,7 +47,7 @@ function ProductIcon() {
     return (
         <svg viewBox="0 0 52 58" fill="none" aria-hidden="true">
             <path d="M26 2 49 15v28L26 56 3 43V15L26 2Z" fill="#d2d5d5" stroke="#a9aeae" strokeWidth="2" />
-            <path d="m26 7 18 11v22L26 51 8 40V18L26 7Z" fill="#e3e5e5" stroke="#b1b6b6" />
+            <path d="M26 7 44 18v22L26 51 8 40V18L26 7Z" fill="#e3e5e5" stroke="#b1b6b6" />
             <path d="M16 22h17m-17 7h21m-21 7h17" stroke="#8b9191" strokeWidth="1.5" strokeLinecap="round" />
             <circle cx="29" cy="22" r="2.5" fill="#e3e5e5" stroke="#8b9191" />
             <circle cx="22" cy="29" r="2.5" fill="#e3e5e5" stroke="#8b9191" />
@@ -94,7 +68,21 @@ function CartDialog({
                         onClose, items, onItemsChange, onCheckout,
                         language = "EN", currency = "USD", discount = 0, orderNumber, orderDate,
                     }: Omit<CartPopupProps, "isOpen">) {
-    const text = copy[language];
+    const { t } = useLanguage();
+    const text = t.cartPopup;
+
+    const [isClosing, setIsClosing] = useState(false);
+
+    const requestClose = () => {
+        if (isClosing || busyRef.current) return;
+
+        setIsClosing(true);
+
+        window.setTimeout(() => {
+            onClose();
+        }, 220);
+    };
+
     const titleId = useId();
     const panelRef = useRef<HTMLDivElement>(null);
     const closeRef = useRef(onClose);
@@ -186,6 +174,7 @@ function CartDialog({
         panelRef.current?.focus();
         onItemsChange(items.filter(item => item.id !== id));
     };
+
     const checkout = async () => {
         if (busyRef.current || items.length === 0) return;
         busyRef.current = true;
@@ -207,11 +196,22 @@ function CartDialog({
     };
 
     return createPortal(
-        <div className={styles.overlay} onClick={event => {
-            if (event.target === event.currentTarget) onClose();
-        }}>
-            <div ref={panelRef} className={styles.panel} role="dialog" aria-modal="true"
-                 aria-labelledby={titleId} tabIndex={-1} lang={htmlLanguages[language]}>
+        <div
+            className={`${styles.overlay} ${
+                isClosing ? styles.overlayClosing : ""
+            }`}
+            onClick={event => {
+                if (event.target === event.currentTarget) {
+                    requestClose();
+                }
+            }}
+        >
+            <div
+                ref={panelRef}
+                className={`${styles.panel} ${
+                    isClosing ? styles.panelClosing : ""
+                }`} role="dialog" aria-modal="true"
+                aria-labelledby={titleId} tabIndex={-1} lang={htmlLanguages[language]}>
                 <header className={styles.header}>
                     <h2 id={titleId} className={styles.title}>
                         {orderNumber ? `${text.order} #${orderNumber}` : text.title}
@@ -263,7 +263,7 @@ function CartDialog({
                 <footer className={styles.footer}>
                     {error && <p className={styles.error} role="alert">{text.error}</p>}
                     <div className={styles.actions}>
-                        <button type="button" className={styles.close} onClick={onClose}>{text.close}</button>
+                        <button type="button" className={styles.close} onClick={requestClose}>{text.close}</button>
                         <button type="button" className={styles.buy} onClick={checkout}
                                 disabled={busy || items.length === 0} aria-busy={busy}>
                             {busy ? text.processing : text.buy}

@@ -5,12 +5,14 @@ import { QRCodeSVG } from "qrcode.react";
 import "./paymentStyle.css";
 import top_lines from "@/app/images/video_block_top_lines.svg";
 import bottom_lines from "@/app/images/bottom_lines_video_block.svg";
+import { useLanguage } from "@/context/LanguageProvider";
+
+import "../checkout/checkout.css";
 
 const PAYMENT_KEY = "currentPayment";
 const CHECKOUT_KEY = "algo_world_checkout_v1";
 const SUCCESS_KEY = "algo_world_payment_success_v1";
 const FINAL_STATUSES = new Set(["finished", "failed", "expired", "refunded"]);
-import "../checkout/checkout.css"
 
 type Payment = {
     id: string;
@@ -41,18 +43,6 @@ type Checkout = {
     savedAt: number;
 };
 
-const STATUS_TEXT: Record<string, string> = {
-    waiting: "Waiting for payment",
-    confirming: "Confirming payment",
-    confirmed: "Payment confirmed",
-    sending: "Processing payment",
-    partially_paid: "Partially paid",
-    finished: "Payment completed",
-    failed: "Payment failed",
-    expired: "Payment expired",
-    refunded: "Payment refunded",
-};
-
 function getStatusKind(status: string) {
     if (status === "finished" || status === "confirmed") return "success";
     if (status === "failed" || status === "expired" || status === "refunded") return "error";
@@ -60,6 +50,9 @@ function getStatusKind(status: string) {
 }
 
 export default function PaymentPage() {
+    const { t } = useLanguage();
+    const text = t.payment;
+
     const [payment, setPayment] = useState<Payment | null>(null);
     const [checkout, setCheckout] = useState<Checkout | null>(null);
     const [loaded, setLoaded] = useState(false);
@@ -92,7 +85,7 @@ export default function PaymentPage() {
                 );
                 const data = await response.json();
                 if (!response.ok) {
-                    throw new Error(data.error || "Unable to check payment status");
+                    throw new Error(data.error || text.errors.statusCheckFailed);
                 }
                 if (stopped || typeof data.payment_status !== "string") return;
 
@@ -114,7 +107,7 @@ export default function PaymentPage() {
             stopped = true;
             window.clearInterval(timer);
         };
-    }, [payment?.id, payment?.status]);
+    }, [payment?.id, payment?.status, text.errors.statusCheckFailed]);
 
     useEffect(() => {
         if (payment?.status !== "finished" || redirected.current) return;
@@ -158,7 +151,7 @@ export default function PaymentPage() {
     if (!loaded) {
         return (
             <main className="payment_page">
-                <div className="payment_state">Loading payment…</div>
+                <div className="payment_state">{text.loading}</div>
             </main>
         );
     }
@@ -167,16 +160,16 @@ export default function PaymentPage() {
         return (
             <main className="payment_page">
                 <div className="payment_state">
-                    <h1>Payment not found</h1>
-                    <p>Please return to checkout and create a new payment.</p>
-                    <a href="/checkout">Return to checkout</a>
+                    <h1>{text.notFound.title}</h1>
+                    <p>{text.notFound.description}</p>
+                    <a href="/checkout">{text.notFound.button}</a>
                 </div>
             </main>
         );
     }
 
     const statusKind = getStatusKind(payment.status);
-    const statusText = STATUS_TEXT[payment.status] || payment.status;
+    const statusText = text.status[payment.status as keyof typeof text.status] || payment.status;
 
     return (
         <main className="payment_page">
@@ -187,14 +180,15 @@ export default function PaymentPage() {
                     className="top_lines_video_block"
                 />
             </div>
+
             <div className="payment_page_container">
-                <a href="/" className="payment_home">Main page</a>
+                <a href="/" className="payment_home">{text.mainPage}</a>
 
                 <section className="payment_card">
                     <header className="payment_card_header">
                         <div>
-                            <h1>Complete payment</h1>
-                            <p>Send the exact amount to the address below.</p>
+                            <h1>{text.title}</h1>
+                            <p>{text.description}</p>
                         </div>
                         <span className={`payment_status payment_status_${statusKind}`}>
                             <i aria-hidden="true" />
@@ -202,18 +196,18 @@ export default function PaymentPage() {
                         </span>
                     </header>
 
-                    <div className="payment_section_title">PAYMENT DETAILS</div>
+                    <div className="payment_section_title">{text.paymentDetails}</div>
 
                     <div className="payment_card_body">
                         {payment.orderCode && (
                             <div className="payment_order_number">
-                                <span>Order number</span>
+                                <span>{text.orderNumber}</span>
                                 <strong>#{payment.orderCode}</strong>
                             </div>
                         )}
 
                         <div className="payment_amount">
-                            <span>Send exactly</span>
+                            <span>{text.sendExactly}</span>
                             <strong>
                                 {payment.payAmount} {payment.payCurrency.toUpperCase()}
                             </strong>
@@ -225,18 +219,19 @@ export default function PaymentPage() {
                         </div>
 
                         <div className="payment_address_block">
-                            <span>Payment address</span>
+                            <span>{text.paymentAddress}</span>
                             <div className="payment_address_row">
                                 <code>{payment.payAddress}</code>
                                 <button type="button" onClick={copyAddress}>
-                                    {copied ? "Copied" : "Copy"}
+                                    {copied ? text.copied : text.copy}
                                 </button>
                             </div>
                         </div>
 
                         <p className="payment_notice">
-                            Send only {payment.payCurrency.toUpperCase()} using the selected network.
-                            Sending another asset or using another network may result in permanent loss.
+                            {text.paymentNotice.beforeCurrency}{" "}
+                            {payment.payCurrency.toUpperCase()}{" "}
+                            {text.paymentNotice.afterCurrency}
                         </p>
                     </div>
                 </section>
@@ -244,14 +239,15 @@ export default function PaymentPage() {
                 {checkout && (
                     <aside className="checkout_summary">
                         <header className="checkout_summary_head">
-                            <h2>Order summary</h2>
+                            <h2>{text.orderSummary}</h2>
                             <p>
-                                {checkout.items.length} {checkout.items.length === 1 ? "item" : "items"}
+                                {checkout.items.length}{" "}
+                                {checkout.items.length === 1 ? text.item : text.items}
                                 {" · "}{formatter.format(checkout.total)}
                             </p>
                         </header>
 
-                        <div className="checkout_summary_label">ORDER SUMMARY</div>
+                        <div className="checkout_summary_label">{text.orderSummaryLabel}</div>
 
                         <ul className="checkout_items">
                             {checkout.items.map(item => (
@@ -276,21 +272,22 @@ export default function PaymentPage() {
 
                         <dl className="checkout_totals">
                             <div>
-                                <dt>Subtotal</dt>
+                                <dt>{text.subtotal}</dt>
                                 <dd>{formatter.format(checkout.subtotal)}</dd>
                             </div>
                             <div>
-                                <dt>Discount</dt>
+                                <dt>{text.discount}</dt>
                                 <dd>{formatter.format(checkout.discount)}</dd>
                             </div>
                             <div className="checkout_total">
-                                <dt>Total</dt>
+                                <dt>{text.total}</dt>
                                 <dd>{formatter.format(checkout.total)}</dd>
                             </div>
                         </dl>
                     </aside>
                 )}
             </div>
+
             <div className="bottom_lines_wrapper">
                 <img
                     src={bottom_lines.src}

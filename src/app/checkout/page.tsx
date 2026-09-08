@@ -8,6 +8,7 @@ import {
 } from "react-google-recaptcha-v3";
 
 import { useCart } from "@/components/cartPopup/CartProvider";
+import { useLanguage } from "@/context/LanguageProvider";
 import top_lines from "@/app/images/video_block_top_lines.svg";
 import bottom_lines from "@/app/images/bottom_lines_video_block.svg";
 import styles from "./checkout.module.css";
@@ -55,6 +56,8 @@ function CheckoutContent() {
     const router = useRouter();
     const { executeRecaptcha } = useGoogleReCaptcha();
     const { items, isHydrated } = useCart();
+    const { t, language } = useLanguage();
+    const text = t.checkoutCustomer;
 
     const [form, setForm] = useState<CustomerForm>(initialForm);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -92,16 +95,36 @@ function CheckoutContent() {
 
     const discount = 0;
     const total = Math.max(0, subtotal - discount);
+    const locale =
+        language === "UA"
+            ? "uk-UA"
+            : language === "RU"
+                ? "ru-RU"
+                : "en-US";
 
     const formatter = useMemo(
         () =>
-            new Intl.NumberFormat("en-US", {
+            new Intl.NumberFormat(locale, {
                 style: "currency",
                 currency: "USD",
                 maximumFractionDigits: 2,
             }),
-        [],
+        [locale],
     );
+
+    const itemCount = items.reduce(
+        (sum, item) => sum + item.quantity,
+        0,
+    );
+    const pluralForm = new Intl.PluralRules(locale).select(itemCount);
+    const itemLabel =
+        pluralForm === "one"
+            ? text.items.one
+            : pluralForm === "few"
+                ? text.items.few
+                : pluralForm === "many"
+                    ? text.items.many
+                    : text.items.other;
 
     const canSubmit =
         form.firstName.trim().length > 0 &&
@@ -124,7 +147,7 @@ function CheckoutContent() {
         if (!canSubmit || isSubmitting || items.length === 0) return;
 
         if (!executeRecaptcha) {
-            setSubmitError("reCAPTCHA is still loading. Please try again.");
+            setSubmitError(text.recaptchaLoading);
             return;
         }
 
@@ -147,7 +170,7 @@ function CheckoutContent() {
 
             if (!captchaResponse.ok || captchaResult.verified !== true) {
                 throw new Error(
-                    captchaResult.error || "reCAPTCHA verification failed.",
+                    captchaResult.error || text.recaptchaVerificationFailed,
                 );
             }
 
@@ -172,7 +195,7 @@ function CheckoutContent() {
             setSubmitError(
                 error instanceof Error
                     ? error.message
-                    : "Unable to continue. Please try again.",
+                    : text.unableToContinue,
             );
         } finally {
             setIsSubmitting(false);
@@ -182,7 +205,7 @@ function CheckoutContent() {
     if (!isHydrated) {
         return (
             <main className={styles.page}>
-                <div className={styles.state}>Loading...</div>
+                <div className={styles.state}>{text.loading}</div>
             </main>
         );
     }
@@ -191,12 +214,12 @@ function CheckoutContent() {
         return (
             <main className={styles.page}>
                 <a href="/" className={styles.back}>
-                    Main page
+                    {text.mainPage}
                 </a>
 
                 <div className={styles.state}>
-                    <h1>Your cart is empty</h1>
-                    <p>Add a trading bot before placing an order.</p>
+                    <h1>{text.emptyCartTitle}</h1>
+                    <p>{text.emptyCartDescription}</p>
                 </div>
             </main>
         );
@@ -214,33 +237,35 @@ function CheckoutContent() {
 
             <div className={styles.shell}>
                 <a href="/" className={styles.back}>
-                    Main page
+                    {text.mainPage}
                 </a>
 
                 <form className={styles.customerCard} onSubmit={handleSubmit}>
                     <header className={styles.cardHeader}>
-                        <h1>Customer details</h1>
-                        <p>
-                            Your program and license keys will be issued to this
-                            email.
-                        </p>
+                        <h1>{text.title}</h1>
+                        <p>{text.description}</p>
                     </header>
 
-                    <div className={styles.sectionTitle}>ORDER SUMMARY</div>
+                    <div className={styles.sectionTitle}>
+                        {text.orderSummaryLabel}
+                    </div>
 
                     <div className={styles.formBody}>
                         <div className={styles.twoColumns}>
                             <label className={styles.field}>
                                 <span>
-                                    First name <b>*</b>
+                                    {text.firstName} <b>*</b>
                                 </span>
                                 <input
                                     type="text"
                                     value={form.firstName}
                                     onChange={event =>
-                                        updateField("firstName", event.target.value)
+                                        updateField(
+                                            "firstName",
+                                            event.target.value,
+                                        )
                                     }
-                                    placeholder="First name"
+                                    placeholder={text.firstNamePlaceholder}
                                     autoComplete="given-name"
                                     required
                                 />
@@ -248,15 +273,18 @@ function CheckoutContent() {
 
                             <label className={styles.field}>
                                 <span>
-                                    Last name <b>*</b>
+                                    {text.lastName} <b>*</b>
                                 </span>
                                 <input
                                     type="text"
                                     value={form.lastName}
                                     onChange={event =>
-                                        updateField("lastName", event.target.value)
+                                        updateField(
+                                            "lastName",
+                                            event.target.value,
+                                        )
                                     }
-                                    placeholder="Last name"
+                                    placeholder={text.lastNamePlaceholder}
                                     autoComplete="family-name"
                                     required
                                 />
@@ -265,7 +293,7 @@ function CheckoutContent() {
 
                         <label className={styles.field}>
                             <span>
-                                Email <b>*</b>
+                                {text.email} <b>*</b>
                             </span>
                             <input
                                 type="email"
@@ -273,21 +301,24 @@ function CheckoutContent() {
                                 onChange={event =>
                                     updateField("email", event.target.value)
                                 }
-                                placeholder="hello@mail.com"
+                                placeholder={text.emailPlaceholder}
                                 autoComplete="email"
                                 required
                             />
                         </label>
 
                         <label className={styles.field}>
-                            <span>Referral / discount code</span>
+                            <span>{text.referralCode}</span>
                             <input
                                 type="text"
                                 value={form.referralCode}
                                 onChange={event =>
-                                    updateField("referralCode", event.target.value)
+                                    updateField(
+                                        "referralCode",
+                                        event.target.value,
+                                    )
                                 }
-                                placeholder="Code"
+                                placeholder={text.codePlaceholder}
                                 autoComplete="off"
                             />
                         </label>
@@ -297,36 +328,34 @@ function CheckoutContent() {
                                 type="checkbox"
                                 checked={form.accepted}
                                 onChange={event =>
-                                    updateField("accepted", event.target.checked)
+                                    updateField(
+                                        "accepted",
+                                        event.target.checked,
+                                    )
                                 }
                                 required
                             />
-                            <span>
-                                I agree to Trade&apos;s terms and conditions,
-                                privacy policy, and risk disclosure, and understand
-                                that my purchase is from Mitalio OÜ and payment is
-                                securely processed by credit or debit card.
-                            </span>
+                            <span>{text.agreement}</span>
                         </label>
 
                         <p className={styles.captchaNotice}>
-                            This site is protected by reCAPTCHA and the Google{" "}
+                            {text.captchaNotice.beforeLinks}
                             <a
                                 href="https://policies.google.com/privacy"
                                 target="_blank"
                                 rel="noreferrer"
                             >
-                                Privacy Policy
-                            </a>{" "}
-                            and{" "}
+                                {text.captchaNotice.privacyPolicy}
+                            </a>
+                            {text.captchaNotice.betweenLinks}
                             <a
                                 href="https://policies.google.com/terms"
                                 target="_blank"
                                 rel="noreferrer"
                             >
-                                Terms of Service
-                            </a>{" "}
-                            apply.
+                                {text.captchaNotice.termsOfService}
+                            </a>
+                            {text.captchaNotice.afterLinks}
                         </p>
 
                         {submitError && (
@@ -343,7 +372,7 @@ function CheckoutContent() {
                             onClick={() => router.back()}
                             disabled={isSubmitting}
                         >
-                            Cancel
+                            {text.cancel}
                         </button>
 
                         <button
@@ -351,21 +380,25 @@ function CheckoutContent() {
                             className={styles.buy}
                             disabled={!canSubmit || isSubmitting}
                         >
-                            {isSubmitting ? "Checking..." : "Buy"}
+                            {isSubmitting ? text.checking : text.buy}
                         </button>
                     </footer>
                 </form>
 
-                <aside className={styles.summaryCard} aria-label="Order summary">
+                <aside
+                    className={styles.summaryCard}
+                    aria-label={text.orderSummary}
+                >
                     <header className={styles.summaryHeader}>
-                        <h2>Order</h2>
+                        <h2>{text.order}</h2>
                         <p>
-                            {items.reduce((sum, item) => sum + item.quantity, 0)}{" "}
-                            items · {formatter.format(total)}
+                            {itemCount} {itemLabel} · {formatter.format(total)}
                         </p>
                     </header>
 
-                    <div className={styles.sectionTitle}>ORDER SUMMARY</div>
+                    <div className={styles.sectionTitle}>
+                        {text.orderSummaryLabel}
+                    </div>
 
                     <ul className={styles.items}>
                         {items.map(item => (
@@ -382,7 +415,9 @@ function CheckoutContent() {
                                 <div className={styles.itemText}>
                                     <strong>{item.name}</strong>
                                     {item.quantity > 1 && (
-                                        <span>Quantity: {item.quantity}</span>
+                                        <span>
+                                            {text.quantity}: {item.quantity}
+                                        </span>
                                     )}
                                 </div>
 
@@ -397,15 +432,15 @@ function CheckoutContent() {
 
                     <dl className={styles.totals}>
                         <div>
-                            <dt>Subtotal</dt>
+                            <dt>{text.subtotal}</dt>
                             <dd>{formatter.format(subtotal)}</dd>
                         </div>
                         <div>
-                            <dt>Discount</dt>
+                            <dt>{text.discount}</dt>
                             <dd>{formatter.format(discount)}</dd>
                         </div>
                         <div className={styles.total}>
-                            <dt>Total</dt>
+                            <dt>{text.total}</dt>
                             <dd>{formatter.format(total)}</dd>
                         </div>
                     </dl>
@@ -424,12 +459,13 @@ function CheckoutContent() {
 }
 
 export default function CheckoutPage() {
+    const { t } = useLanguage();
     const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
 
     if (!siteKey) {
         return (
             <main className={styles.page}>
-                reCAPTCHA site key is missing.
+                {t.checkoutCustomer.recaptchaSiteKeyMissing}
             </main>
         );
     }

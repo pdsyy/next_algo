@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/components/cartPopup/CartProvider";
+import { useLanguage } from "@/context/LanguageProvider";
 import styles from "./payment.module.css";
 import bottom_lines from "@/app/images/bottom_lines_video_block.svg";
 import top_lines from "@/app/images/video_block_top_lines.svg";
-import "../checkout.css"
+import "../checkout.css";
 
 const CUSTOMER_STORAGE_KEY = "checkoutCustomer";
 const PENDING_ORDER_KEY = "algo_world_pending_crypto_order_v1";
@@ -27,12 +28,6 @@ type PendingOrder = {
     currency: string;
 };
 
-const currencies: Array<{ value: PayCurrency; title: string; text: string }> = [
-    { value: "usdttrc20", title: "USDT", text: "TRON network (TRC20)" },
-    { value: "btc", title: "Bitcoin", text: "Bitcoin network" },
-    { value: "eth", title: "Ethereum", text: "Ethereum network" },
-];
-
 function readCustomer(): Customer | null {
     try {
         const raw = sessionStorage.getItem(CUSTOMER_STORAGE_KEY);
@@ -47,12 +42,20 @@ function readCustomer(): Customer | null {
 
 export default function CheckoutPaymentPage() {
     const router = useRouter();
+    const { t } = useLanguage();
+    const text = t.checkoutPayment;
     const { items, isHydrated } = useCart();
     const [customer, setCustomer] = useState<Customer | null>(null);
     const [loaded, setLoaded] = useState(false);
     const [payCurrency, setPayCurrency] = useState<PayCurrency>("usdttrc20");
     const [busy, setBusy] = useState(false);
     const [error, setError] = useState("");
+
+    const currencies: Array<{ value: PayCurrency; title: string; text: string }> = [
+        { value: "usdttrc20", title: "USDT", text: text.currencies.usdt },
+        { value: "btc", title: "Bitcoin", text: text.currencies.bitcoin },
+        { value: "eth", title: "Ethereum", text: text.currencies.ethereum },
+    ];
 
     useEffect(() => {
         setCustomer(readCustomer());
@@ -101,7 +104,7 @@ export default function CheckoutPaymentPage() {
                 });
                 const checkoutData = await checkoutResponse.json();
                 if (!checkoutResponse.ok || !checkoutData.success || !checkoutData.order?.code) {
-                    throw new Error(checkoutData.error || "Could not create the order.");
+                    throw new Error(checkoutData.error || text.errors.createOrder);
                 }
                 pending = {
                     orderCode: String(checkoutData.order.code),
@@ -119,7 +122,7 @@ export default function CheckoutPaymentPage() {
             });
             const data = await response.json();
             if (!response.ok || !data.success || !data.payment?.id) {
-                throw new Error(data.error || "Could not create the crypto payment.");
+                throw new Error(data.error || text.errors.createPayment);
             }
 
             localStorage.setItem(
@@ -140,14 +143,14 @@ export default function CheckoutPaymentPage() {
             );
             router.push("/payment");
         } catch (reason) {
-            setError(reason instanceof Error ? reason.message : "Payment creation failed.");
+            setError(reason instanceof Error ? reason.message : text.errors.paymentFailed);
         } finally {
             setBusy(false);
         }
     };
 
     if (!isHydrated || !loaded) {
-        return <main className={styles.page}><div className={styles.state}>Loading…</div></main>;
+        return <main className={styles.page}><div className={styles.state}>{text.loading}</div></main>;
     }
 
     if (
@@ -158,9 +161,9 @@ export default function CheckoutPaymentPage() {
         return (
             <main className={styles.page}>
                 <div className={styles.state}>
-                    <h1>Order cannot be continued</h1>
-                    <p>Please return to checkout and check your customer details and cart.</p>
-                    <button type="button" onClick={() => router.push("/checkout")}>Back to checkout</button>
+                    <h1>{text.invalidOrder.title}</h1>
+                    <p>{text.invalidOrder.description}</p>
+                    <button type="button" onClick={() => router.push("/checkout")}>{text.invalidOrder.button}</button>
                 </div>
             </main>
         );
@@ -168,7 +171,7 @@ export default function CheckoutPaymentPage() {
 
     return (
         <main className={styles.page}>
-            <div className="top_lines_wrapper">
+            <div className="top_lines_wrapper" aria-hidden="true">
                 <img
                     src={top_lines.src}
                     alt=""
@@ -176,13 +179,13 @@ export default function CheckoutPaymentPage() {
                 />
             </div>
             <div className={styles.shell}>
-                <a href="/" className={styles.home}>Main page</a>
+                <a href="/" className={styles.home}>{text.mainPage}</a>
                 <section className={styles.card}>
                     <header className={styles.header}>
-                        <h1>Pay with crypto</h1>
-                        <p>Select the cryptocurrency you want to send.</p>
+                        <h1>{text.title}</h1>
+                        <p>{text.description}</p>
                     </header>
-                    <div className={styles.sectionTitle}>PAYMENT CURRENCY</div>
+                    <div className={styles.sectionTitle}>{text.paymentCurrency}</div>
                     <div className={styles.options}>
                         {currencies.map(currency => (
                             <label key={currency.value} className={`${styles.option} ${payCurrency === currency.value ? styles.active : ""}`}>
@@ -197,25 +200,25 @@ export default function CheckoutPaymentPage() {
                         {error && <p className={styles.error} role="alert">{error}</p>}
                     </div>
                     <footer className={styles.actions}>
-                        <button type="button" className={styles.back} onClick={() => router.push("/checkout/review")} disabled={busy}>Back</button>
+                        <button type="button" className={styles.back} onClick={() => router.push("/checkout/review")} disabled={busy}>{text.back}</button>
                         <button type="button" className={styles.pay} onClick={startPayment} disabled={busy} aria-busy={busy}>
-                            {busy ? "Creating payment…" : "Continue to payment"}
+                            {busy ? text.creatingPayment : text.continueToPayment}
                         </button>
                     </footer>
                 </section>
                 <aside className={styles.summary}>
-                    <header><h2>Order</h2><p>{checkoutItems.length} {checkoutItems.length === 1 ? "item" : "items"} · ${previewTotal.toFixed(2)}</p></header>
-                    <div className={styles.sectionTitle}>ORDER SUMMARY</div>
+                    <header><h2>{text.order}</h2><p>{checkoutItems.length} {checkoutItems.length === 1 ? text.item : text.items} · ${previewTotal.toFixed(2)}</p></header>
+                    <div className={styles.sectionTitle}>{text.orderSummary}</div>
                     {checkoutItems.map(item => (
                         <div className={styles.product} key={item.id}>
                             {item.imageSrc ? <img src={item.imageSrc} alt="" /> : <span>◇</span>}
-                            <div><strong>{item.name}</strong><small>One license</small></div>
+                            <div><strong>{item.name}</strong><small>{text.oneLicense}</small></div>
                         </div>
                     ))}
-                    <dl><div><dt>Total</dt><dd>${previewTotal.toFixed(2)}</dd></div></dl>
+                    <dl><div><dt>{text.total}</dt><dd>${previewTotal.toFixed(2)}</dd></div></dl>
                 </aside>
             </div>
-            <div className="bottom_lines_wrapper">
+            <div className="bottom_lines_wrapper" aria-hidden="true">
                 <img
                     src={bottom_lines.src}
                     alt=""

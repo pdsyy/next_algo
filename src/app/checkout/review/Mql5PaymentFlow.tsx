@@ -1,6 +1,7 @@
 "use client";
 
 import { type ChangeEvent, type DragEvent, useEffect, useRef, useState } from "react";
+import { useLanguage } from "@/context/LanguageProvider";
 import styles from "./Mql5PaymentFlow.module.css";
 
 const STORAGE_KEY = "pendingMql5Order";
@@ -49,6 +50,8 @@ export default function Mql5PaymentFlow({
                                             onClose,
                                             icons,
                                         }: Props) {
+    const { t } = useLanguage();
+    const text = t.mql5PaymentFlow;
     const [pending, setPending] = useState<PendingOrder | null>(null);
     const [file, setFile] = useState<File | null>(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -91,7 +94,7 @@ export default function Mql5PaymentFlow({
                 const data = await response.json();
 
                 if (!response.ok || !data.success) {
-                    throw new Error(data.error || "Could not create order");
+                    throw new Error(data.error || text.errors.createOrder);
                 }
 
                 const next: PendingOrder = {
@@ -103,14 +106,14 @@ export default function Mql5PaymentFlow({
                 setPending(next);
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
             } catch (caught) {
-                setError(caught instanceof Error ? caught.message : "Could not create order");
+                setError(caught instanceof Error ? caught.message : text.errors.createOrder);
             } finally {
                 setIsLoading(false);
             }
         };
 
         void createOrder();
-    }, [customer, isOpen, items, pending]);
+    }, [customer, isOpen, items, pending, text.errors.createOrder]);
 
     useEffect(() => {
         if (!isOpen) return;
@@ -146,11 +149,11 @@ export default function Mql5PaymentFlow({
     const selectFile = (candidate?: File) => {
         if (!candidate) return;
         if (!["image/jpeg", "image/png", "application/pdf"].includes(candidate.type)) {
-            setError("Use JPG, PNG or PDF");
+            setError(text.errors.fileType);
             return;
         }
         if (candidate.size > 10 * 1024 * 1024) {
-            setError("The file must be no larger than 10 MB");
+            setError(text.errors.fileSize);
             return;
         }
         setFile(candidate);
@@ -212,12 +215,12 @@ export default function Mql5PaymentFlow({
             }
 
             setUploadStatus("failed");
-            setError(data.error || "Could not send confirmation");
+            setError(data.error || text.errors.sendConfirmation);
         };
 
         xhr.onerror = () => {
             setUploadStatus("failed");
-            setError("Network error. Please try again.");
+            setError(text.errors.network);
         };
 
         xhr.send(body);
@@ -232,49 +235,42 @@ export default function Mql5PaymentFlow({
     return (
         <div className={styles.overlay} role="presentation">
             <section className={styles.modal} role="dialog" aria-modal="true">
-                {isLoading && <div className={styles.loading}>Creating order...</div>}
+                {isLoading && <div className={styles.loading}>{text.creatingOrder}</div>}
 
                 {!isLoading && error && !pending && (
                     <>
-                        <h2>Could not create order</h2>
+                        <h2>{text.createOrderErrorTitle}</h2>
                         <p className={styles.error}>{error}</p>
-                        <button className={styles.secondaryButton} onClick={onClose}>Close</button>
+                        <button className={styles.secondaryButton} onClick={onClose}>{text.close}</button>
                     </>
                 )}
 
                 {pending && pending.phase === "redirect" && (
                     <>
-                        <h2>Continue to MQL5</h2>
-                        <p>
-                            Your payment will be processed securely on MQL5. Keep this
-                            page open and return after completing the purchase.
-                        </p>
-                        <div className={styles.orderLabel}>ORDER NUMBER</div>
+                        <h2>{text.redirect.title}</h2>
+                        <p>{text.redirect.description}</p>
+                        <div className={styles.orderLabel}>{text.redirect.orderNumber}</div>
                         <button className={styles.orderNumber} onClick={copyOrderNumber}>
                             <strong>{pending.order.orderNumber}</strong>
-                            <span>{copied ? "Copied" : "Copy"}</span>
+                            <span>{copied ? text.redirect.copied : text.redirect.copy}</span>
                         </button>
                         <div className={styles.amount}>
-                            Total: <strong>{pending.order.currency} {pending.order.total.toFixed(2)}</strong>
+                            {text.redirect.total}: <strong>{pending.order.currency} {pending.order.total.toFixed(2)}</strong>
                         </div>
                         <button className={styles.primaryButton} onClick={openMql5}>
-                            Proceed to MQL5
+                            {text.redirect.proceed}
                         </button>
                         <button className={styles.secondaryButton} onClick={onClose}>
-                            Cancel order and edit cart
+                            {text.redirect.cancel}
                         </button>
                     </>
                 )}
 
                 {pending && pending.phase === "confirmation" && (
                     <>
-                        <h2>Confirm your payment</h2>
-                        <p>
-                            Since you paid through MQL5, please upload a screenshot of
-                            your purchase confirmation so we can verify your purchase and
-                            send all the instructions to the email address you provided.
-                        </p>
-                        <div className={styles.orderChip}>Order {pending.order.orderNumber}</div>
+                        <h2>{text.confirmation.title}</h2>
+                        <p>{text.confirmation.description}</p>
+                        <div className={styles.orderChip}>{text.confirmation.order} {pending.order.orderNumber}</div>
                         <label
                             className={styles.dropzone}
                             onDragOver={event => event.preventDefault()}
@@ -284,9 +280,9 @@ export default function Mql5PaymentFlow({
                             <span className={styles.cloudIcon} aria-hidden="true">
                                 {icons?.cloud ? <img src={icons.cloud} alt="" /> : "↥"}
                             </span>
-                            <strong>Choose a file or drag & drop it here</strong>
-                            <span>JPG, PNG or PDF, up to 10 MB</span>
-                            <span className={styles.browseButton}>Browse File</span>
+                            <strong>{text.confirmation.chooseFile}</strong>
+                            <span>{text.confirmation.fileFormats}</span>
+                            <span className={styles.browseButton}>{text.confirmation.browseFile}</span>
                         </label>
                         {file && (
                             <div className={`${styles.fileCard} ${uploadStatus === "failed" ? styles.fileCardFailed : ""}`}>
@@ -296,13 +292,13 @@ export default function Mql5PaymentFlow({
                                     <div className={styles.fileMeta}>
                                         <span>{formatFileSize(file.size)}</span>
                                         <span>•</span>
-                                        {uploadStatus === "ready" && <span>Ready to upload</span>}
-                                        {uploadStatus === "uploading" && <span className={styles.uploadingStatus}>Uploading… {uploadProgress}%</span>}
-                                        {uploadStatus === "completed" && <span className={styles.completedStatus}>● Completed</span>}
-                                        {uploadStatus === "failed" && <span className={styles.failedStatus}>● Failed</span>}
+                                        {uploadStatus === "ready" && <span>{text.status.ready}</span>}
+                                        {uploadStatus === "uploading" && <span className={styles.uploadingStatus}>{text.status.uploading} {uploadProgress}%</span>}
+                                        {uploadStatus === "completed" && <span className={styles.completedStatus}>● {text.status.completed}</span>}
+                                        {uploadStatus === "failed" && <span className={styles.failedStatus}>● {text.status.failed}</span>}
                                     </div>
                                     {uploadStatus === "failed" && (
-                                        <button className={styles.tryAgain} type="button" onClick={submitConfirmation}>Try Again</button>
+                                        <button className={styles.tryAgain} type="button" onClick={submitConfirmation}>{text.tryAgain}</button>
                                     )}
                                 </div>
                                 <button
@@ -310,7 +306,7 @@ export default function Mql5PaymentFlow({
                                     className={styles.fileAction}
                                     onClick={removeSelectedFile}
                                     disabled={uploadStatus === "uploading"}
-                                    aria-label="Remove file"
+                                    aria-label={text.removeFile}
                                 >
                                     {uploadStatus === "uploading"
                                         ? (icons?.close ? <img src={icons.close} alt="" /> : "×")
@@ -330,13 +326,13 @@ export default function Mql5PaymentFlow({
                             onClick={submitConfirmation}
                         >
                             {uploadStatus === "uploading"
-                                ? `Uploading ${uploadProgress}%`
+                                ? `${text.status.uploading} ${uploadProgress}%`
                                 : uploadStatus === "completed"
-                                    ? "Sent"
-                                    : "Send"}
+                                    ? text.sent
+                                    : text.send}
                         </button>
                         <button className={styles.secondaryButton} onClick={openHelp}>
-                            Need help?
+                            {text.needHelp}
                         </button>
                     </>
                 )}

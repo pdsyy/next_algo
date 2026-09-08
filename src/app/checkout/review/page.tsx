@@ -2,17 +2,19 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import editIcon from "./images/edit-line.svg"
+import { useLanguage } from "@/context/LanguageProvider";
+import editIcon from "./images/edit-line.svg";
 import cloudIcon from "./images/cloude.svg";
 import closeIcon from "./images/close_cross.svg";
 import deleteIcon from "./images/delete_icon.svg";
-import tether_icon from "./images/tether.svg"
+import tether_icon from "./images/tether.svg";
+
 import { useCart } from "@/components/cartPopup/CartProvider";
 import Mql5PaymentFlow from "./Mql5PaymentFlow";
 import topLines from "@/app/images/video_block_top_lines.svg";
 import bottomLines from "@/app/images/bottom_lines_video_block.svg";
 import styles from "./review.module.css";
-import "../checkout.css"
+import "../checkout.css";
 
 const CUSTOMER_STORAGE_KEY = "checkoutCustomer";
 const REVIEW_STORAGE_KEY = "checkoutReview";
@@ -60,9 +62,11 @@ function isStoredReview(value: unknown): value is StoredReview {
     );
 }
 
-
 export default function ReviewPage() {
     const router = useRouter();
+    const { t, language } = useLanguage();
+    const text = t.checkoutReview;
+    const locale = { UA: "uk-UA", RU: "ru-RU", EN: "en-US" }[language];
     const { items, isHydrated } = useCart();
 
     const [customer, setCustomer] = useState<StoredCustomer | null>(null);
@@ -85,7 +89,10 @@ export default function ReviewPage() {
 
             if (storedReview) {
                 const parsedReview: unknown = JSON.parse(storedReview);
-                if (isStoredReview(parsedReview)) {
+                if (
+                    isStoredReview(parsedReview) &&
+                    parsedReview.paymentMethod === "crypto"
+                ) {
                     setPaymentMethod(parsedReview.paymentMethod);
                 }
             }
@@ -110,13 +117,20 @@ export default function ReviewPage() {
 
     const formatter = useMemo(
         () =>
-            new Intl.NumberFormat("en-US", {
+            new Intl.NumberFormat(locale, {
                 style: "currency",
                 currency: "USD",
                 maximumFractionDigits: 2,
             }),
-        [],
+        [locale],
     );
+
+    const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
+    const plural = new Intl.PluralRules(locale).select(itemCount);
+    const itemLabel =
+        plural === "one" ? text.items.one :
+            plural === "few" ? text.items.few :
+                plural === "many" ? text.items.many : text.items.other;
 
     const editCustomer = () => {
         router.push("/checkout");
@@ -148,7 +162,7 @@ export default function ReviewPage() {
     if (!isHydrated || !isStorageLoaded) {
         return (
             <main className={styles.page}>
-                <div className={styles.state}>Loading...</div>
+                <div className={styles.state}>{text.loading}</div>
             </main>
         );
     }
@@ -157,11 +171,9 @@ export default function ReviewPage() {
         return (
             <main className={styles.page}>
                 <div className={styles.state}>
-                    <h1>Your cart is empty</h1>
-                    <p>Add a trading bot before placing an order.</p>
-                    <a href="/" className={styles.back}>
-                        Main page
-                    </a>
+                    <h1>{text.emptyCartTitle}</h1>
+                    <p>{text.emptyCartDescription}</p>
+                    <a href="/" className={styles.back}>{text.mainPage}</a>
                 </div>
             </main>
         );
@@ -171,10 +183,10 @@ export default function ReviewPage() {
         return (
             <main className={styles.page}>
                 <div className={styles.state}>
-                    <h1>Customer details not found</h1>
-                    <p>Please complete the checkout form first.</p>
+                    <h1>{text.missingCustomerTitle}</h1>
+                    <p>{text.missingCustomerDescription}</p>
                     <button type="button" onClick={() => router.push("/checkout")}>
-                        Go to checkout
+                        {text.goToCheckout}
                     </button>
                 </div>
             </main>
@@ -188,65 +200,63 @@ export default function ReviewPage() {
             </div>
 
             <div className={styles.shell}>
-                <a href="/" className={styles.back}>
-                    Main page
-                </a>
+                <a href="/" className={styles.back}>{text.mainPage}</a>
 
                 <section className={styles.reviewCard}>
                     <header className={styles.cardHeader}>
-                        <h1>Review order</h1>
-                        <p>Confirm your details and selected license options.</p>
+                        <h1>{text.title}</h1>
+                        <p>{text.description}</p>
                     </header>
 
-                    <div className={styles.sectionTitle}>ORDER SUMMARY</div>
+                    <div className={styles.sectionTitle}>{text.orderSummaryLabel}</div>
 
                     <div className={styles.customerData}>
                         <div className={styles.twoColumns}>
                             <div className={styles.dataField}>
                                 <span>
-                                    First name <b>*</b>
+                                    {text.firstName} <b>*</b>
                                 </span>
                                 <button type="button" onClick={editCustomer}>
                                     <strong>{customer.firstName}</strong>
-                                    <img src = {editIcon.src}  alt = "" className = {styles.editIcon}/>
+                                    <img src={editIcon.src} alt="" className={styles.editIcon} />
                                 </button>
                             </div>
 
                             <div className={styles.dataField}>
                                 <span>
-                                    Last name <b>*</b>
+                                    {text.lastName} <b>*</b>
                                 </span>
                                 <button type="button" onClick={editCustomer}>
                                     <strong>{customer.lastName}</strong>
-                                    <img src = {editIcon.src}  alt = "" className = {styles.editIcon}/>
+                                    <img src={editIcon.src} alt="" className={styles.editIcon} />
                                 </button>
                             </div>
                         </div>
 
                         <div className={styles.dataField}>
                             <span>
-                                Email <b>*</b>
+                                {text.email} <b>*</b>
                             </span>
                             <button type="button" onClick={editCustomer}>
                                 <strong>{customer.email}</strong>
-                                <img src = {editIcon.src}  alt = "" className = {styles.editIcon}/>
+                                <img src={editIcon.src} alt="" className={styles.editIcon} />
                             </button>
                         </div>
 
                         <div className={styles.dataField}>
-                            <span>Referral / discount code</span>
+                            <span>{text.referralCode}</span>
                             <button type="button" onClick={editCustomer}>
                                 <strong>{customer.referralCode || "—"}</strong>
-                                <img src = {editIcon.src}  alt = "" className = {styles.editIcon}/>
+                                <img src={editIcon.src} alt="" className={styles.editIcon} />
                             </button>
                         </div>
                     </div>
 
-                    <div className={styles.sectionTitle}>PAYMENT METHOD</div>
+                    <div className={styles.sectionTitle}>{text.paymentMethod}</div>
 
                     <fieldset className={styles.paymentMethods}>
                         <legend className={styles.visuallyHidden}>
-                            Choose payment method
+                            {text.choosePaymentMethod}
                         </legend>
 
                         <label
@@ -263,8 +273,8 @@ export default function ReviewPage() {
                                 checked={paymentMethod === "crypto"}
                                 onChange={() => setPaymentMethod("crypto")}
                             />
-                            <img className={styles.cryptoIcon} src = {tether_icon.src} alt = ""/>
-                            <strong>Crypto</strong>
+                            <img className={styles.cryptoIcon} src={tether_icon.src} alt="" />
+                            <strong>{text.crypto}</strong>
                             <span className={styles.radioMark} aria-hidden="true" />
                         </label>
 
@@ -281,13 +291,14 @@ export default function ReviewPage() {
                                 value="card"
                                 checked={paymentMethod === "card"}
                                 onChange={() => setPaymentMethod("card")}
-                                disabled={true}
+                                disabled
                             />
                             <span className={styles.cardBrands} aria-hidden="true">
                                 <span className={styles.visa}>VISA</span>
                                 <span className={styles.mastercard} />
                             </span>
                             <strong>Visa/Mastercard</strong>
+
                             <span className={styles.radioMark} aria-hidden="true" />
                         </label>
                     </fieldset>
@@ -298,28 +309,27 @@ export default function ReviewPage() {
                             className={styles.backButton}
                             onClick={() => router.push("/checkout")}
                         >
-                            Back
+                            {text.back}
                         </button>
                         <button
                             type="button"
                             className={styles.confirmButton}
                             onClick={handleConfirm}
                         >
-                            Confirm and pay
+                            {text.confirmAndPay}
                         </button>
                     </footer>
                 </section>
 
-                <aside className={styles.summaryCard} aria-label="Order summary">
+                <aside className={styles.summaryCard} aria-label={text.orderSummary}>
                     <header className={styles.summaryHeader}>
-                        <h2>Order</h2>
+                        <h2>{text.order}</h2>
                         <p>
-                            {items.reduce((sum, item) => sum + item.quantity, 0)}{" "}
-                            items · {formatter.format(total)}
+                            {itemCount} {itemLabel} · {formatter.format(total)}
                         </p>
                     </header>
 
-                    <div className={styles.sectionTitle}>ORDER SUMMARY</div>
+                    <div className={styles.sectionTitle}>{text.orderSummaryLabel}</div>
 
                     <ul className={styles.items}>
                         {items.map(item => (
@@ -337,7 +347,7 @@ export default function ReviewPage() {
                                     <strong>{item.name}</strong>
                                     {item.subtitle && <span>{item.subtitle}</span>}
                                     {item.quantity > 1 && (
-                                        <span>Quantity: {item.quantity}</span>
+                                        <span>{text.quantity}: {item.quantity}</span>
                                     )}
                                 </div>
 
@@ -350,15 +360,15 @@ export default function ReviewPage() {
 
                     <dl className={styles.totals}>
                         <div>
-                            <dt>Subtotal</dt>
+                            <dt>{text.subtotal}</dt>
                             <dd>{formatter.format(subtotal)}</dd>
                         </div>
                         <div>
-                            <dt>Discount</dt>
+                            <dt>{text.discount}</dt>
                             <dd>{formatter.format(discount)}</dd>
                         </div>
                         <div className={styles.total}>
-                            <dt>Total</dt>
+                            <dt>{text.total}</dt>
                             <dd>{formatter.format(total)}</dd>
                         </div>
                     </dl>

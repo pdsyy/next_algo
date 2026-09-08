@@ -1,435 +1,115 @@
-import {
-    NextRequest,
-    NextResponse,
-} from "next/server";
-
-import {
-    confirmCmlOrder,
-    createCmlCustomer,
-    createCmlOrder,
-    getCmlOrder,
-    getCmlProductByCode,
-} from "@/lib/cml";
+import crypto from "crypto";
+import { NextRequest, NextResponse } from "next/server";
+import { confirmCmlOrder, createCmlCustomer, createCmlOrder, getCmlOrder, getCmlProductByCode } from "@/lib/cml";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-type CheckoutBody = {
-    email?: unknown;
-    firstName?: unknown;
-    lastName?: unknown;
-    productCode?: unknown;
-    quantity?: unknown;
-};
+const CUSTOMER_COOKIE = "algo_cml_customer";
+const COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
 
-function normalizeAmount(
-    value: unknown,
-) {
-    const normalized =
-        String(value ?? "")
-            .replace(/[^\d.-]/g, "");
+type CustomerSession = { email:string; customerId:number; expiresAt:number };
 
-    return Number.parseFloat(normalized);
+function secret(){
+    const value=process.env.CML_API_SECRET;
+    if(!value) throw new Error("CML_API_SECRET is missing");
+    return value;
 }
 
-function extractCustomerId(
-    response: any,
-) {
-    return (
-        response?.success?.data?.customer?.id ??
-        response?.success?.customer?.id ??
-        response?.data?.customer?.id ??
-        response?.customer?.id
-    );
+function signSession(value:CustomerSession){
+    const payload=Buffer.from(JSON.stringify(value)).toString("base64url");
+    const signature=crypto.createHmac("sha256",secret()).update(payload).digest("base64url");
+    return `${payload}.${signature}`;
 }
 
-function extractOrder(
-    response: any,
-) {
-    return (
-        response?.success?.data?.order ??
-        response?.success?.order ??
-        response?.data?.order ??
-        response?.order
-    );
+function readSession(request:NextRequest):CustomerSession|null{
+    try{
+        const token=request.cookies.get(CUSTOMER_COOKIE)?.value;
+        if(!token) return null;
+        const [payload,received]=token.split(".");
+        if(!payload||!received) return null;
+        const expected=crypto.createHmac("sha256",secret()).update(payload).digest("base64url");
+        const a=Buffer.from(received); const b=Buffer.from(expected);
+        if(a.length!==b.length || !crypto.timingSafeEqual(a,b)) return null;
+        const value=JSON.parse(Buffer.from(payload,"base64url").toString("utf8")) as CustomerSession;
+        if(!value.email||!Number.isInteger(value.customerId)||value.customerId<1||value.expiresAt<Date.now()) return null;
+        return value;
+    }catch{return null}
 }
 
-export async function POST(
-    request: NextRequest,
-) {
-    try {
-        const body =
-            (await request.json()) as CheckoutBody;
+const extractCustomerId=(r:any)=>r?.success?.data?.customer?.id??r?.success?.customer?.id??r?.data?.customer?.id??r?.customer?.id;
+const extractOrder=(r:any)=>r?.success?.data?.order??r?.success?.order??r?.data?.order??r?.order;
+const amountOf=(value:unknown)=>Number.parseFloat(String(value??"").replace(/[^\d.-]/g,""));
 
-        const email =
-            typeof body.email === "string"
-                ? body.email.trim().toLowerCase()
-                : "";
+export async function POST(request:NextRequest){
+    try{
+        const body=await request.json();
+        const email=typeof body.email==="string"?body.email.trim().toLowerCase():"";
+        const firstName=typeof body.firstName==="string"?body.firstName.trim():"";
+        const lastName=typeof body.lastName==="string"?body.lastName.trim():"";
+        const productCode=typeof body.productCode==="string"?body.productCode.trim():"";
+        const quantity=Number(body.quantity??1);
 
-        const firstName =
-            typeof body.firstName === "string"
-                ? body.firstName.trim()
-                : "";
-
-        const lastName =
-            typeof body.lastName === "string"
-                ? body.lastName.trim()
-                : "";
-
-        const productCode =
-            typeof body.productCode === "string"
-                ? body.productCode.trim()
-                : "";
-
-        const quantity =
-            Number(body.quantity ?? 1);
-
-        /* =========================
-           VALIDATION
-        ========================= */
-
-        if (
-            !email ||
-            !firstName ||
-            !lastName ||
-            !productCode
-        ) {
-            return NextResponse.json(
-                {
-                    success: false,
-                    error:
-                        "email, firstName, lastName and productCode are required",
-                },
-                {
-                    status: 400,
-                },
-            );
+        if(!email||!firstName||!lastName||!productCode){
+            return NextResponse.json({success:false,error:"email, firstName, lastName and productCode are required"},{status:400});
+        }
+        if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+            return NextResponse.json({success:false,error:"A valid email address is required"},{status:400});
+        }
+        if(!Number.isInteger(quantity)||quantity<1||quantity>99){
+            return NextResponse.json({success:false,error:"quantity must be an integer from 1 to 99"},{status:400});
         }
 
-        const emailIsValid =
-            /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
-                email,
-            );
+        const product=await getCmlProductByCode(productCode);
+        const productId=Number(product?.id);
+        if(!Number.isInteger(productId)||productId<1) throw new Error("CML product ID not found");
 
-        if (!emailIsValid) {
-            return NextResponse.json(
-                {
-                    success: false,
-                    error:
-                        "A valid email address is required",
-                },
-                {
-                    status: 400,
-                },
-            );
+        const existing=readSession(request);
+        let customerId:number;
+        let newCustomer=false;
+
+        if(existing && existing.email===email){
+            customerId=existing.customerId;
+        }else{
+            const customerResponse=await createCmlCustomer({email,firstName,lastName});
+            customerId=Number(extractCustomerId(customerResponse));
+            if(!Number.isInteger(customerId)||customerId<1) throw new Error("CML customer ID not returned");
+            newCustomer=true;
         }
 
-        if (
-            !Number.isInteger(quantity) ||
-            quantity < 1 ||
-            quantity > 99
-        ) {
-            return NextResponse.json(
-                {
-                    success: false,
-                    error:
-                        "quantity must be an integer from 1 to 99",
-                },
-                {
-                    status: 400,
-                },
-            );
-        }
+        const orderResponse=await createCmlOrder({customerId,productId,quantity});
+        const created=extractOrder(orderResponse);
+        const orderId=Number(created?.id);
+        const orderCode=String(created?.code??"").trim();
+        if(!Number.isInteger(orderId)||orderId<1||!orderCode) throw new Error("CML order was not created correctly");
 
-        /* =========================
-           1. FIND PRODUCT IN CML
-        ========================= */
+        await confirmCmlOrder(orderId);
+        const confirmed=extractOrder(await getCmlOrder(orderCode));
+        if(!confirmed) throw new Error("Confirmed CML order not returned");
 
-        const product =
-            await getCmlProductByCode(
-                productCode,
-            );
+        const amount=amountOf(confirmed.final_amount??confirmed.total??confirmed.amount);
+        const currency=String(confirmed.currency??product.currency??"").toUpperCase();
+        const status=Number(confirmed.status);
+        if(!Number.isFinite(amount)||amount<=0) throw new Error("Invalid CML order amount");
+        if(currency!=="USD") throw new Error(`Unexpected CML currency: ${currency}`);
+        if(status!==1) throw new Error(`CML order is not awaiting payment. Status: ${status}`);
 
-        console.log(
-            "CML PRODUCT:",
-            JSON.stringify(
-                product,
-                null,
-                2,
-            ),
-        );
+        const response=NextResponse.json({success:true,order:{id:orderId,code:orderCode,status,amount,currency,quantity,product:{id:productId,code:product.product?.code??product.code,title:product.product?.title??product.title}}});
 
-        const productId =
-            Number(product?.id);
-
-        if (
-            !Number.isInteger(productId) ||
-            productId <= 0
-        ) {
-            throw new Error(
-                "CML product ID not found",
-            );
-        }
-
-        /* =========================
-           2. CREATE CUSTOMER
-        ========================= */
-
-        const customerResponse =
-            await createCmlCustomer({
-                email,
-                firstName,
-                lastName,
+        if(newCustomer || existing?.email===email){
+            response.cookies.set({
+                name:CUSTOMER_COOKIE,
+                value:signSession({email,customerId,expiresAt:Date.now()+COOKIE_MAX_AGE*1000}),
+                httpOnly:true,
+                secure:process.env.NODE_ENV==="production",
+                sameSite:"lax",
+                path:"/",
+                maxAge:COOKIE_MAX_AGE,
             });
-
-        console.log(
-            "CML CUSTOMER RESPONSE:",
-            JSON.stringify(
-                customerResponse,
-                null,
-                2,
-            ),
-        );
-
-        const customerId =
-            Number(
-                extractCustomerId(
-                    customerResponse,
-                ),
-            );
-
-        if (
-            !Number.isInteger(customerId) ||
-            customerId <= 0
-        ) {
-            console.error(
-                "CUSTOMER ID NOT FOUND:",
-                customerResponse,
-            );
-
-            throw new Error(
-                "CML customer ID not returned",
-            );
         }
-
-        /* =========================
-           3. CREATE DRAFT ORDER
-        ========================= */
-
-        const orderResponse =
-            await createCmlOrder({
-                customerId,
-                productId,
-                quantity,
-            });
-
-        console.log(
-            "CML ORDER CREATED:",
-            JSON.stringify(
-                orderResponse,
-                null,
-                2,
-            ),
-        );
-
-        const createdOrder =
-            extractOrder(orderResponse);
-
-        const orderId =
-            Number(createdOrder?.id);
-
-        const orderCode =
-            String(
-                createdOrder?.code ?? "",
-            ).trim();
-
-        if (
-            !Number.isInteger(orderId) ||
-            orderId <= 0 ||
-            !orderCode
-        ) {
-            console.error(
-                "ORDER DATA NOT FOUND:",
-                orderResponse,
-            );
-
-            throw new Error(
-                "CML order was not created correctly",
-            );
-        }
-
-        /* =========================
-           4. CONFIRM ORDER
-        ========================= */
-
-        const confirmResponse =
-            await confirmCmlOrder(
-                orderId,
-            );
-
-        console.log(
-            "CML ORDER CONFIRM:",
-            JSON.stringify(
-                confirmResponse,
-                null,
-                2,
-            ),
-        );
-
-        /* =========================
-           5. GET CONFIRMED ORDER
-        ========================= */
-
-        const confirmedOrderResponse =
-            await getCmlOrder(
-                orderCode,
-            );
-
-        console.log(
-            "CML CONFIRMED ORDER:",
-            JSON.stringify(
-                confirmedOrderResponse,
-                null,
-                2,
-            ),
-        );
-
-        const confirmedOrder =
-            extractOrder(
-                confirmedOrderResponse,
-            );
-
-        if (!confirmedOrder) {
-            throw new Error(
-                "Confirmed CML order not returned",
-            );
-        }
-
-        /* =========================
-           6. AUTHORITATIVE PRICE
-        ========================= */
-
-        const rawAmount =
-            confirmedOrder.final_amount ??
-            confirmedOrder.total ??
-            confirmedOrder.amount;
-
-        const amount =
-            normalizeAmount(rawAmount);
-
-        const currency =
-            String(
-                confirmedOrder.currency ??
-                product.currency ??
-                "",
-            ).toUpperCase();
-
-        const status =
-            Number(
-                confirmedOrder.status,
-            );
-
-        console.log(
-            "CML ORDER AMOUNT:",
-            {
-                rawAmount,
-                amount,
-                currency,
-                quantity,
-                status,
-            },
-        );
-
-        if (
-            !Number.isFinite(amount) ||
-            amount <= 0
-        ) {
-            throw new Error(
-                `Invalid CML order amount: ${rawAmount}`,
-            );
-        }
-
-        if (!currency) {
-            throw new Error(
-                "CML order currency not returned",
-            );
-        }
-
-        if (currency !== "USD") {
-            throw new Error(
-                `Unexpected CML currency: ${currency}`,
-            );
-        }
-
-        /*
-         * После confirm заказ должен ожидать оплату.
-         * В вашей текущей интеграции CML использует статус 1.
-         */
-        if (status !== 1) {
-            throw new Error(
-                `CML order is not awaiting payment. Status: ${status}`,
-            );
-        }
-
-        /* =========================
-           7. RESPONSE
-        ========================= */
-
-        return NextResponse.json({
-            success: true,
-
-            order: {
-                id: orderId,
-                code: orderCode,
-                status,
-                amount,
-                currency,
-                quantity,
-
-                product: {
-                    id: productId,
-
-                    code:
-                        product.product?.code ??
-                        product.code,
-
-                    title:
-                        product.product?.title ??
-                        product.title,
-
-                    description:
-                        product.product?.description ??
-                        product.description,
-
-                    programId:
-                    product.program_id,
-
-                    programCode:
-                    product.program?.code,
-
-                    programName:
-                    product.program?.name,
-                },
-            },
-        });
-    } catch (error) {
-        console.error(
-            "CHECKOUT ERROR:",
-            error,
-        );
-
-        return NextResponse.json(
-            {
-                success: false,
-
-                error:
-                    error instanceof Error
-                        ? error.message
-                        : "Unknown checkout error",
-            },
-            {
-                status: 500,
-            },
-        );
+        return response;
+    }catch(error){
+        console.error("CHECKOUT ERROR:",error);
+        return NextResponse.json({success:false,error:error instanceof Error?error.message:"Unknown checkout error"},{status:500});
     }
 }

@@ -8,8 +8,8 @@ import {
     useState,
 } from "react";
 
-import AlgoReveal from "./AlgoReveal";
 import {useLanguage} from "@/context/LanguageProvider";
+import AlgoRevealDynamic from "@/app/AlgoRevealDynamic";
 
 type MainHeroProps = {
     linesTopSrc: string;
@@ -138,7 +138,7 @@ const MainHero = ({
             className="main_block_new"
         >
 
-            <AlgoReveal />
+            <AlgoRevealDynamic  />
 
             <div className="hero_blend_layer">
 

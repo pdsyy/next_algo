@@ -4,7 +4,10 @@ import {useLanguage} from "@/context/LanguageProvider";
 import YearMonthHandler from "./YearMonthHandler";
 import TripleHandler from "./TripleHandler";
 import Image from "next/image";
-import {usePathname} from "next/navigation";
+import {usePathname, useRouter} from "next/navigation";
+import cart_icon from "../app/images/header_cart_icon.svg"
+import CartPopup, {type CartCheckout, type CartItem} from "@/components/cartPopup/CartPopup";
+import {useCart} from "@/components/cartPopup/CartProvider";
 
 interface HeaderProps {
     dark: boolean,
@@ -14,11 +17,7 @@ interface HeaderProps {
 
 const Header = ({dark, visibleHeader, setVisibleHeader}: HeaderProps) => {
 
-
-
-    const pathname = usePathname();
-
-
+    const { itemCount, isHydrated, openCart, setItems, items, isOpen, closeCart} = useCart();
 
     const {t, language, setLanguage} = useLanguage();
 
@@ -35,13 +34,21 @@ const Header = ({dark, visibleHeader, setVisibleHeader}: HeaderProps) => {
         setActiveMenu(false);
     };
 
-    const menuItems = [
-        {name: t.home.header.howItWorks, id: "how-it-works"},
-        {name: t.home.header.advantages, id: "advantages"},
-        {name: t.home.header.catalog, id: "catalog"},
-        {name: t.home.header.reviews, id: "reviews"},
-        {name: t.home.header.faq, id: "faq"},
-    ];
+    const CHECKOUT_STORAGE_KEY = "algo_checkout_cart";
+
+    const router = useRouter();
+
+    const handleCheckout = (cart: CartCheckout) => {
+        localStorage.setItem(
+            CHECKOUT_STORAGE_KEY,
+            JSON.stringify({
+                ...cart,
+                savedAt: Date.now(),
+            })
+        );
+
+        router.push("/checkout");
+    };
 
     return (
         <div
@@ -121,6 +128,7 @@ const Header = ({dark, visibleHeader, setVisibleHeader}: HeaderProps) => {
                             EN
                         </div>
                     </div>
+                    <Image src={cart_icon} alt="" className = "cart_icon_desk" onClick={openCart}/>
                     <div className="select_bot_button" onClick={() => handleMenuClick("catalog")}>
                         {t.home.hero.button}
                     </div>
@@ -137,6 +145,11 @@ const Header = ({dark, visibleHeader, setVisibleHeader}: HeaderProps) => {
 
             {/* Mobile Menu */}
             <div className={`mobile_menu ${dark ? "prop_bot" : ""}`}>
+                <Image src={cart_icon} alt="" className = "mobile_cart_icon" onClick={() => {
+
+                    setActiveMenu(!activeMenu)
+                    openCart()
+                }}/>
                 {/*menuItems.map((item) => (
                     <div key={item.id} className="menu_item" onClick={() => handleMenuClick(item.id)}>
                         {item.name}
@@ -235,6 +248,15 @@ const Header = ({dark, visibleHeader, setVisibleHeader}: HeaderProps) => {
                                        yChannelSelector="G"/>
                 </filter>
             </svg>
+            <CartPopup
+                isOpen={isOpen}
+                onClose={closeCart}
+                items={items}
+                onItemsChange={setItems}
+                onCheckout={handleCheckout}
+                language={language}
+                currency="USD"
+            />
         </div>
     );
 };

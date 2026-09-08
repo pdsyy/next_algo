@@ -5,18 +5,14 @@ import React, {
     useState,
 } from "react";
 
-import {LanguageProvider,} from "@/context/LanguageProvider";
-
-import type {Language,} from "@/context/LanguageProvider";
-
-import {ScrollProvider,} from "@/context/ScrollContext";
-
-import {ThemeContext,} from "@/context/ThemeContext";
-
-import {ThxProvider,} from "@/context/ThxContext";
-
+import {LanguageProvider} from "@/context/LanguageProvider";
+import type {Language} from "@/context/LanguageProvider";
+import {ScrollProvider} from "@/context/ScrollContext";
+import {ThemeContext} from "@/context/ThemeContext";
+import {ThxProvider} from "@/context/ThxContext";
 import Header from "@/components/Header";
 import ThxPopup from "@/components/ThxPopup";
+import {CartProvider} from "@/components/cartPopup/CartProvider";
 
 
 interface ProvidersProps {
@@ -25,9 +21,8 @@ interface ProvidersProps {
 }
 
 
-export default function Providers({children, initialLanguage,}: ProvidersProps) {
+export default function Providers({children, initialLanguage}: ProvidersProps) {
     const [darkTheme, setDarkTheme] = useState(false);
-
     const [visibleHeader, setVisibleHeader] = useState(false);
 
     return (
@@ -41,21 +36,23 @@ export default function Providers({children, initialLanguage,}: ProvidersProps) 
                             setDarkTheme,
                         }}
                     >
-                        <div className="App">
-                            <Header
-                                dark={darkTheme}
-                                visibleHeader={
-                                    visibleHeader
-                                }
-                                setVisibleHeader={
-                                    setVisibleHeader
-                                }
-                            />
+                        <CartProvider>
+                            <div className="App">
+                                <Header
+                                    dark={darkTheme}
+                                    visibleHeader={
+                                        visibleHeader
+                                    }
+                                    setVisibleHeader={
+                                        setVisibleHeader
+                                    }
+                                />
 
-                            {children}
+                                {children}
 
-                            <ThxPopup />
-                        </div>
+                                <ThxPopup/>
+                            </div>
+                        </CartProvider>
                     </ThemeContext.Provider>
                 </ThxProvider>
             </ScrollProvider>

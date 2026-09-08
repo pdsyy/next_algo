@@ -42,9 +42,7 @@ const PopupBot = ({bot_info = [], bot_name, price, isActive, setIsActive, active
         }
     };
     const pathname = usePathname();
-    console.log(pathname)
     const isMainPage = pathname === "/"
-    console.log('Props check:', { setIsActive, setActiveThx });
 
     const buyBot = async () => {
         const response = await fetch(

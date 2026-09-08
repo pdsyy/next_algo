@@ -1,0 +1,292 @@
+.page {
+    box-sizing: border-box;
+    min-height: 100vh;
+    padding: 26px 42px;
+    background: #ececec;
+    color: #171717;
+    font-family: Inter, Arial, sans-serif
+}
+
+.shell {
+    display: grid;
+    grid-template-columns:172px minmax(480px, 660px) minmax(260px, 320px);
+    align-items: start;
+    justify-content: center;
+    gap: 24px;
+    width: 100%;
+    max-width: 1168px;
+    margin: 0 auto
+}
+
+.home, .card, .summary {
+    border: 1px solid #e6e6e6;
+    background: #fff;
+    box-shadow: 0 4px 16px rgb(0 0 0/3%)
+}
+
+.home {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 172px;
+    height: 40px;
+    border-radius: 200px;
+    color: #5c5c5c;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none
+}
+
+.card, .summary {
+    overflow: hidden;
+    border-radius: 20px
+}
+
+.header, .summary header {
+    padding: 20px
+}
+
+.header h1, .summary h2 {
+    margin: 0;
+    font-size: 18px;
+    line-height: 24px
+}
+
+.header p, .summary header p {
+    margin: 4px 0 0;
+    color: #5c5c5c;
+    font-size: 14px;
+    line-height: 20px
+}
+
+.sectionTitle {
+    padding: 6px 20px;
+    background: #f5f5f5;
+    color: #a3a3a3;
+    font-size: 12px;
+    line-height: 16px;
+    letter-spacing: .04em
+}
+
+.options {
+    display: grid;
+    gap: 10px;
+    padding: 20px
+}
+
+.option {
+    position: relative;
+    display: grid;
+    grid-template-columns:42px 1fr 16px;
+    align-items: center;
+    gap: 12px;
+    min-height: 64px;
+    padding: 10px 14px;
+    border: 1px solid #ebebeb;
+    border-radius: 10px;
+    cursor: pointer
+}
+
+.option input {
+    position: absolute;
+    opacity: 0
+}
+
+.option > span:nth-child(3) {
+    display: flex;
+    flex-direction: column
+}
+
+.option strong {
+    font-size: 14px
+}
+
+.option small {
+    margin-top: 3px;
+    color: #a3a3a3;
+    font-size: 12px
+}
+
+.coin {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #e9f7f3;
+    color: #299d7f;
+    font-weight: 800
+}
+
+.option i {
+    width: 12px;
+    height: 12px;
+    border: 1px solid #d4d4d4;
+    border-radius: 50%
+}
+
+.active {
+    border-color: #262626
+}
+
+.active i {
+    border: 4px solid #262626
+}
+
+.actions {
+    display: grid;
+    grid-template-columns:1fr 1fr;
+    gap: 16px;
+    padding: 20px;
+    border-top: 1px solid #ebebeb
+}
+
+.actions button, .state button {
+    height: 40px;
+    border-radius: 200px;
+    font: 600 14px Inter, Arial, sans-serif;
+    cursor: pointer
+}
+
+.back {
+    border: 1px solid #ebebeb;
+    background: #fff;
+    color: #5c5c5c
+}
+
+.pay {
+    border: 1px solid #262626;
+    background: #262626;
+    color: #fff
+}
+
+.actions button:disabled {
+    border-color: #f5f5f5;
+    background: #f5f5f5;
+    color: #d1d1d1;
+    cursor: not-allowed
+}
+
+.error {
+    margin: 0;
+    padding: 10px 12px;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    background: #fef2f2;
+    color: #b91c1c;
+    font-size: 12px
+}
+
+.product {
+    display: grid;
+    grid-template-columns:48px 1fr;
+    align-items: center;
+    gap: 10px;
+    margin: 20px;
+    padding: 8px;
+    border: 1px solid #ebebeb;
+    border-radius: 10px
+}
+
+.product img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain
+}
+
+.product div {
+    display: flex;
+    flex-direction: column
+}
+
+.product strong {
+    font-size: 16px
+}
+
+.product small {
+    margin-top: 3px;
+    color: #a3a3a3
+}
+
+.summary dl {
+    margin: 0;
+    padding: 0 20px 20px
+}
+
+.summary dl div {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 14px;
+    border-top: 1px solid #ebebeb
+}
+
+.summary dt, .summary dd {
+    margin: 0
+}
+
+.summary dd {
+    font-weight: 700
+}
+
+.state {
+    display: grid;
+    place-content: center;
+    min-height: 420px;
+    text-align: center
+}
+
+.state h1 {
+    margin: 0
+}
+
+.state p {
+    color: #777
+}
+
+.state button {
+    padding: 0 24px;
+    border: 1px solid #262626;
+    background: #262626;
+    color: #fff
+}
+
+@media (max-width: 980px) {
+    .shell {
+        grid-template-columns:minmax(0, 660px) minmax(250px, 300px)
+    }
+
+    .home {
+        position: absolute;
+        transform: translateY(calc(-100% - 12px))
+    }
+}
+
+@media (max-width: 760px) {
+    .page {
+        padding: 62px 16px 24px
+    }
+
+    .shell {
+        grid-template-columns:1fr
+    }
+
+    .summary {
+        order: 2
+    }
+}
+
+@media (max-width: 480px) {
+    .page {
+        padding-right: 10px;
+        padding-left: 10px
+    }
+
+    .actions {
+        grid-template-columns:1fr
+    }
+
+    .options, .header, .actions {
+        padding-right: 14px;
+        padding-left: 14px
+    }
+}

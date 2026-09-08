@@ -77,11 +77,7 @@ export const metadata: Metadata = {
     },
 };
 
-const supportedLanguages: Language[] = [
-    "UA",
-    "RU",
-    "EN",
-];
+const supportedLanguages: Language[] = ["UA", "RU", "EN"];
 
 const isLanguage = (value: string | undefined): value is Language => {
     return supportedLanguages.includes(

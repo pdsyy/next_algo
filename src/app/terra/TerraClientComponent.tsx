@@ -32,6 +32,8 @@ import youtube_icon from "../images/youtube_icon.svg";
 import {useThxContext} from "@/context/ThxContext";
 import lines from "@/app/images/bottom_lines.svg";
 import Image from "next/image";
+import Footer from "@/components/Footer";
+import AddToCartButton from "@/components/cartPopup/AddToCartButton";
 
 const TerraPage = () => {
     const {activePopup, setActivePopup} = useThxContext()
@@ -174,14 +176,16 @@ const TerraPage = () => {
                         {t.terra.hero.desc}
                     </motion.div>
 
-                    <motion.div
-                        className="button_buy_bot"
-                        onClick={() => setIsActive(true)}
-                        {...fadeNumeric}
-                        custom={4}
+                    <AddToCartButton className="button_buy_bot" product={{
+                            id: "terra-ea",
+                            name: "TERRA EA",
+                            subtitle: t.terra.hero.theme,
+                            imageSrc: bottom_product_image.src,
+                            unitPrice: 1000,
+                        }}
                     >
                         {t.terra.hero.buy}
-                    </motion.div>
+                    </AddToCartButton>
 
                     <motion.div className="product_slogan" {...fadeNumeric} custom={5}>
                         {t.terra.hero.slogan}
@@ -539,18 +543,21 @@ const TerraPage = () => {
                         <div className="bot_stat_price">
                             {t.terra.buy.price}
                             <div className="price_block_bottom">
-                                <a className = "blur_price">499</a>
+                                <a className = "blur_price">1000</a>
                                 <span>USD</span>
                             </div>
                         </div>
 
                         <div className="bottom_buttons_block">
-                            <div
-                                className="button_buy_bottom"
-                                onClick={() => setIsActive(true)}
-                            >
+                            <AddToCartButton className="button_buy_bottom" product={{
+                                id: "terra-ea",
+                                name: "TERRA EA",
+                                subtitle: t.terra.hero.theme,
+                                imageSrc: bottom_product_image.src,
+                                unitPrice: 1000,
+                            }}>
                                 {t.terra.buy.buy}
-                            </div>
+                            </AddToCartButton>
 
                             {/* <div
                                 className="piece_pay_bottom"
@@ -563,44 +570,7 @@ const TerraPage = () => {
                 </div>
             </div>
 
-            <motion.div className="footer" {...fadeUp}>
-                <a href="/">
-                    <img src={logo.src} alt="Logo" className="logo_img"/>
-                </a>
-                <hr/>
-
-                {isMobile ?
-                    <div className="society_block">
-                        <div>
-                            <a href={language === "EN" ? "https://t.me/algoworId" : "https://t.me/+uKCqVOr1OAE2ZmQy"} target="_blank" rel="noreferrer">
-                                <img src={tg_icon.src} alt=""/>
-                            </a>
-                        </div>
-                        {/*<div>
-                            <a href="https://www.instagram.com/alg0_bots?igsh=NW82eGFuajRlYmpw" target="_blank"
-                               rel="noreferrer">
-                                <img src={instagram_icon.src} alt=""/>
-                            </a>
-                        </div>*/}
-                        <div>
-                            <a href={language === "EN" ? "https://www.youtube.com/channel/UCUdEXqsf87y8gSnz7FjxS8g" : "https://www.youtube.com/@alg0_ofx"} target="_blank" rel="noreferrer">
-                                <img src={youtube_icon.src} alt=""/>
-                            </a>
-                        </div>
-                    </div>
-
-                    : <div className="society_block">
-                        {/* <div>
-                           <a href="https://www.instagram.com/alg0_bots?igsh=NW82eGFuajRlYmpw">{t.terra.footer.instagram}</a>
-                        </div>*/}
-                        <div>
-                            <a href={language === "EN" ? "https://www.youtube.com/channel/UCUdEXqsf87y8gSnz7FjxS8g" : "https://www.youtube.com/@alg0_ofx"}>{t.terra.footer.youtube}</a>
-                        </div>
-                        <div>
-                            <a href={language === "EN" ? "https://t.me/algoworId" : "https://t.me/+uKCqVOr1OAE2ZmQy"}>{t.terra.footer.telegram}</a>
-                        </div>
-                    </div>}
-            </motion.div>
+            <Footer/>
             <Image src={lines} alt="" className="bottom_lines" style={{ width: '100%', height: 'auto' }} loading="eager"/>
         </div>
     );

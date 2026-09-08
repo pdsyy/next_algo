@@ -7,7 +7,9 @@
     --algo-image-bottom-space: 102px;
     --algo-image-width: 70%;
     --algo-image-offset-x: 0px;
-    --algo-video-box-offset-y: -35px;
+
+    --algo-video-box-offset-y: 1px;
+
     --algo-content-image-gap: 12px;
 }
 
@@ -1781,6 +1783,7 @@ h2 span {
     gap: 24px;
     align-items: center;
     padding: 0 48px;
+    width: 100%;
 }
 
 .footer img {
@@ -1915,7 +1918,7 @@ h2 span {
 
 
 .blur_price {
-    filter: blur(10px);
+    filter: blur(0px);
 }
 
 
@@ -2560,6 +2563,7 @@ h2 span {
         margin-top: 48px;
         padding: 0 20px;
         gap: 16px;
+
     }
 
     .footer hr {
@@ -2567,7 +2571,7 @@ h2 span {
     }
 
     .society_block {
-        width: 116px;
+        width: 74px;
         align-items: center;
         justify-content: space-around;
         flex-shrink: 0;
@@ -2648,6 +2652,7 @@ h2 span {
     }
 
     .mobile_menu {
+        position: relative;
         opacity: 0;
         display: flex !important;
         max-height: 0;

@@ -5,6 +5,10 @@ const CML_API_URL =
 
 const CML_CHANNEL = "algo-bots";
 
+/* =========================
+   HEADERS
+========================= */
+
 function createCmlHeaders(rawBody: string) {
     const apiKey = process.env.CML_API_KEY;
     const apiSecret = process.env.CML_API_SECRET;
@@ -36,16 +40,14 @@ function createCmlHeaders(rawBody: string) {
     };
 }
 
-
 /* =========================
    GENERIC CML REQUEST
 ========================= */
 
 async function cmlRequest<T = any>(
     endpoint: string,
-    payload: Record<string, any>
+    payload: Record<string, unknown>,
 ): Promise<T> {
-
     const body = JSON.stringify(payload);
 
     const response = await fetch(
@@ -55,30 +57,30 @@ async function cmlRequest<T = any>(
             headers: createCmlHeaders(body),
             body,
             cache: "no-store",
-        }
+        },
     );
 
-    const text = await response.text();
+    const responseText = await response.text();
 
     let data: any;
 
     try {
-        data = JSON.parse(text);
+        data = JSON.parse(responseText);
     } catch {
-        data = text;
+        data = responseText;
     }
 
     if (!response.ok) {
         console.error(
             `CML ERROR ${endpoint}:`,
             response.status,
-            data
+            data,
         );
 
         const message =
-            data?.error?.message ||
-            data?.message ||
-            text ||
+            data?.error?.message ??
+            data?.message ??
+            responseText ??
             `CML request failed: ${response.status}`;
 
         throw new Error(message);
@@ -87,13 +89,12 @@ async function cmlRequest<T = any>(
     return data;
 }
 
-
 /* =========================
    CATALOG
 ========================= */
 
 export async function getCmlProducts(
-    countryCode?: string
+    countryCode?: string,
 ) {
     return cmlRequest(
         "/sales-channel/catalog",
@@ -106,18 +107,26 @@ export async function getCmlProducts(
                         countryCode.toUpperCase(),
                 }
                 : {}),
-        }
+        },
     );
 }
-
 
 /* =========================
    FIND PRODUCT
 ========================= */
 
 export async function getCmlProductByCode(
-    productCode: string
+    productCode: string,
 ) {
+    const normalizedProductCode =
+        productCode.trim();
+
+    if (!normalizedProductCode) {
+        throw new Error(
+            "CML product code is required",
+        );
+    }
+
     const catalog =
         await getCmlProducts();
 
@@ -126,26 +135,32 @@ export async function getCmlProductByCode(
 
     if (!data?.available) {
         throw new Error(
-            "CML catalog is not available"
+            "CML catalog is not available",
         );
     }
 
+    const products =
+        Array.isArray(data.products)
+            ? data.products
+            : [];
+
     const product =
-        data.products?.find(
+        products.find(
             (item: any) =>
-                item.code === productCode ||
-                item.product?.code === productCode
+                String(item.code) ===
+                normalizedProductCode ||
+                String(item.product?.code) ===
+                normalizedProductCode,
         );
 
     if (!product) {
         throw new Error(
-            `CML product "${productCode}" not found`
+            `CML product "${normalizedProductCode}" not found`,
         );
     }
 
     return product;
 }
-
 
 /* =========================
    CREATE CUSTOMER
@@ -164,14 +179,13 @@ export async function createCmlCustomer({
                                             lastName,
                                             countryCode,
                                         }: CreateCustomerParams) {
-
     return cmlRequest(
         "/order/customer",
         {
             customer: {
-                email,
-                first_name: firstName,
-                last_name: lastName,
+                email: email.trim().toLowerCase(),
+                first_name: firstName.trim(),
+                last_name: lastName.trim(),
                 type: "Individual",
 
                 ...(countryCode
@@ -181,10 +195,9 @@ export async function createCmlCustomer({
                     }
                     : {}),
             },
-        }
+        },
     );
 }
-
 
 /* =========================
    CREATE ORDER
@@ -193,66 +206,107 @@ export async function createCmlCustomer({
 interface CreateOrderParams {
     customerId: number;
     productId: number;
+    quantity: number;
 }
 
 export async function createCmlOrder({
                                          customerId,
                                          productId,
+                                         quantity,
                                      }: CreateOrderParams) {
+    if (
+        !Number.isInteger(customerId) ||
+        customerId <= 0
+    ) {
+        throw new Error(
+            "Invalid CML customer ID",
+        );
+    }
+
+    if (
+        !Number.isInteger(productId) ||
+        productId <= 0
+    ) {
+        throw new Error(
+            "Invalid CML product ID",
+        );
+    }
+
+    if (
+        !Number.isInteger(quantity) ||
+        quantity < 1 ||
+        quantity > 99
+    ) {
+        throw new Error(
+            "Invalid product quantity",
+        );
+    }
 
     return cmlRequest(
         "/order/submit",
         {
             order: {
                 customer_id: customerId,
-
-                sales_channel:
-                CML_CHANNEL,
+                sales_channel: CML_CHANNEL,
 
                 items: [
                     {
-                        product_id:
-                        productId,
-                        qty: 1,
+                        product_id: productId,
+                        qty: quantity,
                     },
                 ],
             },
-        }
+        },
     );
 }
-
 
 /* =========================
    CONFIRM ORDER
 ========================= */
 
 export async function confirmCmlOrder(
-    orderId: number
+    orderId: number,
 ) {
+    if (
+        !Number.isInteger(orderId) ||
+        orderId <= 0
+    ) {
+        throw new Error(
+            "Invalid CML order ID",
+        );
+    }
+
     return cmlRequest(
         "/order/confirm",
         {
             order_id: orderId,
-        }
+        },
     );
 }
-
 
 /* =========================
    GET ORDER
 ========================= */
 
 export async function getCmlOrder(
-    orderCode: string
+    orderCode: string,
 ) {
+    const normalizedOrderCode =
+        orderCode.trim();
+
+    if (!normalizedOrderCode) {
+        throw new Error(
+            "CML order code is required",
+        );
+    }
+
     return cmlRequest(
         "/order/get",
         {
-            order_code: orderCode,
-        }
+            order_code: normalizedOrderCode,
+        },
     );
 }
-
 
 /* =========================
    RECORD PAYMENT
@@ -273,22 +327,41 @@ export async function recordCmlPayment({
                                            paymentMethod,
                                            externalReference,
                                        }: RecordCmlPaymentParams) {
+    if (!orderCode.trim()) {
+        throw new Error(
+            "CML order code is required",
+        );
+    }
+
+    if (!providerTransactionId.trim()) {
+        throw new Error(
+            "Provider transaction ID is required",
+        );
+    }
+
+    if (
+        !Number.isFinite(amount) ||
+        amount <= 0
+    ) {
+        throw new Error(
+            "Invalid payment amount",
+        );
+    }
 
     return cmlRequest(
         "/order/payment",
         {
             payment: {
-                order_code: orderCode,
+                order_code: orderCode.trim(),
 
                 provider: "nowpayments",
 
                 provider_txn_id:
-                providerTransactionId,
+                    providerTransactionId.trim(),
 
                 amount,
 
-                // CML:
-                // 1 = captured
+                // CML: 1 = captured
                 status: 1,
 
                 ...(paymentMethod
@@ -305,6 +378,6 @@ export async function recordCmlPayment({
                     }
                     : {}),
             },
-        }
+        },
     );
 }

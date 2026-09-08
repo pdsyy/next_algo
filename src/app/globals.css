@@ -401,6 +401,31 @@
 
 
 }
+
+.tech_page_list{
+    width: 100%;
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    position: relative;
+    z-index: 1;
+    padding-bottom: 25px;
+
+}
+
+.tech_page_list a{
+    color: #232323;
+    font-family: Inter;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 100%;
+    letter-spacing: -1%;
+    text-transform: uppercase;
+
+
+}
+
 @media screen and (width > 768px) {
     .desk_none{
         display: none !important;
@@ -408,6 +433,21 @@
 }
 
 @media screen and (max-width: 768px) {
+
+    .mobile_cart_icon{
+        position: absolute;
+        right: 0;
+        width: 40px;
+        height: auto;
+        top: 0;
+    }
+
+    .tech_page_list{
+        flex-direction: column;
+        gap: 12px;
+        align-items: center;
+        padding-bottom: 10px;
+    }
     .mob_none{
         display: none !important;
     }

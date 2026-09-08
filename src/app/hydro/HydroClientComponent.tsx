@@ -35,6 +35,8 @@ import {useThxContext} from "@/context/ThxContext";
 import lines from "@/app/images/bottom_lines.svg";
 import Image from "next/image";
 import bottom_product_image from "@/app/aero/images/aero_product_image.png";
+import Footer from "@/components/Footer";
+import AddToCartButton from "@/components/cartPopup/AddToCartButton";
 
 const HydroPage = () => {
     const {activePopup, setActivePopup} = useThxContext()
@@ -172,9 +174,15 @@ const HydroPage = () => {
                     <motion.div className="bot_main_desc" {...fadeNumeric} custom={3}>
                         {t.hydro.hero.desc}
                     </motion.div>
-                    <motion.div className="button_buy_bot" onClick={() => setIsActive(true)} {...fadeNumeric} custom={4}>
+                    <AddToCartButton className="button_buy_bot" product={{
+                        id: "hydro-ea",
+                        name: "HYDRO EA",
+                        subtitle: t.hydro.hero.theme,
+                        imageSrc: hydroBuyImage.src,
+                        unitPrice: 2000,
+                    }}>
                         {t.hydro.hero.buy}
-                    </motion.div>
+                    </AddToCartButton>
                     <motion.div className="product_slogan" {...fadeNumeric} custom={5}>
                         {t.hydro.hero.slogan}
                     </motion.div>
@@ -538,9 +546,15 @@ const HydroPage = () => {
                         </div>
 
                         <div className="bottom_buttons_block">
-                            <div className="button_buy_bottom" onClick={() => setIsActive(true)}>
+                            <AddToCartButton className="button_buy_bottom" product={{
+                                id: "hydro-ea",
+                                name: "HYDRO EA",
+                                subtitle: t.hydro.hero.theme,
+                                imageSrc: hydroBuyImage.src,
+                                unitPrice: 2000,
+                            }}>
                                 {t.terra.buy.buy}
-                            </div>
+                            </AddToCartButton>
                             {/*<div className="piece_pay_bottom" onClick={() => setIsActive(true)}>
                                 {t.terra.buy.parts}
                             </div>*/}
@@ -549,44 +563,7 @@ const HydroPage = () => {
                 </div>
             </div>
 
-            <motion.div className="footer" {...fadeUp}>
-                <a href="/">
-                    <img src={logo.src} alt="Logo" className="logo_img"/>
-                </a>
-                <hr/>
-
-                {isMobile ?
-                    <div className="society_block">
-                        <div>
-                            <a href={language === "EN" ? "https://t.me/algoworId" : "https://t.me/+uKCqVOr1OAE2ZmQy"} target="_blank" rel="noreferrer">
-                                <img src={tg_icon.src} alt=""/>
-                            </a>
-                        </div>
-                        {/*<div>
-                            <a href="https://www.instagram.com/alg0_bots?igsh=NW82eGFuajRlYmpw" target="_blank"
-                               rel="noreferrer">
-                                <img src={instagram_icon.src} alt=""/>
-                            </a>
-                        </div>*/}
-                        <div>
-                            <a href={language === "EN" ? "https://www.youtube.com/channel/UCUdEXqsf87y8gSnz7FjxS8g" : "https://www.youtube.com/@alg0_ofx"} target="_blank" rel="noreferrer">
-                                <img src={youtube_icon.src} alt=""/>
-                            </a>
-                        </div>
-                    </div>
-
-                    : <div className="society_block">
-                        {/* <div>
-                           <a href="https://www.instagram.com/alg0_bots?igsh=NW82eGFuajRlYmpw">{t.terra.footer.instagram}</a>
-                        </div>*/}
-                        <div>
-                            <a href={language === "EN" ? "https://www.youtube.com/channel/UCUdEXqsf87y8gSnz7FjxS8g" : "https://www.youtube.com/@alg0_ofx"}>{t.terra.footer.youtube}</a>
-                        </div>
-                        <div>
-                            <a href={language === "EN" ? "https://t.me/algoworId" : "https://t.me/+uKCqVOr1OAE2ZmQy"}>{t.terra.footer.telegram}</a>
-                        </div>
-                    </div>}
-            </motion.div>
+            <Footer/>
             <Image src={lines} alt="" className="bottom_lines" style={{ width: '100%', height: 'auto' }} loading="eager"/>
         </div>
     );

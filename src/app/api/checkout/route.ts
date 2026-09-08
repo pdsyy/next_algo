@@ -4,27 +4,85 @@ import {
 } from "next/server";
 
 import {
-    getCmlProductByCode,
+    confirmCmlOrder,
     createCmlCustomer,
     createCmlOrder,
-    confirmCmlOrder,
     getCmlOrder,
+    getCmlProductByCode,
 } from "@/lib/cml";
 
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+type CheckoutBody = {
+    email?: unknown;
+    firstName?: unknown;
+    lastName?: unknown;
+    productCode?: unknown;
+    quantity?: unknown;
+};
+
+function normalizeAmount(
+    value: unknown,
+) {
+    const normalized =
+        String(value ?? "")
+            .replace(/[^\d.-]/g, "");
+
+    return Number.parseFloat(normalized);
+}
+
+function extractCustomerId(
+    response: any,
+) {
+    return (
+        response?.success?.data?.customer?.id ??
+        response?.success?.customer?.id ??
+        response?.data?.customer?.id ??
+        response?.customer?.id
+    );
+}
+
+function extractOrder(
+    response: any,
+) {
+    return (
+        response?.success?.data?.order ??
+        response?.success?.order ??
+        response?.data?.order ??
+        response?.order
+    );
+}
 
 export async function POST(
-    req: NextRequest
+    request: NextRequest,
 ) {
     try {
-        const body = await req.json();
+        const body =
+            (await request.json()) as CheckoutBody;
 
-        const {
-            email,
-            firstName,
-            lastName,
-            productCode,
-        } = body;
+        const email =
+            typeof body.email === "string"
+                ? body.email.trim().toLowerCase()
+                : "";
 
+        const firstName =
+            typeof body.firstName === "string"
+                ? body.firstName.trim()
+                : "";
+
+        const lastName =
+            typeof body.lastName === "string"
+                ? body.lastName.trim()
+                : "";
+
+        const productCode =
+            typeof body.productCode === "string"
+                ? body.productCode.trim()
+                : "";
+
+        const quantity =
+            Number(body.quantity ?? 1);
 
         /* =========================
            VALIDATION
@@ -44,10 +102,44 @@ export async function POST(
                 },
                 {
                     status: 400,
-                }
+                },
             );
         }
 
+        const emailIsValid =
+            /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+                email,
+            );
+
+        if (!emailIsValid) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    error:
+                        "A valid email address is required",
+                },
+                {
+                    status: 400,
+                },
+            );
+        }
+
+        if (
+            !Number.isInteger(quantity) ||
+            quantity < 1 ||
+            quantity > 99
+        ) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    error:
+                        "quantity must be an integer from 1 to 99",
+                },
+                {
+                    status: 400,
+                },
+            );
+        }
 
         /* =========================
            1. FIND PRODUCT IN CML
@@ -55,7 +147,7 @@ export async function POST(
 
         const product =
             await getCmlProductByCode(
-                productCode
+                productCode,
             );
 
         console.log(
@@ -63,17 +155,21 @@ export async function POST(
             JSON.stringify(
                 product,
                 null,
-                2
-            )
+                2,
+            ),
         );
 
+        const productId =
+            Number(product?.id);
 
-        if (!product?.id) {
+        if (
+            !Number.isInteger(productId) ||
+            productId <= 0
+        ) {
             throw new Error(
-                "CML product ID not found"
+                "CML product ID not found",
             );
         }
-
 
         /* =========================
            2. CREATE CUSTOMER
@@ -91,38 +187,30 @@ export async function POST(
             JSON.stringify(
                 customerResponse,
                 null,
-                2
-            )
+                2,
+            ),
         );
 
-
-        /*
-         * CML может оборачивать customer
-         * немного по-разному.
-         * Поэтому проверяем несколько вариантов.
-         */
-
         const customerId =
-            customerResponse?.success?.data
-                ?.customer?.id ??
-            customerResponse?.success
-                ?.customer?.id ??
-            customerResponse?.data
-                ?.customer?.id ??
-            customerResponse?.customer?.id;
+            Number(
+                extractCustomerId(
+                    customerResponse,
+                ),
+            );
 
-
-        if (!customerId) {
+        if (
+            !Number.isInteger(customerId) ||
+            customerId <= 0
+        ) {
             console.error(
                 "CUSTOMER ID NOT FOUND:",
-                customerResponse
+                customerResponse,
             );
 
             throw new Error(
-                "CML customer ID not returned"
+                "CML customer ID not returned",
             );
         }
-
 
         /* =========================
            3. CREATE DRAFT ORDER
@@ -130,67 +218,45 @@ export async function POST(
 
         const orderResponse =
             await createCmlOrder({
-                customerId:
-                    Number(customerId),
-
-                productId:
-                    Number(product.id),
+                customerId,
+                productId,
+                quantity,
             });
-
 
         console.log(
             "CML ORDER CREATED:",
             JSON.stringify(
                 orderResponse,
                 null,
-                2
-            )
+                2,
+            ),
         );
 
+        const createdOrder =
+            extractOrder(orderResponse);
 
-        /*
-         * Возможные структуры ответа:
-         *
-         * {
-         *   success: true,
-         *   data: {
-         *      order: {...}
-         *   }
-         * }
-         *
-         * либо
-         *
-         * {
-         *   success: {
-         *      data: {
-         *          order: {...}
-         *      }
-         *   }
-         * }
-         */
+        const orderId =
+            Number(createdOrder?.id);
 
-        const order =
-            orderResponse?.data?.order ??
-            orderResponse?.success?.data
-                ?.order ??
-            orderResponse?.success?.order ??
-            orderResponse?.order;
-
+        const orderCode =
+            String(
+                createdOrder?.code ?? "",
+            ).trim();
 
         if (
-            !order?.id ||
-            !order?.code
+            !Number.isInteger(orderId) ||
+            orderId <= 0 ||
+            !orderCode
         ) {
             console.error(
                 "ORDER DATA NOT FOUND:",
-                orderResponse
+                orderResponse,
             );
 
             throw new Error(
-                "CML order was not created correctly"
+                "CML order was not created correctly",
             );
         }
-
 
         /* =========================
            4. CONFIRM ORDER
@@ -198,19 +264,17 @@ export async function POST(
 
         const confirmResponse =
             await confirmCmlOrder(
-                Number(order.id)
+                orderId,
             );
-
 
         console.log(
             "CML ORDER CONFIRM:",
             JSON.stringify(
                 confirmResponse,
                 null,
-                2
-            )
+                2,
+            ),
         );
-
 
         /* =========================
            5. GET CONFIRMED ORDER
@@ -218,55 +282,31 @@ export async function POST(
 
         const confirmedOrderResponse =
             await getCmlOrder(
-                order.code
+                orderCode,
             );
 
-
         console.log(
-            "CML CONFIRMED ORDER FULL:",
+            "CML CONFIRMED ORDER:",
             JSON.stringify(
                 confirmedOrderResponse,
                 null,
-                2
-            )
+                2,
+            ),
         );
 
-
-        /*
-         * Основной ожидаемый вариант:
-         *
-         * {
-         *   success: {
-         *      order: {...}
-         *   }
-         * }
-         */
-
         const confirmedOrder =
-            confirmedOrderResponse
-                ?.success?.order ??
-            confirmedOrderResponse
-                ?.success?.data?.order ??
-            confirmedOrderResponse
-                ?.data?.order ??
-            confirmedOrderResponse
-                ?.order;
-
-
-        if (!confirmedOrder) {
-            console.error(
-                "CONFIRMED ORDER NOT FOUND:",
-                confirmedOrderResponse
+            extractOrder(
+                confirmedOrderResponse,
             );
 
+        if (!confirmedOrder) {
             throw new Error(
-                "Confirmed CML order not returned"
+                "Confirmed CML order not returned",
             );
         }
 
-
         /* =========================
-           6. GET AUTHORITATIVE PRICE
+           6. AUTHORITATIVE PRICE
         ========================= */
 
         const rawAmount =
@@ -274,18 +314,20 @@ export async function POST(
             confirmedOrder.total ??
             confirmedOrder.amount;
 
-
-        const normalizedAmount =
-            String(rawAmount)
-                .replace(/[^\d.-]/g, "");
-
         const amount =
-            parseFloat(normalizedAmount);
+            normalizeAmount(rawAmount);
 
         const currency =
-            confirmedOrder.currency ??
-            product.currency;
+            String(
+                confirmedOrder.currency ??
+                product.currency ??
+                "",
+            ).toUpperCase();
 
+        const status =
+            Number(
+                confirmedOrder.status,
+            );
 
         console.log(
             "CML ORDER AMOUNT:",
@@ -293,28 +335,41 @@ export async function POST(
                 rawAmount,
                 amount,
                 currency,
-                status:
-                confirmedOrder.status,
-            }
+                quantity,
+                status,
+            },
         );
-
 
         if (
             !Number.isFinite(amount) ||
             amount <= 0
         ) {
             throw new Error(
-                `Invalid CML order amount: ${rawAmount}`
+                `Invalid CML order amount: ${rawAmount}`,
             );
         }
-
 
         if (!currency) {
             throw new Error(
-                "CML order currency not returned"
+                "CML order currency not returned",
             );
         }
 
+        if (currency !== "USD") {
+            throw new Error(
+                `Unexpected CML currency: ${currency}`,
+            );
+        }
+
+        /*
+         * После confirm заказ должен ожидать оплату.
+         * В вашей текущей интеграции CML использует статус 1.
+         */
+        if (status !== 1) {
+            throw new Error(
+                `CML order is not awaiting payment. Status: ${status}`,
+            );
+        }
 
         /* =========================
            7. RESPONSE
@@ -324,22 +379,15 @@ export async function POST(
             success: true,
 
             order: {
-                id:
-                    Number(order.id),
-
-                code:
-                order.code,
-
-                status:
-                confirmedOrder.status,
-
+                id: orderId,
+                code: orderCode,
+                status,
                 amount,
-
                 currency,
+                quantity,
 
                 product: {
-                    id:
-                    product.id,
+                    id: productId,
 
                     code:
                         product.product?.code ??
@@ -350,8 +398,7 @@ export async function POST(
                         product.title,
 
                     description:
-                        product.product
-                            ?.description ??
+                        product.product?.description ??
                         product.description,
 
                     programId:
@@ -365,12 +412,10 @@ export async function POST(
                 },
             },
         });
-
-
     } catch (error) {
         console.error(
             "CHECKOUT ERROR:",
-            error
+            error,
         );
 
         return NextResponse.json(
@@ -384,7 +429,7 @@ export async function POST(
             },
             {
                 status: 500,
-            }
+            },
         );
     }
 }

@@ -34,71 +34,25 @@ const SETTINGS = {
     simResolution: 256,
     dyeResolution: 512,
 
-    /*
-        Множитель применяется к скорости КАЖДЫЙ кадр, поэтому
-        разница даже в сотые доли даёт большой эффект за секунду:
-        0.962^60 ≈ 0.10 (скорость гаснет почти мгновенно),
-        0.99^60  ≈ 0.55 (течение ощутимо дольше после отпускания
-        мыши). Подбирай в диапазоне 0.98–0.995 под свой вкус.
-    */
     velocityDissipation: 0.98,
     dyeDissipation: 0.988,
-
     pressureIterations: 20,
-
     curlStrength: 0,
 
-    /*
-        Один радиус для velocity и dye, как в оригинале.
-
-        0.00006 — значение с noth.in, оно подобрано под их
-        размер hero-блока. На большом full-bleed блоке с
-        крупным 3D-текстом такой радиус (~15px на широком
-        экране) читается как тонкая царапина, а не как масса
-        жидкости. Поэтому радиус увеличен — подбирай под свой
-        размер блока: чем шире контейнер, тем больше нужно
-        значение, чтобы визуальная толщина потока была той же.
-    */
     splatRadius: 0.00035,
-
     splatForce: 5900,
-
     revealSize: 3.9,
 
-    /*
-        Более широкий edgeWidth даёт мягкий, растушёванный
-        край вместо жёсткого «прорезанного» силуэта.
-    */
     edgeSoftness: 0.4,
     edgeWidth: 0.05,
 
-    /*
-        Цвет "чернильного" пятна за пределами блока
-        картинки/видео — там, где жидкость просто окрашивает
-        поверх страницы, без composite base/video.
-    */
     inkColor: 0x0a0a0a,
 
-    /* VIDEO ALIGNMENT
-       scale > 1 = video content appears larger
-       offsetX: + moves video content right, - left
-       offsetY: + moves video content up, - down
-    */
-    videoScale: 1.12,
-    videoOffsetX: -0.02,
-
-    /*
-        Базовое UV-смещение видео.
-        Продолжает работать как раньше.
-    */
-    videoOffsetY: 0.04,
-
-    /*
-        Отдельное физическое смещение всего VIDEO BOX в пикселях.
-        Это НЕ меняет videoOffsetY и не смешивается с UV-настройкой.
-    */
-    /* Резервное значение. Основное задаётся CSS-переменной. */
-    videoBoxOffsetYPx: -35,
+    // Без дополнительного масштабирования и смещения
+    videoScale: 1.16,
+    videoOffsetX: -0.003,
+    videoOffsetY: 0,
+    videoBoxOffsetYPx: 3,
 };
 
 
@@ -1060,8 +1014,9 @@ const AlgoReveal = () => {
 
         const video =
             videoRef.current;
-
-
+        if (video) {
+            video.playbackRate = 1.5
+        }
         if (
             !container ||
             !canvas ||
@@ -3114,7 +3069,7 @@ const AlgoReveal = () => {
 
             <video
                 ref={videoRef}
-                src="/algo_main_bg.mp4"
+                src="/algo_main_video_non_scale.mp4"
                 autoPlay
                 muted
                 loop

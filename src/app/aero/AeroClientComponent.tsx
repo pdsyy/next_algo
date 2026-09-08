@@ -33,6 +33,8 @@ import youtube_icon from "../images/youtube_icon.svg";
 import {useThxContext} from "@/context/ThxContext";
 import Image from "next/image";
 import lines from "@/app/images/bottom_lines.svg";
+import Footer from "@/components/Footer";
+import AddToCartButton from "@/components/cartPopup/AddToCartButton";
 
 const AeroClientComponent = () => {
     const {t, language} = useLanguage();
@@ -169,10 +171,15 @@ const AeroClientComponent = () => {
                         {t.aero.hero.desc}
                     </motion.div>
                     <div className="top_buttons_cont">
-                        <motion.div className="button_buy_bot" onClick={() => setIsActive(true)} {...fadeNumeric}
-                                    custom={4}>
+                        <AddToCartButton className="button_buy_bot" product={{
+                            id: "aero-ea",
+                            name: "AERO EA",
+                            subtitle: t.aero.hero.theme,
+                            imageSrc: bottom_product_image.src,
+                            unitPrice: 1200,
+                        }}>
                             {t.aero.hero.buy}
-                        </motion.div>
+                        </AddToCartButton>
                         <motion.a
                             href="https://www.mql5.com/en/market/product/176860?source=Site+Market+My+Products+Page#description"
                             target="_blank"
@@ -545,9 +552,15 @@ const AeroClientComponent = () => {
                         </div>
 
                         <div className="bottom_buttons_block aero_purchase_block">
-                            <div className="button_buy_bottom" onClick={() => setIsActive(true)}>
+                            <AddToCartButton className="button_buy_bottom" product={{
+                                id: "aero-ea",
+                                name: "AERO EA",
+                                subtitle: t.aero.hero.theme,
+                                imageSrc: bottom_product_image.src,
+                                unitPrice: 1200,
+                            }}>
                                 {t.terra.buy.buy}
-                            </div>
+                            </AddToCartButton>
                             <a className="open_mql5_bottom"
                                href="https://www.mql5.com/en/market/product/176860?source=Site+Market+My+Products+Page#description"
                                target="_blank"
@@ -563,44 +576,7 @@ const AeroClientComponent = () => {
                 </div>
             </div>
 
-            <motion.div className="footer" {...fadeUp}>
-                <a href="/">
-                    <img src={logo.src} alt="Logo" className="logo_img"/>
-                </a>
-                <hr/>
-
-                {isMobile ?
-                    <div className="society_block">
-                        <div>
-                            <a href={language === "EN" ? "https://t.me/algoworId" : "https://t.me/+uKCqVOr1OAE2ZmQy"} target="_blank" rel="noreferrer">
-                                <img src={tg_icon.src} alt=""/>
-                            </a>
-                        </div>
-                        {/*<div>
-                            <a href="https://www.instagram.com/alg0_bots?igsh=NW82eGFuajRlYmpw" target="_blank"
-                               rel="noreferrer">
-                                <img src={instagram_icon.src} alt=""/>
-                            </a>
-                        </div>*/}
-                        <div>
-                            <a href={language === "EN" ? "https://www.youtube.com/channel/UCUdEXqsf87y8gSnz7FjxS8g" : "https://www.youtube.com/@alg0_ofx"} target="_blank" rel="noreferrer">
-                                <img src={youtube_icon.src} alt=""/>
-                            </a>
-                        </div>
-                    </div>
-
-                    : <div className="society_block">
-                        {/* <div>
-                           <a href="https://www.instagram.com/alg0_bots?igsh=NW82eGFuajRlYmpw">{t.terra.footer.instagram}</a>
-                        </div>*/}
-                        <div>
-                            <a href={language === "EN" ? "https://www.youtube.com/channel/UCUdEXqsf87y8gSnz7FjxS8g" : "https://www.youtube.com/@alg0_ofx"}>{t.terra.footer.youtube}</a>
-                        </div>
-                        <div>
-                            <a href={language === "EN" ? "https://t.me/algoworId" : "https://t.me/+uKCqVOr1OAE2ZmQy"}>{t.terra.footer.telegram}</a>
-                        </div>
-                    </div>}
-            </motion.div>
+            <Footer/>
             <Image src={lines} alt="" className="bottom_lines" style={{width: '100%', height: 'auto'}} loading="eager"/>
         </div>
     );

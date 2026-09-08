@@ -3,6 +3,7 @@
 }
 
 .payment_page {
+    width: 100%;
     min-height: 100vh;
     padding: 26px 42px;
     background: #ececec;

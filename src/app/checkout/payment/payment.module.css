@@ -4,7 +4,9 @@
     padding: 26px 42px;
     background: #ececec;
     color: #171717;
-    font-family: Inter, Arial, sans-serif
+    font-family: Inter, Arial, sans-serif;
+    width: 100%;
+    position: relative;
 }
 
 .shell {

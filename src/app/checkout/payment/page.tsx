@@ -1,9 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/components/cartPopup/CartProvider";
 import styles from "./payment.module.css";
+import bottom_lines from "@/app/images/bottom_lines_video_block.svg";
+import top_lines from "@/app/images/video_block_top_lines.svg";
 
 const CUSTOMER_STORAGE_KEY = "checkoutCustomer";
 const PENDING_ORDER_KEY = "algo_world_pending_crypto_order_v1";
@@ -165,6 +167,13 @@ export default function CheckoutPaymentPage() {
 
     return (
         <main className={styles.page}>
+            <div className="top_lines_wrapper">
+                <img
+                    src={top_lines.src}
+                    alt=""
+                    className="top_lines_video_block"
+                />
+            </div>
             <div className={styles.shell}>
                 <a href="/" className={styles.home}>Main page</a>
                 <section className={styles.card}>
@@ -204,6 +213,13 @@ export default function CheckoutPaymentPage() {
                     ))}
                     <dl><div><dt>Total</dt><dd>${previewTotal.toFixed(2)}</dd></div></dl>
                 </aside>
+            </div>
+            <div className="bottom_lines_wrapper">
+                <img
+                    src={bottom_lines.src}
+                    alt=""
+                    className="bottom_lines_video_block"
+                />
             </div>
         </main>
     );

@@ -79,36 +79,24 @@ export default function CartPopupRoot() {
         };
     }, []);
 
-    const handleCheckout = useCallback(
-        (_checkout: CartCheckout) => {
-            /*
-             * Пока Promise не завершён, CartPopup сохраняет:
-             *
-             * busy = true
-             *
-             * Поэтому кнопка показывает Please wait…
-             * и повторно нажать её нельзя.
-             */
-            return new Promise<void>((resolve, reject) => {
-                navigationResolveRef.current = resolve;
+    const handleCheckout = useCallback(() => {
+        return new Promise<void>((_resolve, reject) => {
+            const timeout = window.setTimeout(() => {
+                reject(new Error("Checkout navigation timed out",),);}, 15000);
 
-                navigationTimeoutRef.current =
-                    window.setTimeout(() => {
-                        navigationResolveRef.current = null;
-                        navigationTimeoutRef.current = null;
+            window.addEventListener(
+                "beforeunload",
+                () => {
+                    window.clearTimeout(timeout);
+                },
+                {
+                    once: true,
+                },
+            );
 
-                        reject(
-                            new Error(
-                                "Checkout navigation timed out",
-                            ),
-                        );
-                    }, 15000);
-
-                router.push(CHECKOUT_URL);
-            });
-        },
-        [router],
-    );
+            window.location.assign("/checkout");
+        });
+    }, []);
 
     return (
         <CartPopup

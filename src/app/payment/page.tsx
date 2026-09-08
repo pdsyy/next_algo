@@ -1,8 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import "./paymentStyle.css";
+import top_lines from "@/app/images/video_block_top_lines.svg";
+import bottom_lines from "@/app/images/bottom_lines_video_block.svg";
 
 const PAYMENT_KEY = "currentPayment";
 const CHECKOUT_KEY = "algo_world_checkout_v1";
@@ -177,6 +179,13 @@ export default function PaymentPage() {
 
     return (
         <main className="payment_page">
+            <div className="top_lines_wrapper">
+                <img
+                    src={top_lines.src}
+                    alt=""
+                    className="top_lines_video_block"
+                />
+            </div>
             <div className="payment_page_container">
                 <a href="/" className="payment_home">Main page</a>
 
@@ -280,6 +289,13 @@ export default function PaymentPage() {
                         </dl>
                     </aside>
                 )}
+            </div>
+            <div className="bottom_lines_wrapper">
+                <img
+                    src={bottom_lines.src}
+                    alt=""
+                    className="bottom_lines_video_block"
+                />
             </div>
         </main>
     );

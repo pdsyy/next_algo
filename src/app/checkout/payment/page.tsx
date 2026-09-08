@@ -19,7 +19,7 @@ const PRODUCT_CODES: Record<string, string> = {
     "hydro-ea": "hydro-ea",
 };
 
-type PayCurrency = "usdttrc20" | "btc" | "eth";
+type PayCurrency = "usdttrc20" | "usdc" | "usdtbsc" | "usdterc20";
 type Customer = { firstName: string; lastName: string; email: string };
 type PendingOrder = {
     orderCode: string;
@@ -52,9 +52,26 @@ export default function CheckoutPaymentPage() {
     const [error, setError] = useState("");
 
     const currencies: Array<{ value: PayCurrency; title: string; text: string }> = [
-        { value: "usdttrc20", title: "USDT", text: text.currencies.usdt },
-        { value: "btc", title: "Bitcoin", text: text.currencies.bitcoin },
-        { value: "eth", title: "Ethereum", text: text.currencies.ethereum },
+        {
+            value: "usdttrc20",
+            title: "USDT",
+            text: text.currencies.usdtTrc20,
+        },
+        {
+            value: "usdc",
+            title: "USDC",
+            text: text.currencies.usdc,
+        },
+        {
+            value: "usdtbsc",
+            title: "USDT",
+            text: text.currencies.usdtBep20,
+        },
+        {
+            value: "usdterc20",
+            title: "USDT",
+            text: text.currencies.usdtErc20,
+        },
     ];
 
     useEffect(() => {

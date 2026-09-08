@@ -202,9 +202,10 @@ export const translations = {
             oneLicense: "Одна ліцензія",
             total: "Разом",
             currencies: {
-                usdt: "Мережа TRON (TRC20)",
-                bitcoin: "Мережа Bitcoin",
-                ethereum: "Мережа Ethereum",
+                usdtTrc20: "Мережа TRON (TRC-20)",
+                usdc: "Мережа Ethereum (ERC-20)",
+                usdtBep20: "Мережа BNB Smart Chain (BEP-20)",
+                usdtErc20: "Мережа Ethereum (ERC-20)",
             },
             invalidOrder: {
                 title: "Неможливо продовжити замовлення",
@@ -1887,9 +1888,10 @@ export const translations = {
             oneLicense: "Одна лицензия",
             total: "Итого",
             currencies: {
-                usdt: "Сеть TRON (TRC20)",
-                bitcoin: "Сеть Bitcoin",
-                ethereum: "Сеть Ethereum",
+                usdtTrc20: "Сеть TRON (TRC-20)",
+                usdc: "Сеть Ethereum (ERC-20)",
+                usdtBep20: "Сеть BNB Smart Chain (BEP-20)",
+                usdtErc20: "Сеть Ethereum (ERC-20)",
             },
             invalidOrder: {
                 title: "Невозможно продолжить заказ",
@@ -1902,6 +1904,7 @@ export const translations = {
                 paymentFailed: "Не удалось создать платёж.",
             },
         },
+
         termsConditions: {
             title: "ALGO — Условия и положения",
             lastUpdated: "Последнее обновление: 03.09.2026",
@@ -3576,9 +3579,10 @@ export const translations = {
             oneLicense: "One license",
             total: "Total",
             currencies: {
-                usdt: "TRON network (TRC20)",
-                bitcoin: "Bitcoin network",
-                ethereum: "Ethereum network",
+                usdtTrc20: "TRON network (TRC-20)",
+                usdc: "Ethereum network (ERC-20)",
+                usdtBep20: "BNB Smart Chain network (BEP-20)",
+                usdtErc20: "Ethereum network (ERC-20)",
             },
             invalidOrder: {
                 title: "Order cannot be continued",

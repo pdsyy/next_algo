@@ -91,7 +91,7 @@ export default function PaymentSuccessPopup() {
                 {/*<small>Order #{data.orderCode}</small>*/}
                 <div className={styles.actions}>
                     <button type="button" className={styles.done} onClick={close}>Done</button>
-                    <a className={styles.help} href="mailto:support@algo-world.com">Need help?</a>
+                    <a className={styles.help} href="https://t.me/vladimirbabak_mql" target = "_blank">Need help?</a>
                 </div>
             </section>
         </div>

@@ -78,7 +78,7 @@ export const translations = {
             referralCode: "Реферальний код / промокод",
             codePlaceholder: "Код",
             agreement:
-                "Я погоджуюся з умовами та положеннями Trade, політикою конфіденційності й повідомленням про ризики та розумію, що купую продукт у Mitalio OÜ, а оплата безпечно обробляється кредитною або дебетовою карткою.",
+                "Я погоджуюся з умовами використання Algo, політикою конфіденційності та попередженням про ризики й розумію, що моя покупка та платіж безпечно обробляються за допомогою банківської картки або криптовалюти.",
             captchaNotice: {
                 beforeLinks:
                     "Цей сайт захищено reCAPTCHA; застосовуються ",
@@ -1764,7 +1764,7 @@ export const translations = {
             referralCode: "Реферальный код / промокод",
             codePlaceholder: "Код",
             agreement:
-                "Я соглашаюсь с условиями и положениями Trade, политикой конфиденциальности и уведомлением о рисках и понимаю, что приобретаю продукт у Mitalio OÜ, а оплата безопасно обрабатывается кредитной или дебетовой картой.",
+                "Я соглашаюсь с условиями использования Algo, политикой конфиденциальности и предупреждением о рисках и понимаю, что моя покупка и платёж безопасно обрабатываются с помощью банковской карты или криптовалюты.",
             captchaNotice: {
                 beforeLinks:
                     "Этот сайт защищён reCAPTCHA; применяются ",
@@ -3455,7 +3455,7 @@ export const translations = {
             referralCode: "Referral / discount code",
             codePlaceholder: "Code",
             agreement:
-                "I agree to Trade's terms and conditions, privacy policy, and risk disclosure, and understand that my purchase is from Mitalio OÜ and payment is securely processed by credit or debit card.",
+                "I agree to Algo's terms and conditions, privacy policy, and risk disclosure, and understand that my purchase and payment is securely processed by credit card or crypto.",
             captchaNotice: {
                 beforeLinks:
                     "This site is protected by reCAPTCHA and the Google ",

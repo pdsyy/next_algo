@@ -1,38 +1,39 @@
-"use client"
-import React, {useState} from 'react';
+"use client";
+
 interface YearMonthHandlerProps {
-    leftItem: any,
-    rightItem: any,
-    handleValue: any,
-    setHandleValue: (value: any) => void
+    leftItem: string;
+    rightItem: string;
+    handleValue: string;
+    setHandleValue: (value: string) => void;
 }
 
-const YearMonthHandler = ({leftItem, rightItem, handleValue, setHandleValue}: YearMonthHandlerProps) => {
-
-    const [hoverMonthYearFirst, setHoverMonthYearFirst] = useState(null);
-    const [MonthYearFirst, setMonthYearFirst] = useState(leftItem);
+const YearMonthHandler = ({
+                              leftItem,
+                              rightItem,
+                              handleValue,
+                              setHandleValue,
+                          }: YearMonthHandlerProps) => {
+    const isLeftActive = handleValue === leftItem;
+    const isRightActive = handleValue === rightItem;
 
     return (
         <div className="month_year_handler">
-            <div className={`top_handler_calc ${
-                (hoverMonthYearFirst === rightItem || (!hoverMonthYearFirst && MonthYearFirst === rightItem)) ? "active_month" : ""
-            }`}></div>
             <div
-                className={`year ${MonthYearFirst === leftItem ? "active" : ""}`}
-                onClick={() => {
-                    setHoverMonthYearFirst(leftItem)
-                    setMonthYearFirst(leftItem)
-                    setHandleValue(leftItem)
-                }}
+                className={`top_handler_calc ${
+                    isRightActive ? "active_month" : ""
+                }`}
+            />
+
+            <div
+                className={`year ${isLeftActive ? "active" : ""}`}
+                onClick={() => setHandleValue(leftItem)}
             >
-                {leftItem}</div>
+                {leftItem}
+            </div>
+
             <div
-                className={`month ${MonthYearFirst === rightItem ? "active" : ""}`}
-                onClick={() => {
-                    setHoverMonthYearFirst(rightItem)
-                    setMonthYearFirst(rightItem)
-                    setHandleValue(rightItem)
-                }}
+                className={`month ${isRightActive ? "active" : ""}`}
+                onClick={() => setHandleValue(rightItem)}
             >
                 {rightItem}
             </div>

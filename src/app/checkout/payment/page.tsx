@@ -7,7 +7,12 @@ import { useLanguage } from "@/context/LanguageProvider";
 import styles from "./payment.module.css";
 import bottom_lines from "@/app/images/bottom_lines_video_block.svg";
 import top_lines from "@/app/images/video_block_top_lines.svg";
+import tron_icon from "../images/tron_icon.svg";
+import usdc_icon from "../images/usdc_icon.svg";
+import tether_eth_icon from "../images/tether_eth_icon.svg";
+import tether_bnb_icon from "../images/tether_bnb_icon.svg";
 import "../checkout.css";
+import Image, {StaticImageData} from "next/image";
 
 const CUSTOMER_STORAGE_KEY = "checkoutCustomer";
 const PENDING_ORDER_KEY = "algo_world_pending_crypto_order_v1";
@@ -51,26 +56,30 @@ export default function CheckoutPaymentPage() {
     const [busy, setBusy] = useState(false);
     const [error, setError] = useState("");
 
-    const currencies: Array<{ value: PayCurrency; title: string; text: string }> = [
+    const currencies: Array<{ value: PayCurrency; title: string; text: string, image: string | StaticImageData }> = [
         {
             value: "usdttrc20",
             title: "USDT",
             text: text.currencies.usdtTrc20,
+            image: tron_icon
         },
         {
             value: "usdc",
             title: "USDC",
             text: text.currencies.usdc,
+            image: usdc_icon
         },
         {
             value: "usdtbsc",
             title: "USDT",
             text: text.currencies.usdtBep20,
+            image: tether_bnb_icon
         },
         {
             value: "usdterc20",
             title: "USDT",
             text: text.currencies.usdtErc20,
+            image: tether_eth_icon
         },
     ];
 
@@ -209,7 +218,7 @@ export default function CheckoutPaymentPage() {
                                 <input type="radio" name="currency" value={currency.value}
                                        checked={payCurrency === currency.value}
                                        onChange={() => setPayCurrency(currency.value)} />
-                                <span className={styles.coin}>{currency.title.slice(0, 1)}</span>
+                                <span className={styles.coin}><Image src={currency.image} alt=""/></span>
                                 <span><strong>{currency.title}</strong><small>{currency.text}</small></span>
                                 <i aria-hidden="true" />
                             </label>

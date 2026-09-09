@@ -1,8 +1,8 @@
 "use client";
 
-import "../tech.css"
+import "../tech.css";
+import { useLanguage } from "@/context/LanguageProvider";
 import Footer from "@/components/Footer";
-import {useLanguage} from "@/context/LanguageProvider";
 
 const Page = () => {
     const { t, language } = useLanguage();

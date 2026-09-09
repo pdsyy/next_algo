@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import InputRangeBar from "./InputRangeBar";
 import dollar_circle from "./components_images/dollar_circle.svg";
 import info_icon from "./components_images/info_icon.svg";
@@ -8,10 +8,23 @@ import percent_icon from "./components_images/percent_icon.svg";
 import {HTMLMotionProps, motion} from "framer-motion"
 import {useLanguage} from "@/context/LanguageProvider";
 
+type PeriodUnit = "year" | "month";
+type Frequency = "yearly" | "monthly";
+
+type CalculationResult = {
+    year: number;
+    balance: number;
+    addedYear: number;
+    totalAdded: number;
+    yearlyIncome: number;
+    totalIncome: number;
+    finalBalance: number;
+};
+
 const CalculatorSection = ({startPercentage}:any) => {
     const { t } = useLanguage()!;
 
-    const [calcResults, setCalcResults] = useState([]);
+    const [hasCalculated, setHasCalculated] = useState(false);
 
     const [startSum, setStartSum] = useState(10000)
 
@@ -19,42 +32,53 @@ const CalculatorSection = ({startPercentage}:any) => {
     const [rate, setRate] = useState(startPercentage);
     const [refillSum, setRefillSum] = useState(0);
 
-    const [periodUnit, setPeriodUnit] = useState("Рік");
-    const [rateFrequency, setRateFrequency] = useState("Щорічно");
-    const [refillFrequency, setRefillFrequency] = useState("Щорічно");
+    // В состоянии храним стабильные значения, а не переведённый текст.
+    // Благодаря этому расчёт одинаково работает на UA / RU / EN.
+    const [periodUnit, setPeriodUnit] = useState<PeriodUnit>("year");
+    const [rateFrequency, setRateFrequency] = useState<Frequency>("yearly");
+    const [refillFrequency, setRefillFrequency] = useState<Frequency>("yearly");
 
-    const handleCalculate = () => {
+    const calcResults = useMemo<CalculationResult[]>(() => {
+        if (!hasCalculated) return [];
+
         let currentBalance = startSum;
         let totalInvested = startSum;
         let totalIncome = 0;
-        const results:any = [];
+        let elapsedMonths = 0;
+        const results: CalculationResult[] = [];
 
+        // Один ряд таблицы — один выбранный пользователем период.
         const iterations = years;
+        const monthsInPeriod = periodUnit === "year" ? 12 : 1;
+
+        // Если ставка годовая, переводим её в эквивалентную месячную.
+        // За 12 месяцев итоговая доходность будет равна указанной годовой ставке.
+        const monthlyRate =
+            rateFrequency === "monthly"
+                ? rate / 100
+                : Math.pow(1 + rate / 100, 1 / 12) - 1;
 
         for (let i = 1; i <= iterations; i++) {
             let periodIncome = 0;
             let periodAdded = 0;
             const startOfPeriodBalance = currentBalance;
 
-            if (periodUnit === "Рік" && rateFrequency === "Щомісяця") {
-                for (let m = 1; m <= 12; m++) {
-                    let monthlyProfit = currentBalance * (rate / 100);
-                    currentBalance += monthlyProfit;
-                    periodIncome += monthlyProfit;
+            for (let month = 0; month < monthsInPeriod; month++) {
+                const monthlyProfit = currentBalance * monthlyRate;
+                currentBalance += monthlyProfit;
+                periodIncome += monthlyProfit;
+                elapsedMonths += 1;
+
+                const shouldRefill =
+                    refillFrequency === "monthly" || elapsedMonths % 12 === 0;
+
+                if (shouldRefill) {
+                    currentBalance += refillSum;
+                    totalInvested += refillSum;
+                    periodAdded += refillSum;
                 }
-            } else {
-                periodIncome = currentBalance * (rate / 100);
-                currentBalance += periodIncome;
             }
 
-            if (periodUnit === "Рік" && refillFrequency === "Щомісяця") {
-                periodAdded = refillSum * 12;
-            } else {
-                periodAdded = refillSum;
-            }
-
-            currentBalance += periodAdded;
-            totalInvested += periodAdded;
             totalIncome += periodIncome;
 
             results.push({
@@ -67,9 +91,22 @@ const CalculatorSection = ({startPercentage}:any) => {
                 finalBalance: currentBalance
             });
         }
-        setCalcResults(results);
-    };
 
+        return results;
+    }, [
+        hasCalculated,
+        periodUnit,
+        rate,
+        rateFrequency,
+        refillFrequency,
+        refillSum,
+        startSum,
+        years,
+    ]);
+
+    const handleCalculate = () => {
+        setHasCalculated(true);
+    };
 
     const pointVariants:any = {
         hidden: {opacity: 0, y: 20},
@@ -119,8 +156,19 @@ const CalculatorSection = ({startPercentage}:any) => {
                     <YearMonthHandler
                         leftItem={t.terra.calculator.units.year}
                         rightItem={t.terra.calculator.units.month}
-                        handleValue={periodUnit}
-                        setHandleValue={setPeriodUnit}
+                        handleValue={
+                            periodUnit === "year"
+                                ? t.terra.calculator.units.year
+                                : t.terra.calculator.units.month
+                        }
+                        setHandleValue={(value: unknown) => {
+                            if (typeof value !== "string") return;
+                            setPeriodUnit(
+                                value === t.terra.calculator.units.month
+                                    ? "month"
+                                    : "year",
+                            );
+                        }}
                     />
 
                     <div className="input_name mt8">
@@ -146,8 +194,19 @@ const CalculatorSection = ({startPercentage}:any) => {
                     <YearMonthHandler
                         leftItem={t.terra.calculator.units.yearly}
                         rightItem={t.terra.calculator.units.monthly}
-                        handleValue={rateFrequency}
-                        setHandleValue={setRateFrequency}
+                        handleValue={
+                            rateFrequency === "yearly"
+                                ? t.terra.calculator.units.yearly
+                                : t.terra.calculator.units.monthly
+                        }
+                        setHandleValue={(value: unknown) => {
+                            if (typeof value !== "string") return;
+                            setRateFrequency(
+                                value === t.terra.calculator.units.monthly
+                                    ? "monthly"
+                                    : "yearly",
+                            );
+                        }}
                     />
 
                     <div className="input_name mt8">
@@ -172,8 +231,19 @@ const CalculatorSection = ({startPercentage}:any) => {
                     <YearMonthHandler
                         leftItem={t.terra.calculator.units.yearly}
                         rightItem={t.terra.calculator.units.monthly}
-                        handleValue={refillFrequency}
-                        setHandleValue={setRefillFrequency}
+                        handleValue={
+                            refillFrequency === "yearly"
+                                ? t.terra.calculator.units.yearly
+                                : t.terra.calculator.units.monthly
+                        }
+                        setHandleValue={(value: unknown) => {
+                            if (typeof value !== "string") return;
+                            setRefillFrequency(
+                                value === t.terra.calculator.units.monthly
+                                    ? "monthly"
+                                    : "yearly",
+                            );
+                        }}
                     />
                     <div className="input_name mt8">
                         {t.terra.calculator.labels.sum}
@@ -199,11 +269,11 @@ const CalculatorSection = ({startPercentage}:any) => {
                             <table className="results_table">
                                 <thead>
                                 <tr>
-                                    <th>{periodUnit === t.terra.calculator.units.year ? t.terra.calculator.units.year : t.terra.calculator.units.month}</th>
+                                    <th>{periodUnit === "year" ? t.terra.calculator.units.year : t.terra.calculator.units.month}</th>
                                     <th>{t.terra.calculator.table.balance}</th>
-                                    <th>{periodUnit === t.terra.calculator.units.year ? t.terra.calculator.table.addedYear : t.terra.calculator.table.addedMonth}</th>
+                                    <th>{periodUnit === "year" ? t.terra.calculator.table.addedYear : t.terra.calculator.table.addedMonth}</th>
                                     <th>{t.terra.calculator.table.totalAdded}</th>
-                                    <th>{periodUnit === t.terra.calculator.units.year ? t.terra.calculator.table.incomeYear : t.terra.calculator.table.incomeMonth}</th>
+                                    <th>{periodUnit === "year" ? t.terra.calculator.table.incomeYear : t.terra.calculator.table.incomeMonth}</th>
                                     <th>{t.terra.calculator.table.totalIncome}</th>
                                     <th>{t.terra.calculator.table.finalBalance}</th>
                                 </tr>

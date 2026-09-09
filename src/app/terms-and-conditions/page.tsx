@@ -1,8 +1,8 @@
 "use client";
 
-import "../tech.css"
+import "../tech.css";
+import { useLanguage } from "@/context/LanguageProvider";
 import Footer from "@/components/Footer";
-import {useLanguage} from "@/context/LanguageProvider";
 
 const Page = () => {
     const { t, language } = useLanguage();
@@ -22,9 +22,8 @@ const Page = () => {
                     <p className="legal_page_text"><strong className="legal_page_emphasis">{t.termsConditions.whoWeAre.label1}</strong>{" "}{t.termsConditions.whoWeAre.paragraph2}</p>
                     <p className="legal_page_text"><strong className="legal_page_emphasis">{t.termsConditions.whoWeAre.label2}</strong>{" "}{t.termsConditions.whoWeAre.paragraph3}</p>
                     <p className="legal_page_text"><strong className="legal_page_emphasis">{t.termsConditions.whoWeAre.label3}</strong>{" "}{t.termsConditions.whoWeAre.paragraph4}</p>
-                    <p className="legal_page_text"><strong className="legal_page_emphasis">{t.termsConditions.whoWeAre.label4}</strong>{" "}{t.termsConditions.whoWeAre.paragraph5}</p>
-                    <p className="legal_page_text">{t.termsConditions.whoWeAre.paragraph6}</p>
-                    <p className="legal_page_text"><strong className="legal_page_emphasis">{t.termsConditions.whoWeAre.label5}</strong><a className="legal_page_link" href="https://algo-world.com">{t.termsConditions.whoWeAre.linkText1}</a></p>
+                    <p className="legal_page_text">{t.termsConditions.whoWeAre.paragraph5}</p>
+                    <p className="legal_page_text"><strong className="legal_page_emphasis">{t.termsConditions.whoWeAre.label4}</strong>{" "}<a className="legal_page_link" href="https://algo-world.com">{t.termsConditions.whoWeAre.linkText1}</a></p>
                 </section>
                 <section className="legal_page_section" aria-labelledby="terms-section-2">
                     <h2 className="legal_page_heading" id="terms-section-2">{t.termsConditions.products.title}</h2>
@@ -118,9 +117,10 @@ const Page = () => {
                     <h2 className="legal_page_heading" id="terms-section-10">{t.termsConditions.refunds.title}</h2>
                     <p className="legal_page_text">{t.termsConditions.refunds.paragraph1}</p>
                     <p className="legal_page_text">{t.termsConditions.refunds.paragraph2}</p>
+                    <p className="legal_page_text">{t.termsConditions.refunds.paragraph3}</p>
                     <div className="legal_page_subsection">
                         <h3 className="legal_page_subtitle">{t.termsConditions.refunds.subtitle1}</h3>
-                        <p className="legal_page_text">{t.termsConditions.refunds.paragraph3}</p>
+                        <p className="legal_page_text">{t.termsConditions.refunds.paragraph4}</p>
                         <ul className="legal_page_list">
                             <li className="legal_page_list_item">{t.termsConditions.refunds.item1}</li>
                             <li className="legal_page_list_item">{t.termsConditions.refunds.item2}</li>
@@ -130,17 +130,17 @@ const Page = () => {
                     </div>
                     <div className="legal_page_subsection">
                         <h3 className="legal_page_subtitle">{t.termsConditions.refunds.subtitle2}</h3>
-                        <p className="legal_page_text">{t.termsConditions.refunds.paragraph4}</p>
+                        <p className="legal_page_text">{t.termsConditions.refunds.paragraph5}</p>
                         <ul className="legal_page_list">
                             <li className="legal_page_list_item">{t.termsConditions.refunds.item5}</li>
                             <li className="legal_page_list_item">{t.termsConditions.refunds.item6}</li>
                             <li className="legal_page_list_item">{t.termsConditions.refunds.item7}</li>
                         </ul>
-                        <p className="legal_page_text">{t.termsConditions.refunds.paragraph5}</p>
+                        <p className="legal_page_text">{t.termsConditions.refunds.paragraph6}</p>
                     </div>
                     <div className="legal_page_subsection">
                         <h3 className="legal_page_subtitle">{t.termsConditions.refunds.subtitle3}</h3>
-                        <p className="legal_page_text">{t.termsConditions.refunds.paragraph6}</p>
+                        <p className="legal_page_text">{t.termsConditions.refunds.paragraph7}</p>
                     </div>
                 </section>
                 <section className="legal_page_section" aria-labelledby="terms-section-11">

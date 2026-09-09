@@ -1,9 +1,8 @@
-"use client"
+"use client";
 
-import "../tech.css"
-
+import "../tech.css";
+import { useLanguage } from "@/context/LanguageProvider";
 import Footer from "@/components/Footer";
-import {useLanguage} from "@/context/LanguageProvider";
 
 const Page = () => {
     const { t, language } = useLanguage();
@@ -16,9 +15,6 @@ const Page = () => {
                     <p className="legal_page_text">{t.riskDisclosure.intro.paragraph1}</p>
                     <p className="legal_page_text">{t.riskDisclosure.intro.paragraph2}</p>
                     <p className="legal_page_text">{t.riskDisclosure.intro.paragraph3}</p>
-                    <p className="legal_page_text">{t.riskDisclosure.intro.paragraph4}</p>
-                    <p className="legal_page_text">{t.riskDisclosure.intro.paragraph5}</p>
-                    <p className="legal_page_text">{t.riskDisclosure.intro.paragraph6}</p>
                 </header>
                 <section className="legal_page_section" aria-labelledby="risk-section-1">
                     <h2 className="legal_page_heading" id="risk-section-1">{t.riskDisclosure.software.title}</h2>
@@ -262,7 +258,6 @@ const Page = () => {
                         <li className="legal_page_list_item">{t.riskDisclosure.acceptance.item5}</li>
                         <li className="legal_page_list_item">{t.riskDisclosure.acceptance.item6}</li>
                         <li className="legal_page_list_item">{t.riskDisclosure.acceptance.item7}</li>
-                        <li className="legal_page_list_item">{t.riskDisclosure.acceptance.item8}</li>
                     </ul>
                     <p className="legal_page_text">{t.riskDisclosure.acceptance.paragraph2}</p>
                 </section>
@@ -272,8 +267,7 @@ const Page = () => {
                     <p className="legal_page_text"><strong className="legal_page_emphasis">{t.riskDisclosure.contact.label1}</strong>{" "}{t.riskDisclosure.contact.paragraph2}</p>
                     <p className="legal_page_text"><strong className="legal_page_emphasis">{t.riskDisclosure.contact.label2}</strong>{" "}{t.riskDisclosure.contact.paragraph3}</p>
                     <p className="legal_page_text"><strong className="legal_page_emphasis">{t.riskDisclosure.contact.label3}</strong>{" "}{t.riskDisclosure.contact.paragraph4}</p>
-                    <p className="legal_page_text"><strong className="legal_page_emphasis">{t.riskDisclosure.contact.label4}</strong>{" "}{t.riskDisclosure.contact.paragraph5}</p>
-                    <p className="legal_page_text">{t.riskDisclosure.contact.paragraph6}</p>
+                    <p className="legal_page_text">{t.riskDisclosure.contact.paragraph5}</p>
                 </section>
             </article>
             <Footer/>

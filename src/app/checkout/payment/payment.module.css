@@ -28,6 +28,10 @@
     box-shadow: 0 4px 16px rgb(0 0 0/3%)
 }
 
+.summary h2{
+    text-align: left !important;
+}
+
 .home {
     display: flex;
     align-items: center;

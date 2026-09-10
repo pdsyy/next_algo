@@ -316,6 +316,9 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
 
                 <div className="about_us_block">
                     <motion.div className="market_list" {...fadeUp}>
+                        <div className = "motion_block_anim">
+
+
                         {[...Array(isMobile ? 22 : 11)].map((_, i) => (
                             <img
                                 key={i}
@@ -324,6 +327,7 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                                 className={`market-${i}`}
                             />
                         ))}
+                        </div>
                     </motion.div>
 
                     <motion.h2 className="our_main_advantages" {...fadeUp}

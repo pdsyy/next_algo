@@ -2215,8 +2215,7 @@ h2 span {
         display: flex;
         width: 100%;
         height: 36px;
-        animation: marquee 40s linear infinite;
-        overflow-x: visible;
+        overflow-x: hidden;
     }
 
     .about_us_block {
@@ -3507,4 +3506,164 @@ h2 span {
         border-radius: 24px;
     }
 
+}
+
+
+
+/* По умолчанию мобильная картинка не отображается */
+.mobile_hero_static {
+    display: none;
+}
+
+/* =========================================================
+   STATIC MOBILE HERO
+========================================================= */
+
+@media (max-width: 768px) {
+    /*
+     * Высота теперь определяется статичной картинкой,
+     * поскольку AlgoReveal на мобильном не запускается.
+     */
+    .main_block_new {
+        height: auto;
+        min-height: 0;
+    }
+
+    /*
+     * Текст остаётся в обычном потоке.
+     * Минимальная высота сохраняет прежнее положение картинки.
+     */
+    .hero_blend_layer {
+        position: relative;
+        height: auto;
+        min-height: calc(
+                var(--algo-image-top) -
+                var(--algo-content-image-gap)
+        );
+        margin-bottom: 0;
+    }
+
+    .mobile_hero_static {
+        position: relative;
+        z-index: 0;
+        display: block;
+        box-sizing: border-box;
+        width: 100%;
+        margin-top: var(--algo-content-image-gap);
+        padding-bottom: var(--algo-image-bottom-space);
+        pointer-events: none;
+    }
+
+    .mobile_hero_static_image {
+        display: block;
+        width: min(1057px, var(--algo-image-width));
+        max-width: none;
+        height: auto;
+        margin: 0 auto;
+        object-fit: contain;
+        transform: translateX(var(--algo-image-offset-x));
+        user-select: none;
+        pointer-events: none;
+    }
+
+    /*
+     * На мобильном аватары находятся непосредственно
+     * внутри кнопки — отдельный overlay больше не нужен.
+     */
+    .avatars_measure {
+        opacity: 1;
+    }
+
+    .avatars_overlay {
+        display: none;
+    }
+
+    /*
+     * Отключаем оставшиеся hover/scale-анимации херо.
+     */
+    .main_block_button,
+    .avatars_slot,
+    .avatars_measure {
+        transition: none;
+    }
+
+    .main_block_button:hover,
+    .main_block_button:active,
+    .main_block_button:hover .avatars_slot {
+        transform: none;
+    }
+}
+
+
+
+@media (max-width: 768px) {
+    .main_block_new {
+        isolation: isolate;
+    }
+
+    .hero_blend_layer {
+        mix-blend-mode: normal;
+    }
+
+    .mobile_hero_static,
+    .mobile_hero_static_image {
+        mix-blend-mode: normal !important;
+        filter: none !important;
+    }
+
+    /* Цвета, которые раньше создавались через difference */
+    .main_block_theme,
+    .main_block_description {
+        color: #181818;
+    }
+
+    .algo_label {
+        background: #ffffff;
+    }
+
+    .algo_label_text {
+        color: #181818;
+    }
+
+    .main_block_button {
+        background: #181818;
+    }
+
+    .main_button_text {
+        color: #ffffff;
+    }
+
+    .top_lines_images {
+        filter: brightness(0);
+        opacity: 0.12;
+    }
+}
+
+.motion_block_anim{
+    width: fit-content;
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    height: 100%;
+    position: relative;
+
+}
+
+@media screen and (width < 768px) {
+
+    .motion_block_anim {
+        animation: companyMove 60s infinite linear;
+    }
+}
+
+@keyframes companyMove {
+    0%{
+        transform: translateX(0%);
+    }
+    50%{
+        transform: translateX(-60%);
+    }
+    100%{
+        transform: translateX(0);
+    }
 }

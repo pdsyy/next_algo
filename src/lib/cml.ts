@@ -192,6 +192,7 @@ export async function createCmlCustomer({
 
 interface CreateOrderParams {
     customerId: number;
+    referralCode?: string;
     items: Array<{
         productId: number;
         quantity?: number;
@@ -200,29 +201,30 @@ interface CreateOrderParams {
 
 export async function createCmlOrder({
                                          customerId,
+                                         referralCode,
                                          items,
                                      }: CreateOrderParams) {
-
     if (items.length === 0) {
         throw new Error("At least one CML order item is required");
     }
 
-    return cmlRequest(
-        "/order/submit",
-        {
-            order: {
-                customer_id: customerId,
+    const normalizedReferralCode = referralCode?.trim();
 
-                sales_channel:
-                CML_CHANNEL,
+    return cmlRequest("/order/submit", {
+        order: {
+            customer_id: customerId,
+            sales_channel: CML_CHANNEL,
 
-                items: items.map(item => ({
-                    product_id: item.productId,
-                    qty: item.quantity ?? 1,
-                })),
-            },
-        }
-    );
+            ...(normalizedReferralCode
+                ? { referral_code: normalizedReferralCode }
+                : {}),
+
+            items: items.map(item => ({
+                product_id: item.productId,
+                qty: item.quantity ?? 1,
+            })),
+        },
+    });
 }
 
 

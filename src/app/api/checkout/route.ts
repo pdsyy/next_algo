@@ -80,6 +80,10 @@ const amountOf = (value: unknown) =>
 export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
+        const referralCode =
+            typeof body.referralCode === "string"
+                ? body.referralCode.trim()
+                : "";
         const email = typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
         const firstName = typeof body.firstName === "string" ? body.firstName.trim() : "";
         const lastName = typeof body.lastName === "string" ? body.lastName.trim() : "";
@@ -124,7 +128,11 @@ export async function POST(request: NextRequest) {
 
         const orderResponse = await createCmlOrder({
             customerId,
-            items: products.map(({ productId }) => ({ productId, quantity: 1 })),
+            referralCode: referralCode || undefined,
+            items: products.map(({ productId }) => ({
+                productId,
+                quantity: 1,
+            })),
         });
         const created = extractOrder(orderResponse);
         const orderId = Number(created?.id);

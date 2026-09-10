@@ -25,7 +25,12 @@ const PRODUCT_CODES: Record<string, string> = {
 };
 
 type PayCurrency = "usdttrc20" | "usdc" | "usdtbsc" | "usdterc20";
-type Customer = { firstName: string; lastName: string; email: string };
+type Customer = {
+    firstName: string;
+    lastName: string;
+    email: string;
+    referralCode: string;
+};
 type PendingOrder = {
     orderCode: string;
     fingerprint: string;
@@ -39,7 +44,15 @@ function readCustomer(): Customer | null {
         if (!raw) return null;
         const value = JSON.parse(raw) as Partial<Customer>;
         if (!value.firstName || !value.lastName || !value.email) return null;
-        return { firstName: value.firstName, lastName: value.lastName, email: value.email };
+        return {
+            firstName: value.firstName,
+            lastName: value.lastName,
+            email: value.email,
+            referralCode:
+                typeof value.referralCode === "string"
+                    ? value.referralCode.trim()
+                    : "",
+        };
     } catch {
         return null;
     }
@@ -93,12 +106,9 @@ export default function CheckoutPaymentPage() {
         [items],
     );
     const previewTotal = checkoutItems.reduce((sum, item) => sum + item.unitPrice, 0);
-    const productFingerprint = checkoutItems
-        .map(item => PRODUCT_CODES[item.id])
-        .sort()
-        .join(",");
+    const productFingerprint = checkoutItems.map(item => PRODUCT_CODES[item.id]).sort().join(",");
     const fingerprint = customer
-        ? `${customer.email.toLowerCase()}|${productFingerprint}`
+        ? `${customer.email.toLowerCase()}|${productFingerprint}|${customer.referralCode}`
         : "";
 
     const startPayment = async () => {
@@ -122,6 +132,7 @@ export default function CheckoutPaymentPage() {
                         email: customer.email,
                         firstName: customer.firstName,
                         lastName: customer.lastName,
+                        referralCode: customer.referralCode,
                         items: checkoutItems.map(item => ({
                             productCode: PRODUCT_CODES[item.id],
                             quantity: 1,

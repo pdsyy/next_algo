@@ -13,6 +13,10 @@ import top_lines from "@/app/images/video_block_top_lines.svg";
 import bottom_lines from "@/app/images/bottom_lines_video_block.svg";
 import styles from "./checkout.module.css";
 import "./checkout.css";
+import {
+    captureReferralFromUrl,
+    readReferralCode,
+} from "@/lib/referral";
 
 const CUSTOMER_STORAGE_KEY = "checkoutCustomer";
 const REVIEW_PAGE_URL = "/checkout/review";
@@ -53,6 +57,8 @@ function isStoredCustomer(value: unknown): value is StoredCustomer {
 }
 
 function CheckoutContent() {
+
+    const [isReferralLocked, setIsReferralLocked] = useState(false);
     const router = useRouter();
     const { executeRecaptcha } = useGoogleReCaptcha();
     const { items, isHydrated } = useCart();
@@ -64,9 +70,24 @@ function CheckoutContent() {
     const [submitError, setSubmitError] = useState("");
 
     useEffect(() => {
+        const capturedReferral = captureReferralFromUrl();
+        const storedReferral = capturedReferral || readReferralCode();
+
+        setIsReferralLocked(Boolean(storedReferral));
+
         try {
             const stored = sessionStorage.getItem(CUSTOMER_STORAGE_KEY);
-            if (!stored) return;
+
+            if (!stored) {
+                if (storedReferral) {
+                    setForm((current) => ({
+                        ...current,
+                        referralCode: storedReferral,
+                    }));
+                }
+
+                return;
+            }
 
             const customer: unknown = JSON.parse(stored);
             if (!isStoredCustomer(customer)) return;
@@ -75,7 +96,7 @@ function CheckoutContent() {
                 firstName: customer.firstName,
                 lastName: customer.lastName,
                 email: customer.email,
-                referralCode: customer.referralCode,
+                referralCode: storedReferral || customer.referralCode,
                 accepted: customer.accepted,
             });
         } catch (error) {
@@ -309,18 +330,26 @@ function CheckoutContent() {
 
                         <label className={styles.field}>
                             <span>{text.referralCode}</span>
+
                             <input
                                 type="text"
                                 value={form.referralCode}
-                                onChange={event =>
-                                    updateField(
-                                        "referralCode",
-                                        event.target.value,
-                                    )
+                                onChange={(event) =>
+                                    updateField("referralCode", event.target.value)
                                 }
-                                placeholder={text.codePlaceholder}
-                                autoComplete="off"
+                                disabled={isReferralLocked}
+                                className={
+                                    isReferralLocked
+                                        ? styles.referralInputLocked
+                                        : undefined
+                                }
                             />
+
+                            {isReferralLocked && (
+                                <small className={styles.referralLockedHint}>
+                                    {text.referralLocked}
+                                </small>
+                            )}
                         </label>
 
                         <label className={styles.agreement}>

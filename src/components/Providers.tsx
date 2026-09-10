@@ -13,6 +13,7 @@ import {ThxProvider} from "@/context/ThxContext";
 import Header from "@/components/Header";
 import ThxPopup from "@/components/ThxPopup";
 import {CartProvider} from "@/components/cartPopup/CartProvider";
+import ReferralTracker from "@/components/ReferralTracker";
 
 
 interface ProvidersProps {
@@ -37,6 +38,7 @@ export default function Providers({children, initialLanguage}: ProvidersProps) {
                         }}
                     >
                         <CartProvider>
+                            <ReferralTracker />
                             <div className="App">
                                 <Header
                                     dark={darkTheme}

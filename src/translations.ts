@@ -1,5 +1,6 @@
 export const translations = {
     UA: {
+        referralLocked: "Партнерський код застосовано",
         cartPopup: {
             title: "Кошик",
             order: "Замовлення",
@@ -1678,6 +1679,7 @@ export const translations = {
     },
 
     RU: {
+        referralLocked: "Партнёрский код применён",
         cartPopup: {
             title: "Корзина",
             order: "Заказ",
@@ -3361,6 +3363,7 @@ export const translations = {
     },
 
     EN:{
+        referralLocked: "Partner code applied",
         cartPopup: {
             title: "Cart",
             order: "Order",

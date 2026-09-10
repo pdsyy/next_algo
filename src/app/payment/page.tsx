@@ -6,7 +6,7 @@ import "./paymentStyle.css";
 import top_lines from "@/app/images/video_block_top_lines.svg";
 import bottom_lines from "@/app/images/bottom_lines_video_block.svg";
 import { useLanguage } from "@/context/LanguageProvider";
-
+import { clearReferralCode } from "@/lib/referral";
 import "../checkout/checkout.css";
 
 const PAYMENT_KEY = "currentPayment";
@@ -127,6 +127,10 @@ export default function PaymentPage() {
                 completedAt: Date.now(),
             }),
         );
+
+        clearReferralCode();
+
+        sessionStorage.removeItem("checkoutCustomer");
 
         window.location.replace("/?payment=success");
     }, [payment?.status, payment?.orderCode, checkout]);

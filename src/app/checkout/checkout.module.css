@@ -464,7 +464,21 @@
     }
 }
 
+.field input.referralInputLocked {
+    color: #858585;
+    -webkit-text-fill-color: #858585;
+    background-color: #f3f3f3;
+    border-color: #dedede;
+    cursor: not-allowed;
+    opacity: 1;
+}
 
+.referralLockedHint {
+    display: block;
+    margin-top: 6px;
+    color: #6f8f87;
+    font-size: 12px;
+}
 
 @media (max-width: 768px) {
 

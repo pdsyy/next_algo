@@ -235,7 +235,7 @@ export const translations = {
                 label2: "Діяльність:",
                 paragraph3: "розробка та продаж програмного забезпечення для алгоритмічної торгівлі (Expert Advisors)",
                 label3: "Контакти:",
-                paragraph4: "algoweb28@gmail.com, Telegram: @alg0_o",
+                paragraph4: "support@algo-world.com, Telegram: @alg0_o",
                 paragraph5: "ALGO надає цифрові програмні продукти, зокрема сумісних із MetaTrader торгових радників (Expert Advisors), файли конфігурації, документацію та пов’язані цифрові продукти. ALGO не надає фінансових або інвестиційних консультацій, брокерських послуг, послуг з управління портфелем чи рахунками, копіювання угод, зберігання коштів або будь-яких регульованих фінансових послуг.",
                 label4: "Вебсайт:",
                 linkText1: "https://algo-world.com"
@@ -324,7 +324,7 @@ export const translations = {
                 paragraph2: "Ми пропонуємо 14-денний строк для повернення коштів із дати покупки. Якщо ви подасте запит на повернення коштів протягом 14 днів після покупки, ми повернемо кошти за замовлення без необхідності пояснювати причину.",
                 paragraph3: "Якщо ваша країна, штат або регіон надає обов’язкові права на повернення коштів, скасування, відмову від договору чи інші права споживача, сприятливіші за цю політику, ALGO дотримуватиметься та застосовуватиме такі права.",
                 subtitle1: "Як подати запит на повернення коштів",
-                paragraph4: "Щоб подати запит на повернення коштів, зв’яжіться з нами через Telegram @alg0_o або електронною поштою за адресою algoweb28@gmail.com та вкажіть:",
+                paragraph4: "Щоб подати запит на повернення коштів, зв’яжіться з нами через Telegram @alg0_o або електронною поштою за адресою support@algo-world.com та вкажіть:",
                 item1: "ваше ім’я;",
                 item2: "електронну пошту або Telegram, використані для покупки;",
                 item3: "номер замовлення / ідентифікатор платежу;",
@@ -340,7 +340,7 @@ export const translations = {
             },
             chargebacks: {
                 title: "11. Чарджбеки та платіжні спори",
-                paragraph1: "Якщо у вас виникла проблема з оплатою, подвійний платіж, ненадання продукту або проблема з ліцензією, спочатку зверніться до нас через Telegram @alg0_o або електронною поштою за адресою algoweb28@gmail.com, щоб ми могли дослідити та вирішити питання до того, як ви ініціюєте чарджбек або платіжний спір.",
+                paragraph1: "Якщо у вас виникла проблема з оплатою, подвійний платіж, ненадання продукту або проблема з ліцензією, спочатку зверніться до нас через Telegram @alg0_o або електронною поштою за адресою support@algo-world.com, щоб ми могли дослідити та вирішити питання до того, як ви ініціюєте чарджбек або платіжний спір.",
                 paragraph2: "Ініціювання чарджбеку без попереднього звернення до нас може призвести до:",
                 item1: "призупинення вашої ліцензії;",
                 item2: "припинення доступу до продукту;",
@@ -443,7 +443,7 @@ export const translations = {
                 title: "26. Контакти",
                 paragraph1: "Із запитаннями щодо цих Умов звертайтеся:",
                 item1: "Telegram: @alg0_o",
-                item2: "Електронна пошта: algoweb28@gmail.com",
+                item2: "Електронна пошта: support@algo-world.com",
                 item3: "Вебсайт: algo-world.com"
             }
         },
@@ -679,7 +679,7 @@ export const translations = {
                 label1: "Оператор:",
                 paragraph2: "ALGO (Volodymyr Babak)",
                 label2: "Контакт:",
-                paragraph3: "algoweb28@gmail.com",
+                paragraph3: "support@algo-world.com",
                 label3: "Підтримка в Telegram:",
                 paragraph4: "@alg0_o",
                 paragraph5: "За фінансовими, інвестиційними, юридичними, податковими консультаціями або консультаціями щодо регуляторних вимог слід звернутися до кваліфікованого фахівця."
@@ -697,7 +697,7 @@ export const translations = {
                 item1: "Юридична особа: Volodymyr Babak",
                 item2: "Торговий бренд: ALGO",
                 item3: "Діяльність: розробка та продаж програмного забезпечення для автоматизованої торгівлі",
-                item4: "Контакти: algoweb28@gmail.com, Telegram: @alg0_o",
+                item4: "Контакти: support@algo-world.com, Telegram: @alg0_o",
                 item5: "Вебсайт:",
                 linkText1: "https://algo-world.com"
             },
@@ -873,7 +873,7 @@ export const translations = {
                 item6: "вимагати перенесення даних;",
                 item7: "відмовитися від маркетингових повідомлень;",
                 item8: "подати скаргу до органу захисту персональних даних.",
-                paragraph2: "Щоб скористатися цими правами, зв’яжіться з нами через Telegram @alg0_o або електронною поштою за адресою algoweb28@gmail.com. Перед виконанням запиту нам може знадобитися підтвердити вашу особу. Деякі запити можуть бути обмежені, якщо нам необхідно зберегти дані з юридичних, податкових міркувань або для запобігання шахрайству."
+                paragraph2: "Щоб скористатися цими правами, зв’яжіться з нами через Telegram @alg0_o або електронною поштою за адресою support@algo-world.com. Перед виконанням запиту нам може знадобитися підтвердити вашу особу. Деякі запити можуть бути обмежені, якщо нам необхідно зберегти дані з юридичних, податкових міркувань або для запобігання шахрайству."
             },
             children: {
                 title: "17. Конфіденційність дітей",
@@ -910,7 +910,7 @@ export const translations = {
                 paragraph1: "Із запитаннями щодо цієї Політики конфіденційності або обробки персональних даних звертайтеся:",
                 item1: "ALGO",
                 item2: "Telegram: @alg0_o",
-                item3: "Електронна пошта: algoweb28@gmail.com",
+                item3: "Електронна пошта: support@algo-world.com",
                 item4: "Вебсайт: algo-world.com"
             }
         },
@@ -1914,7 +1914,7 @@ export const translations = {
                 label2: "Деятельность:",
                 paragraph3: "разработка и продажа программного обеспечения для алгоритмической торговли (Expert Advisors)",
                 label3: "Контакты:",
-                paragraph4: "algoweb28@gmail.com, Telegram: @alg0_o",
+                paragraph4: "support@algo-world.com, Telegram: @alg0_o",
                 paragraph5: "ALGO предоставляет цифровые программные продукты, включая совместимых с MetaTrader торговых советников (Expert Advisors), файлы конфигурации, документацию и связанные цифровые продукты. ALGO не предоставляет финансовых или инвестиционных консультаций, брокерских услуг, услуг по управлению портфелем или счетами, копированию сделок, хранению средств или каких-либо регулируемых финансовых услуг.",
                 label4: "Веб-сайт:",
                 linkText1: "https://algo-world.com"
@@ -2003,7 +2003,7 @@ export const translations = {
                 paragraph2: "Мы предоставляем 14-дневный срок для возврата средств с даты покупки. Если вы запросите возврат в течение 14 дней после покупки, мы вернём средства за заказ без необходимости указывать причину.",
                 paragraph3: "Если ваша страна, штат или регион предоставляет обязательные права на возврат средств, отмену, отказ от договора или иные права потребителя, более благоприятные для вас, чем эта политика, ALGO будет соблюдать и применять такие права.",
                 subtitle1: "Как подать запрос на возврат средств",
-                paragraph4: "Чтобы подать запрос на возврат средств, свяжитесь с нами через Telegram @alg0_o или по электронной почте algoweb28@gmail.com и укажите:",
+                paragraph4: "Чтобы подать запрос на возврат средств, свяжитесь с нами через Telegram @alg0_o или по электронной почте support@algo-world.com и укажите:",
                 item1: "ваше имя;",
                 item2: "электронную почту или Telegram, использованные для покупки;",
                 item3: "номер заказа / идентификатор платежа;",
@@ -2019,7 +2019,7 @@ export const translations = {
             },
             chargebacks: {
                 title: "11. Чарджбэки и платёжные споры",
-                paragraph1: "Если у вас возникла проблема с оплатой, двойной платёж, непредоставление продукта или проблема с лицензией, сначала свяжитесь с нами через Telegram @alg0_o или по электронной почте algoweb28@gmail.com, чтобы мы могли изучить и решить вопрос до того, как вы инициируете чарджбэк или платёжный спор.",
+                paragraph1: "Если у вас возникла проблема с оплатой, двойной платёж, непредоставление продукта или проблема с лицензией, сначала свяжитесь с нами через Telegram @alg0_o или по электронной почте support@algo-world.com, чтобы мы могли изучить и решить вопрос до того, как вы инициируете чарджбэк или платёжный спор.",
                 paragraph2: "Инициирование чарджбэка без предварительного обращения к нам может привести к:",
                 item1: "приостановке вашей лицензии;",
                 item2: "прекращению доступа к продукту;",
@@ -2122,7 +2122,7 @@ export const translations = {
                 title: "26. Контакты",
                 paragraph1: "По вопросам об этих Условиях обращайтесь:",
                 item1: "Telegram: @alg0_o",
-                item2: "Электронная почта: algoweb28@gmail.com",
+                item2: "Электронная почта: support@algo-world.com",
                 item3: "Веб-сайт: algo-world.com"
             }
         },
@@ -2357,7 +2357,7 @@ export const translations = {
                 label1: "Оператор:",
                 paragraph2: "ALGO (Volodymyr Babak)",
                 label2: "Контакт:",
-                paragraph3: "algoweb28@gmail.com",
+                paragraph3: "support@algo-world.com",
                 label3: "Поддержка в Telegram:",
                 paragraph4: "@alg0_o",
                 paragraph5: "За финансовыми, инвестиционными, юридическими, налоговыми консультациями или консультациями по регуляторным требованиям следует обратиться к квалифицированному специалисту."
@@ -2374,7 +2374,7 @@ export const translations = {
                 item1: "Юридическое лицо: Volodymyr Babak",
                 item2: "Торговый бренд: ALGO",
                 item3: "Деятельность: разработка и продажа программного обеспечения для автоматизированной торговли",
-                item4: "Контакты: algoweb28@gmail.com, Telegram: @alg0_o",
+                item4: "Контакты: support@algo-world.com, Telegram: @alg0_o",
                 item5: "Веб-сайт:",
                 linkText1: "https://algo-world.com"
             },
@@ -2550,7 +2550,7 @@ export const translations = {
                 item6: "потребовать переноса данных;",
                 item7: "отказаться от маркетинговых сообщений;",
                 item8: "подать жалобу в орган по защите персональных данных.",
-                paragraph2: "Чтобы воспользоваться этими правами, свяжитесь с нами через Telegram @alg0_o или по электронной почте algoweb28@gmail.com. Перед выполнением запроса нам может потребоваться подтвердить вашу личность. Некоторые запросы могут быть ограничены, если нам необходимо сохранить данные по юридическим, налоговым причинам или для предотвращения мошенничества."
+                paragraph2: "Чтобы воспользоваться этими правами, свяжитесь с нами через Telegram @alg0_o или по электронной почте support@algo-world.com. Перед выполнением запроса нам может потребоваться подтвердить вашу личность. Некоторые запросы могут быть ограничены, если нам необходимо сохранить данные по юридическим, налоговым причинам или для предотвращения мошенничества."
             },
             children: {
                 title: "17. Конфиденциальность детей",
@@ -2587,7 +2587,7 @@ export const translations = {
                 paragraph1: "По вопросам об этой Политике конфиденциальности или обработке персональных данных обращайтесь:",
                 item1: "ALGO",
                 item2: "Telegram: @alg0_o",
-                item3: "Электронная почта: algoweb28@gmail.com",
+                item3: "Электронная почта: support@algo-world.com",
                 item4: "Веб-сайт: algo-world.com"
             }
         },
@@ -3598,7 +3598,7 @@ export const translations = {
                 label2: "Business activity:",
                 paragraph3: "development and sale of algorithmic trading software (Expert Advisors)",
                 label3: "Contact:",
-                paragraph4: "algoweb28@gmail.com, Telegram: @alg0_o",
+                paragraph4: "support@algo-world.com, Telegram: @alg0_o",
                 paragraph5: "ALGO provides digital software products, including MetaTrader-compatible Expert Advisors, configuration files, documentation, and related digital products. ALGO does not provide financial advice, investment advice, brokerage services, portfolio management, managed accounts, copy trading, custody of funds, or any regulated financial service.",
                 label4: "Website:",
                 linkText1: "https://algo-world.com"
@@ -3687,7 +3687,7 @@ export const translations = {
                 paragraph2: "We offer a 14-day refund period from the date of purchase. If you request a refund within 14 days of your purchase, we will refund your order without requiring you to provide a reason.",
                 paragraph3: "If your country, state, or region provides mandatory refund, cancellation, withdrawal, or consumer rights that are more favourable to you than this policy, ALGO will respect and apply those rights.",
                 subtitle1: "How to Request a Refund",
-                paragraph4: "To request a refund, contact us via Telegram @alg0_o or algoweb28@gmail.com and include:",
+                paragraph4: "To request a refund, contact us via Telegram @alg0_o or support@algo-world.com and include:",
                 item1: "your name;",
                 item2: "the email or Telegram used for the purchase;",
                 item3: "your order/payment reference;",
@@ -3703,7 +3703,7 @@ export const translations = {
             },
             chargebacks: {
                 title: "11. Chargebacks and Payment Disputes",
-                paragraph1: "If you have a billing issue, duplicate payment, failed delivery, or license issue, please contact us first via Telegram @alg0_o or email at algoweb28@gmail.com so we can investigate and resolve the matter before you open a chargeback or payment dispute.",
+                paragraph1: "If you have a billing issue, duplicate payment, failed delivery, or license issue, please contact us first via Telegram @alg0_o or email at support@algo-world.com so we can investigate and resolve the matter before you open a chargeback or payment dispute.",
                 paragraph2: "Initiating a chargeback without first contacting us may result in:",
                 item1: "suspension of your license;",
                 item2: "termination of access to the product;",
@@ -3806,7 +3806,7 @@ export const translations = {
                 title: "26. Contact",
                 paragraph1: "For questions about these Terms, contact:",
                 item1: "Telegram: @alg0_o",
-                item2: "Email: algoweb28@gmail.com",
+                item2: "Email: support@algo-world.com",
                 item3: "Website: algo-world.com"
             }
         },
@@ -4041,7 +4041,7 @@ export const translations = {
                 label1: "Operator:",
                 paragraph2: "ALGO (Volodymyr Babak)",
                 label2: "Contact:",
-                paragraph3: "algoweb28@gmail.com",
+                paragraph3: "support@algo-world.com",
                 label3: "Telegram support:",
                 paragraph4: "@alg0_o",
                 paragraph5: "For financial, investment, legal, tax, or regulatory advice, you should consult a qualified professional."
@@ -4058,7 +4058,7 @@ export const translations = {
                 item1: "Legal entity: Volodymyr Babak",
                 item2: "Trading brand: ALGO",
                 item3: "Business activity: development and sale of software for automated trading",
-                item4: "Contact: algoweb28@gmail.com, Telegram: @alg0_o",
+                item4: "Contact: support@algo-world.com, Telegram: @alg0_o",
                 item5: "Website:",
                 linkText1: "https://algo-world.com"
             },
@@ -4234,7 +4234,7 @@ export const translations = {
                 item6: "request data portability;",
                 item7: "opt out of marketing;",
                 item8: "lodge a complaint with a data protection authority.",
-                paragraph2: "To exercise these rights, contact us via Telegram @alg0_o or email at algoweb28@gmail.com. We may need to verify your identity before fulfilling a request. Some requests may be limited where we need to retain data for legal, tax, or fraud-prevention purposes."
+                paragraph2: "To exercise these rights, contact us via Telegram @alg0_o or email at support@algo-world.com. We may need to verify your identity before fulfilling a request. Some requests may be limited where we need to retain data for legal, tax, or fraud-prevention purposes."
             },
             children: {
                 title: "17. Children's Privacy",
@@ -4271,7 +4271,7 @@ export const translations = {
                 paragraph1: "For questions about this Privacy Policy or how we process personal data, contact:",
                 item1: "ALGO",
                 item2: "Telegram: @alg0_o",
-                item3: "Email: algoweb28@gmail.com",
+                item3: "Email: support@algo-world.com",
                 item4: "Website: algo-world.com"
             }
         },

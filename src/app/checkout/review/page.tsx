@@ -8,7 +8,7 @@ import cloudIcon from "./images/cloude.svg";
 import closeIcon from "./images/close_cross.svg";
 import deleteIcon from "./images/delete_icon.svg";
 import tether_icon from "./images/tether.svg";
-
+import { readReferralCode } from "@/lib/referral";
 import { useCart } from "@/components/cartPopup/CartProvider";
 import Mql5PaymentFlow from "./Mql5PaymentFlow";
 import topLines from "@/app/images/video_block_top_lines.svg";
@@ -63,6 +63,7 @@ function isStoredReview(value: unknown): value is StoredReview {
 }
 
 export default function ReviewPage() {
+    const [isReferralLocked, setIsReferralLocked] = useState(false);
     const router = useRouter();
     const { t, language } = useLanguage();
     const text = t.checkoutReview;
@@ -76,6 +77,9 @@ export default function ReviewPage() {
     const [isMql5Open, setIsMql5Open] = useState(false);
 
     useEffect(() => {
+        const storedReferralCode = readReferralCode();
+        setIsReferralLocked(Boolean(storedReferralCode));
+
         try {
             const storedCustomer = sessionStorage.getItem(CUSTOMER_STORAGE_KEY);
             const storedReview = sessionStorage.getItem(REVIEW_STORAGE_KEY);
@@ -245,9 +249,26 @@ export default function ReviewPage() {
 
                         <div className={styles.dataField}>
                             <span>{text.referralCode}</span>
-                            <button type="button" onClick={editCustomer}>
+
+                            <button
+                                type="button"
+                                onClick={isReferralLocked ? undefined : editCustomer}
+                                disabled={isReferralLocked}
+                                className={
+                                    isReferralLocked
+                                        ? styles.referralFieldLocked
+                                        : undefined
+                                }
+                            >
                                 <strong>{customer.referralCode || "—"}</strong>
-                                <img src={editIcon.src} alt="" className={styles.editIcon} />
+
+                                {!isReferralLocked && (
+                                    <img
+                                        src={editIcon.src}
+                                        alt=""
+                                        className={styles.editIcon}
+                                    />
+                                )}
                             </button>
                         </div>
                     </div>

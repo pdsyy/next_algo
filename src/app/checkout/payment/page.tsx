@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useCart } from "@/components/cartPopup/CartProvider";
 import { useLanguage } from "@/context/LanguageProvider";
 import styles from "./payment.module.css";
+
 import bottom_lines from "@/app/images/bottom_lines_video_block.svg";
 import top_lines from "@/app/images/video_block_top_lines.svg";
 import tron_icon from "../images/tron_icon.svg";

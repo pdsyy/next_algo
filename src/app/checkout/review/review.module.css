@@ -149,9 +149,19 @@
     transition: border-color 160ms ease, box-shadow 160ms ease;
 }
 
-.dataField button:hover,
-.dataField button:focus-visible {
-    box-shadow: 0 1px 2px 0 #0A0D1408;
+.dataField button:not(:disabled):hover,
+.dataField button:not(:disabled):focus-visible {
+    border-color: #8aaaf5;
+    box-shadow: 0 0 0 3px rgb(39 103 240 / 10%);
+}
+
+.dataField button.referralFieldLocked {
+    color: #858585;
+    background-color: #f3f3f3;
+    border-color: #dedede;
+    box-shadow: none;
+    cursor: not-allowed;
+    opacity: 1;
 }
 
 .dataField button strong {

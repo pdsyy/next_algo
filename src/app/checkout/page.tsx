@@ -347,7 +347,7 @@ function CheckoutContent() {
 
                             {isReferralLocked && (
                                 <small className={styles.referralLockedHint}>
-                                    {text.referralLocked}
+                                    {t.referralLocked}
                                 </small>
                             )}
                         </label>

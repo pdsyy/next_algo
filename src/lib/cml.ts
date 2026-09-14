@@ -45,7 +45,6 @@ async function cmlRequest<T = any>(
     endpoint: string,
     payload: Record<string, any>
 ): Promise<T> {
-
     const body = JSON.stringify(payload);
 
     const response = await fetch(
@@ -148,7 +147,75 @@ export async function getCmlProductByCode(
 
 
 /* =========================
-   CREATE CUSTOMER
+   RESOLVE CUSTOMER EMAIL
+========================= */
+
+export async function resolveCmlCustomer(
+    email: string
+) {
+    const normalizedEmail =
+        email.trim().toLowerCase();
+
+    if (!normalizedEmail) {
+        throw new Error(
+            "Customer email is required"
+        );
+    }
+
+    return cmlRequest(
+        "/order/customer/resolve",
+        {
+            email: normalizedEmail,
+        }
+    );
+}
+
+
+/* =========================
+   VERIFY CUSTOMER OTP
+========================= */
+
+interface VerifyCustomerParams {
+    verificationRef: string;
+    otp: string;
+}
+
+export async function verifyCmlCustomer({
+                                            verificationRef,
+                                            otp,
+                                        }: VerifyCustomerParams) {
+    const normalizedVerificationRef =
+        verificationRef.trim();
+
+    const normalizedOtp =
+        otp.trim();
+
+    if (!normalizedVerificationRef) {
+        throw new Error(
+            "CML verification reference is required"
+        );
+    }
+
+    if (!normalizedOtp) {
+        throw new Error(
+            "Verification code is required"
+        );
+    }
+
+    return cmlRequest(
+        "/order/customer/verify",
+        {
+            verification_ref:
+            normalizedVerificationRef,
+
+            otp: normalizedOtp,
+        }
+    );
+}
+
+
+/* =========================
+   CREATE OR UPDATE CUSTOMER
 ========================= */
 
 interface CreateCustomerParams {
@@ -156,6 +223,7 @@ interface CreateCustomerParams {
     firstName: string;
     lastName: string;
     countryCode?: string;
+    verificationRef?: string;
 }
 
 export async function createCmlCustomer({
@@ -163,15 +231,28 @@ export async function createCmlCustomer({
                                             firstName,
                                             lastName,
                                             countryCode,
+                                            verificationRef,
                                         }: CreateCustomerParams) {
+    const normalizedEmail =
+        email.trim().toLowerCase();
+
+    const normalizedVerificationRef =
+        verificationRef?.trim();
 
     return cmlRequest(
         "/order/customer",
         {
+            ...(normalizedVerificationRef
+                ? {
+                    verification_ref:
+                    normalizedVerificationRef,
+                }
+                : {}),
+
             customer: {
-                email,
-                first_name: firstName,
-                last_name: lastName,
+                email: normalizedEmail,
+                first_name: firstName.trim(),
+                last_name: lastName.trim(),
                 type: "Individual",
 
                 ...(countryCode
@@ -193,6 +274,11 @@ export async function createCmlCustomer({
 interface CreateOrderParams {
     customerId: number;
     referralCode?: string;
+
+    verificationRef?: string;
+    existingCustomer?: boolean;
+    checkoutReference?: string;
+
     items: Array<{
         productId: number;
         quantity?: number;
@@ -202,29 +288,82 @@ interface CreateOrderParams {
 export async function createCmlOrder({
                                          customerId,
                                          referralCode,
+                                         verificationRef,
+                                         existingCustomer,
+                                         checkoutReference,
                                          items,
                                      }: CreateOrderParams) {
     if (items.length === 0) {
-        throw new Error("At least one CML order item is required");
+        throw new Error(
+            "At least one CML order item is required"
+        );
     }
 
-    const normalizedReferralCode = referralCode?.trim();
+    const normalizedReferralCode =
+        referralCode?.trim();
 
-    return cmlRequest("/order/submit", {
-        order: {
-            customer_id: customerId,
-            sales_channel: CML_CHANNEL,
+    const normalizedVerificationRef =
+        verificationRef?.trim();
 
-            ...(normalizedReferralCode
-                ? { referral_code: normalizedReferralCode }
-                : {}),
+    const normalizedCheckoutReference =
+        checkoutReference?.trim();
 
-            items: items.map(item => ({
-                product_id: item.productId,
-                qty: item.quantity ?? 1,
-            })),
-        },
-    });
+    const isExistingCustomer =
+        Boolean(
+            existingCustomer ||
+            normalizedVerificationRef
+        );
+
+    if (
+        isExistingCustomer &&
+        !normalizedVerificationRef
+    ) {
+        throw new Error(
+            "Existing CML customer requires email verification"
+        );
+    }
+
+    return cmlRequest(
+        "/order/submit",
+        {
+            order: {
+                customer_id: customerId,
+                sales_channel: CML_CHANNEL,
+
+                ...(normalizedReferralCode
+                    ? {
+                        referral_code:
+                        normalizedReferralCode,
+                    }
+                    : {}),
+
+                ...(normalizedCheckoutReference
+                    ? {
+                        checkout_reference:
+                        normalizedCheckoutReference,
+                    }
+                    : {}),
+
+                ...(normalizedVerificationRef
+                    ? {
+                        verification_ref:
+                        normalizedVerificationRef,
+                    }
+                    : {}),
+
+                ...(isExistingCustomer
+                    ? {
+                        existing_customer: true,
+                    }
+                    : {}),
+
+                items: items.map(item => ({
+                    product_id: item.productId,
+                    qty: item.quantity ?? 1,
+                })),
+            },
+        }
+    );
 }
 
 
@@ -279,7 +418,6 @@ export async function recordCmlPayment({
                                            paymentMethod,
                                            externalReference,
                                        }: RecordCmlPaymentParams) {
-
     return cmlRequest(
         "/order/payment",
         {

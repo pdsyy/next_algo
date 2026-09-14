@@ -21,12 +21,14 @@ const REVIEW_STORAGE_KEY = "checkoutReview";
 const NEXT_STEP_URL = "/checkout/payment";
 
 type PaymentMethod = "crypto" | "card";
+type DeliveryLanguage = "en" | "ru";
 
 type StoredCustomer = {
     firstName: string;
     lastName: string;
     email: string;
     referralCode: string;
+    deliveryLanguage: DeliveryLanguage;
     accepted: boolean;
     savedAt: number;
 };
@@ -36,19 +38,42 @@ type StoredReview = {
     savedAt: number;
 };
 
-function isStoredCustomer(value: unknown): value is StoredCustomer {
-    if (!value || typeof value !== "object") return false;
+function parseStoredCustomer(value: unknown): StoredCustomer | null {
+    if (!value || typeof value !== "object") return null;
 
-    const customer = value as Partial<StoredCustomer>;
+    const {
+        firstName,
+        lastName,
+        email,
+        referralCode,
+        deliveryLanguage,
+        accepted,
+        savedAt,
+    } = value as Record<string, unknown>;
 
-    return (
-        typeof customer.firstName === "string" &&
-        typeof customer.lastName === "string" &&
-        typeof customer.email === "string" &&
-        typeof customer.referralCode === "string" &&
-        customer.accepted === true &&
-        typeof customer.savedAt === "number"
-    );
+    if (
+        typeof firstName !== "string" ||
+        typeof lastName !== "string" ||
+        typeof email !== "string" ||
+        typeof referralCode !== "string" ||
+        (deliveryLanguage !== undefined &&
+            deliveryLanguage !== "en" &&
+            deliveryLanguage !== "ru") ||
+        accepted !== true ||
+        typeof savedAt !== "number"
+    ) {
+        return null;
+    }
+
+    return {
+        firstName,
+        lastName,
+        email,
+        referralCode,
+        deliveryLanguage: deliveryLanguage === "ru" ? "ru" : "en",
+        accepted: true,
+        savedAt,
+    };
 }
 
 function isStoredReview(value: unknown): value is StoredReview {
@@ -67,6 +92,12 @@ export default function ReviewPage() {
     const router = useRouter();
     const { t, language } = useLanguage();
     const text = t.checkoutReview;
+    const deliveryLanguageLabel =
+        language === "UA"
+            ? "Мова файлів та інструкції"
+            : language === "RU"
+                ? "Язык файлов и инструкции"
+                : "Files and instructions language";
     const locale = { UA: "uk-UA", RU: "ru-RU", EN: "en-US" }[language];
     const { items, isHydrated } = useCart();
 
@@ -85,9 +116,18 @@ export default function ReviewPage() {
             const storedReview = sessionStorage.getItem(REVIEW_STORAGE_KEY);
 
             if (storedCustomer) {
-                const parsedCustomer: unknown = JSON.parse(storedCustomer);
-                if (isStoredCustomer(parsedCustomer)) {
+                const parsedCustomer = parseStoredCustomer(
+                    JSON.parse(storedCustomer),
+                );
+
+                if (parsedCustomer) {
                     setCustomer(parsedCustomer);
+
+                    // Upgrade checkout data saved before deliveryLanguage existed.
+                    sessionStorage.setItem(
+                        CUSTOMER_STORAGE_KEY,
+                        JSON.stringify(parsedCustomer),
+                    );
                 }
             }
 
@@ -269,6 +309,24 @@ export default function ReviewPage() {
                                         className={styles.editIcon}
                                     />
                                 )}
+                            </button>
+                        </div>
+
+                        <div className={styles.dataField}>
+                            <span>{deliveryLanguageLabel}</span>
+
+                            <button type="button" onClick={editCustomer}>
+                                <strong>
+                                    {customer.deliveryLanguage === "ru"
+                                        ? "Русский"
+                                        : "English"}
+                                </strong>
+
+                                <img
+                                    src={editIcon.src}
+                                    alt=""
+                                    className={styles.editIcon}
+                                />
                             </button>
                         </div>
                     </div>

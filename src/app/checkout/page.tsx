@@ -17,6 +17,9 @@ import {
     captureReferralFromUrl,
     readReferralCode,
 } from "@/lib/referral";
+import LanguageHandler, {
+    type DeliveryLanguage,
+} from "@/components/LanguageHandler";
 
 const CUSTOMER_STORAGE_KEY = "checkoutCustomer";
 const REVIEW_PAGE_URL = "/checkout/review";
@@ -26,10 +29,13 @@ type CustomerForm = {
     lastName: string;
     email: string;
     referralCode: string;
+    deliveryLanguage: DeliveryLanguage;
     accepted: boolean;
 };
 
-type StoredCustomer = CustomerForm & {
+type StoredCustomer = Omit<CustomerForm, "deliveryLanguage"> & {
+    // Optional so that checkout data saved before this update still works.
+    deliveryLanguage?: DeliveryLanguage;
     savedAt: number;
 };
 
@@ -38,8 +44,13 @@ const initialForm: CustomerForm = {
     lastName: "",
     email: "",
     referralCode: "",
+    deliveryLanguage: "en",
     accepted: false,
 };
+
+function isDeliveryLanguage(value: unknown): value is DeliveryLanguage {
+    return value === "en" || value === "ru";
+}
 
 function isStoredCustomer(value: unknown): value is StoredCustomer {
     if (!value || typeof value !== "object") return false;
@@ -51,6 +62,8 @@ function isStoredCustomer(value: unknown): value is StoredCustomer {
         typeof customer.lastName === "string" &&
         typeof customer.email === "string" &&
         typeof customer.referralCode === "string" &&
+        (customer.deliveryLanguage === undefined ||
+            isDeliveryLanguage(customer.deliveryLanguage)) &&
         typeof customer.accepted === "boolean" &&
         typeof customer.savedAt === "number"
     );
@@ -64,8 +77,18 @@ function CheckoutContent() {
     const { items, isHydrated } = useCart();
     const { t, language } = useLanguage();
     const text = t.checkoutCustomer;
+    const deliveryLanguageLabel =
+        language === "UA"
+            ? "Мова файлів та інструкції"
+            : language === "RU"
+                ? "Язык файлов и инструкции"
+                : "Files and instructions language";
 
-    const [form, setForm] = useState<CustomerForm>(initialForm);
+    const [form, setForm] = useState<CustomerForm>(() => ({
+        ...initialForm,
+        // For the Russian site language select RU, otherwise select EN.
+        deliveryLanguage: language === "RU" ? "ru" : "en",
+    }));
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitError, setSubmitError] = useState("");
 
@@ -92,13 +115,15 @@ function CheckoutContent() {
             const customer: unknown = JSON.parse(stored);
             if (!isStoredCustomer(customer)) return;
 
-            setForm({
+            setForm(current => ({
                 firstName: customer.firstName,
                 lastName: customer.lastName,
                 email: customer.email,
                 referralCode: storedReferral || customer.referralCode,
+                deliveryLanguage:
+                    customer.deliveryLanguage ?? current.deliveryLanguage,
                 accepted: customer.accepted,
-            });
+            }));
         } catch (error) {
             console.error("CUSTOMER STORAGE ERROR:", error);
             sessionStorage.removeItem(CUSTOMER_STORAGE_KEY);
@@ -200,6 +225,7 @@ function CheckoutContent() {
                 lastName: form.lastName.trim(),
                 email: form.email.trim().toLowerCase(),
                 referralCode: form.referralCode.trim(),
+                deliveryLanguage: form.deliveryLanguage,
                 accepted: form.accepted,
                 savedAt: Date.now(),
             };
@@ -351,6 +377,20 @@ function CheckoutContent() {
                                 </small>
                             )}
                         </label>
+
+                        <div className={styles.field}>
+                            <span>{deliveryLanguageLabel}</span>
+
+                            <LanguageHandler
+                                value={form.deliveryLanguage}
+                                onChange={deliveryLanguage =>
+                                    updateField(
+                                        "deliveryLanguage",
+                                        deliveryLanguage,
+                                    )
+                                }
+                            />
+                        </div>
 
                         <label className={styles.agreement}>
                             <input

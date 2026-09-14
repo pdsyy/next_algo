@@ -3069,7 +3069,8 @@ const AlgoReveal = () => {
 
             <video
                 ref={videoRef}
-                src="/algo_main_video_non_scale.mp4"
+                src="/1789130814801168%20(2).mp4"
+                poster = "/hero-video-poster.webp"
                 autoPlay
                 muted
                 loop

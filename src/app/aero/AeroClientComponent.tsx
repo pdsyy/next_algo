@@ -185,10 +185,10 @@ const AeroClientComponent = () => {
                             target="_blank"
                             rel="noopener noreferrer"
                             {...fadeNumeric} custom={4} className="mql_link">
-                            <div className="open_mql5">
+                            {/* <div className="open_mql5">
                                 {t.buttons.openMql}
                                 <img src={mql5_button.src} alt=""/>
-                            </div>
+                            </div>*/}
                         </motion.a>
                     </div>
                     <motion.div className="product_slogan" {...fadeNumeric} custom={5}>

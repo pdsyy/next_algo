@@ -97,6 +97,7 @@ const MainVideoComponent = () => {
                 <video
                     ref={videoRef}
                     src="/Algo%20World%20—%20Official%20Teaser%20Trailer.mp4"
+                    poster = "/algo-video-about-company-poster.webp"
                     muted
                     playsInline
                     preload="auto"
@@ -183,7 +184,7 @@ const MainVideoComponent = () => {
                             />
                         </svg>
                     ) : (
-                        // SOUND ON
+
                         <svg
                             viewBox="0 0 24 24"
                             fill="none"

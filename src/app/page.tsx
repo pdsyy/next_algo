@@ -16,6 +16,7 @@ import market_image8 from "./images/market_image8.png"
 import market_image9 from "./images/market_image9.png"
 import market_image10 from "./images/market_image10.png"
 import market_image11 from "./images/market_image11.png"
+import market_image12 from "./images/market_image12.png"
 import mql_pl from "./images/mql_pl.svg"
 import mql5_2x from "./images/mql_f.png"
 import metaTrader_icon from "./images/metaTrader_icon_light.svg"
@@ -77,12 +78,20 @@ const MotionImage = motion.create(Image);
 
 const MainPage = ({activePopup, setActivePopup}: any) => {
 
+    const [zoom, setZoom] = useState(0)
 
 
     const [isMobile, setIsMobile] = useState(false);
+    const [activeTrackRecord, setActiveTrackRecord] = useState(0);
     useEffect(() => {
-        setIsMobile(window.innerWidth < 768);
-    }, []);
+        if (window.innerWidth < 768) {
+            setZoom(2.8)
+            setIsMobile(true);
+        } else {
+            setIsMobile(false)
+            setZoom(1.6)
+        }
+    }, [])
     const {t, language, setLanguage} = useLanguage();
 
 
@@ -202,17 +211,8 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
     };
 
     const marketImages = [
-        market_image1,
-        market_image2,
-        market_image3,
-        market_image4,
-        market_image5,
-        market_image6,
-        market_image7,
-        market_image8,
-        market_image9,
-        market_image10,
-        market_image11,
+        market_image1, market_image2, market_image3, market_image4, market_image5, market_image6,
+        market_image7, market_image8, market_image9, market_image10, market_image11, market_image12
     ];
 
     const [isActive, setIsActive] = useState(false)
@@ -277,56 +277,23 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
 
 
             <HeroBlock linesTopSrc={lines_top} avatarsSrc={avatars_icon} scrollToSection={scrollToSection}/>
-            {/*<div className="main_block" onMouseMove={handleMouseMove}>
-                <Image
-                    src={!isMobile ? mainBlockBg : mainBlockBgMobile}
-                    alt="Background"
-                    className="main_block_bg"
-                    style = {{height:"auto"}}
-                    priority
-                />
-                <motion.div className="main_info_block" {...fadeLeft}>
-                    <div className="algo_block">
-                        algo
-                    </div>
-                    <h1 className="main_h1">
-                        {t.home.hero.title}
-                    </h1>
-                    <div className="main_desc">
-                        {t.home.hero.desc}
-                    </div>
-                    <div className="select_bot_button" onClick={() => scrollToSection("catalog")}>
-                        {t.home.hero.button}
-                    </div>
-                </motion.div>
 
-                <MotionImage
-                    src={metalPackage}
-                    alt="Metal Package"
-                    className="metalPackage"
-                    ref={boxRef}
-                    style = {{height:"auto"}}
-                    {...fadeRight}
-
-                />
-            </div>
-            */}
             <div className="main_page_content">
 
 
                 <div className="about_us_block">
                     <motion.div className="market_list" {...fadeUp}>
-                        <div className = "motion_block_anim">
+                        <div className="motion_block_anim">
 
 
-                        {[...Array(isMobile ? 22 : 11)].map((_, i) => (
-                            <img
-                                key={i}
-                                src={marketImages[i % 11].src}
-                                alt={`market-${i}`}
-                                className={`market-${i}`}
-                            />
-                        ))}
+                            {[...Array(12)].map((_, i) => (
+                                <img
+                                    key={i}
+                                    src={marketImages[i % 11].src}
+                                    alt={`market-${i}`}
+                                    className={`market-${i}`}
+                                />
+                            ))}
                         </div>
                     </motion.div>
 
@@ -535,38 +502,47 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                                     {t.trackRecord.desc}
                                 </div>
 
-                                <div className="track_record_item">
-                                    <div className="track_record_item_name">
-                                        <Image src={t_record_image1} alt=""/>
-                                        {t.trackRecord.consistentResults.title}
-                                    </div>
+                                {[
+                                    {
+                                        id: "consistent-results",
+                                        image: t_record_image1,
+                                        title: t.trackRecord.consistentResults.title,
+                                        description: t.trackRecord.consistentResults.desc,
+                                    },
+                                    {
+                                        id: "low-drawdown",
+                                        image: t_record_image2,
+                                        title: t.trackRecord.lowDrawdown.title,
+                                        description: t.trackRecord.lowDrawdown.desc,
+                                    },
+                                    {
+                                        id: "verified",
+                                        image: t_record_image3,
+                                        title: t.trackRecord.verified.title,
+                                        description: t.trackRecord.verified.desc,
+                                    },
+                                ].map((item, index) => {
+                                    const isActive = activeTrackRecord === index;
 
-                                    <div className="track_record_item_desc">
-                                        {t.trackRecord.consistentResults.desc}
-                                    </div>
-                                </div>
+                                    return (
+                                        <div
+                                            key={item.id}
+                                            className={`track_record_item ${
+                                                isActive ? "magnifier_active" : ""
+                                            }`}
+                                            onClick={() => setActiveTrackRecord(index)}
+                                        >
+                                            <div className="track_record_item_name">
+                                                <Image src={item.image} alt=""/>
+                                                {item.title}
+                                            </div>
 
-                                <div className="track_record_item">
-                                    <div className="track_record_item_name">
-                                        <Image src={t_record_image2} alt=""/>
-                                        {t.trackRecord.lowDrawdown.title}
-                                    </div>
-
-                                    <div className="track_record_item_desc">
-                                        {t.trackRecord.lowDrawdown.desc}
-                                    </div>
-                                </div>
-
-                                <div className="track_record_item">
-                                    <div className="track_record_item_name">
-                                        <Image src={t_record_image3} alt=""/>
-                                        {t.trackRecord.verified.title}
-                                    </div>
-
-                                    <div className="track_record_item_desc">
-                                        {t.trackRecord.verified.desc}
-                                    </div>
-                                </div>
+                                            <div className="track_record_item_desc">
+                                                {item.description}
+                                            </div>
+                                        </div>
+                                    );
+                                })}
                             </div>
 
                             <div className="track_record_image_container">
@@ -574,8 +550,9 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                                 <ImageMagnifier
                                     src={track_record_main.src}
                                     alt="Myfxbook trading statistics"
-                                    zoom={1.8}
+                                    zoom={zoom}
                                     lensSize={160}
+                                    activeMagnifierItem={activeTrackRecord}
                                 />
                             </div>
 
@@ -698,7 +675,7 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                                 return !isMobile ?
                                     <motion.div className="bot_gradient_border" key={idx} {...fadeNumeric} custom={idx}>
                                         <div className="bot_item">
-                                            {el.name === "Aero EA" ? <img src={mql_pl.src} alt="" className="mql_pl"/> : ""}
+                                            {/*el.name === "Aero EA" ? <img src={mql_pl.src} alt="" className="mql_pl"/> : ""*/}
                                             <div className="bot_image">
                                                 {/*el.prop && <div className="prop_pl">{t.home.catalog.propLabel}</div>*/}
                                                 <img src={el.image.src} alt={el.name}/>
@@ -731,28 +708,12 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                                                 </div>
                                             </div>
 
-                                            {el.name === "Aero EA" ?
-                                                <div className="aero_card_buttons">
-                                                    <a href={el.href}>
-                                                        <div className="bot_more_details">
-                                                            {t.home.catalog.moreDetails}
-                                                        </div>
-                                                    </a>
-                                                    <a href="https://www.mql5.com/en/market/product/176860?source=Site+Market+My+Products+Page#description"
-                                                       target="_blank"
-                                                       rel="noopener noreferrer" className="mql_card_button">
-                                                        <div className="mql_aero_card_button">
-                                                            {t.buttons.openMql}
-                                                        </div>
-                                                    </a>
+                                            <a href={el.href}>
+                                                <div className="bot_more_details">
+                                                    {t.home.catalog.moreDetails}
                                                 </div>
-                                                :
-                                                <a href={el.href}>
-                                                    <div className="bot_more_details">
-                                                        {t.home.catalog.moreDetails}
-                                                    </div>
-                                                </a>
-                                            }
+                                            </a>
+
                                         </div>
                                     </motion.div>
                                     :
@@ -792,28 +753,13 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                                                 </div>
                                             </div>
 
-                                            {el.name === "Aero EA" ?
-                                                <div className="aero_card_buttons">
-                                                    <a href={el.href}>
-                                                        <div className="bot_more_details">
-                                                            {t.home.catalog.moreDetails}
-                                                        </div>
-                                                    </a>
-                                                    <a href="https://www.mql5.com/en/market/product/176860?source=Site+Market+My+Products+Page#description"
-                                                       target="_blank"
-                                                       rel="noopener noreferrer" className="mql_card_button">
-                                                        <div className="mql_aero_card_button">
-                                                            {t.buttons.openMql}
-                                                        </div>
-                                                    </a>
+
+                                            <a href={el.href}>
+                                                <div className="bot_more_details">
+                                                    {t.home.catalog.moreDetails}
                                                 </div>
-                                                :
-                                                <a href={el.href}>
-                                                    <div className="bot_more_details">
-                                                        {t.home.catalog.moreDetails}
-                                                    </div>
-                                                </a>
-                                            }
+                                            </a>
+
                                         </div>
                                     </div>
                             }

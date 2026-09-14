@@ -299,9 +299,7 @@
 }
 
 
-/* =========================================================
-   TABLET
-========================================================= */
+
 
 @media (max-width: 1024px) {
     :root {
@@ -339,6 +337,11 @@
         --algo-image-offset-x: 5px;
         --algo-video-box-offset-y: -13px;
         --algo-content-image-gap: 16px;
+    }
+
+    .motion_block_anim {
+        animation: companyMove 40s infinite ease-in-out !important;
+        padding: 0 12px;
     }
 
     .algo_reveal_base_image {
@@ -672,8 +675,53 @@
 
 
 .track_record_item{
+    border-radius: 12px;
+    background: #FFFFFF;
+    padding: 16px 16px 16px 13px;
+    position: relative;
+    overflow: hidden;
+    border-left: 3px solid transparent;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.track_record_item:hover{
+    background: rgba(0,0,0,0.025);
+}
+
+.image_magnifier_lens {
+    transition: none;
+    will-change: left, top, background-position;
+}
+
+.image_magnifier_source {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.image_magnifier:not(:hover) .image_magnifier_lens {
+    transition:
+            left 0.45s ease,
+            top 0.45s ease,
+            background-position 0.45s ease;
+}
+
+
+.track_record_info .track_record_item{
+    margin-top: 12px;
+}
+
+.track_record_info > .track_record_desc + .track_record_item {
     margin-top: 24px;
 }
+
+.track_record_item.magnifier_active{
+    background: #0000000D;
+    border-left: 3px solid #181818;
+    padding: 16px;
+}
+
 
 .track_record_item_name{
     display: flex;
@@ -701,6 +749,8 @@
     letter-spacing: -2%;
 
 }
+
+
 
 .main_page {
     width: 100%;
@@ -853,7 +903,6 @@
 }
 
 .market_list {
-    filter: grayscale(1);
     justify-content: space-between;
     align-items: center;
     width: 100%;
@@ -861,8 +910,9 @@
     gap: 24px;
     display: flex;
     margin-left: 50%;
-    overflow: scroll hidden;
+    overflow: hidden;
     transform: translateX(-50%) !important;
+    container-type: inline-size;
 }
 
 .market_list img {
@@ -1939,6 +1989,13 @@ h2 span {
 
 @media screen and (max-width: 768px) {
 
+    .track_record_item{
+        padding: 10px;
+    }
+    .track_record_item.magnifier_active{
+        padding: 10px 10px 10px 13px;
+    }
+
     .step_container {
         position: absolute;
         left: 122px !important;
@@ -1993,13 +2050,13 @@ h2 span {
         overflow: hidden;
     }
 
-    .market-8, .market-19{
+    .market-8, .market-20{
         height: 160% !important;
         max-height: unset !important;
         width: auto !important;
     }
 
-    .market-9, .market-20{
+    .market-9, .market-21{
         width: 136px !important;
         max-height: unset !important;
         height: auto !important;
@@ -3646,24 +3703,21 @@ h2 span {
     align-items: center;
     height: 100%;
     position: relative;
+    will-change: transform;
 
 }
 
-@media screen and (width < 768px) {
-
-    .motion_block_anim {
-        animation: companyMove 60s infinite linear;
-    }
+.motion_block_anim {
+    animation: companyMove 20s infinite ease-in-out;
 }
 
 @keyframes companyMove {
-    0%{
-        transform: translateX(0%);
-    }
-    50%{
-        transform: translateX(-60%);
-    }
-    100%{
+    0%,
+    100% {
         transform: translateX(0);
+    }
+
+    50% {
+        transform: translateX(calc(100cqw - 100%));
     }
 }

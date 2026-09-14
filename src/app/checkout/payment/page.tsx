@@ -26,11 +26,14 @@ const PRODUCT_CODES: Record<string, string> = {
 };
 
 type PayCurrency = "usdttrc20" | "usdc" | "usdtbsc" | "usdterc20";
+type DeliveryLanguage = "en" | "ru";
+
 type Customer = {
     firstName: string;
     lastName: string;
     email: string;
     referralCode: string;
+    deliveryLanguage: DeliveryLanguage;
 };
 type PendingOrder = {
     orderCode: string;
@@ -53,6 +56,9 @@ function readCustomer(): Customer | null {
                 typeof value.referralCode === "string"
                     ? value.referralCode.trim()
                     : "",
+            // Old saved checkout data did not contain this property.
+            deliveryLanguage:
+                value.deliveryLanguage === "ru" ? "ru" : "en",
         };
     } catch {
         return null;
@@ -109,7 +115,7 @@ export default function CheckoutPaymentPage() {
     const previewTotal = checkoutItems.reduce((sum, item) => sum + item.unitPrice, 0);
     const productFingerprint = checkoutItems.map(item => PRODUCT_CODES[item.id]).sort().join(",");
     const fingerprint = customer
-        ? `${customer.email.toLowerCase()}|${productFingerprint}|${customer.referralCode}`
+        ? `${customer.email.toLowerCase()}|${productFingerprint}|${customer.referralCode}|${customer.deliveryLanguage}`
         : "";
 
     const startPayment = async () => {
@@ -134,6 +140,7 @@ export default function CheckoutPaymentPage() {
                         firstName: customer.firstName,
                         lastName: customer.lastName,
                         referralCode: customer.referralCode,
+                        deliveryLanguage: customer.deliveryLanguage,
                         items: checkoutItems.map(item => ({
                             productCode: PRODUCT_CODES[item.id],
                             quantity: 1,
@@ -171,13 +178,18 @@ export default function CheckoutPaymentPage() {
                     subtotal: previewTotal,
                     discount: 0,
                     total: pending.amount,
+                    deliveryLanguage: customer.deliveryLanguage,
                     savedAt: Date.now(),
                 }),
             );
 
             sessionStorage.setItem(
                 PAYMENT_STORAGE_KEY,
-                JSON.stringify({ ...data.payment, orderCode: pending.orderCode }),
+                JSON.stringify({
+                    ...data.payment,
+                    orderCode: pending.orderCode,
+                    deliveryLanguage: customer.deliveryLanguage,
+                }),
             );
             router.push("/payment");
         } catch (reason) {

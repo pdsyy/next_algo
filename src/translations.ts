@@ -928,7 +928,7 @@ export const translations = {
 
             consistentResults: {
                 title: "Стабільні результати",
-                desc: "З Algo World ви можете розраховувати на стабільні результати щомісяця завдяки системному підходу до автоматизованої торгівлі."
+                desc: "З Algo World ви можете розраховувати на стабільний і безпечний щомісячний прибуток."
             },
 
             lowDrawdown: {
@@ -2606,7 +2606,7 @@ export const translations = {
 
             consistentResults: {
                 title: "Стабильные результаты",
-                desc: "С Algo World вы можете рассчитывать на стабильные результаты каждый месяц благодаря системному подходу к автоматизированной торговле."
+                desc: "С Algo World вы можете рассчитывать на стабильную и безопасную ежемесячную прибыль."
             },
 
             lowDrawdown: {
@@ -4313,7 +4313,7 @@ export const translations = {
 
             consistentResults: {
                 title: "Consistent Results",
-                desc: "With Algo World, you can expect consistent monthly performance driven by a systematic approach to automated trading."
+                desc: "With Algo World, you can expect safe and consistent monthly profits."
             },
 
             lowDrawdown: {

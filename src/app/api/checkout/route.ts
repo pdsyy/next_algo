@@ -13,7 +13,28 @@ export const dynamic = "force-dynamic";
 
 const CUSTOMER_COOKIE = "algo_cml_customer";
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
-const ALLOWED_PRODUCT_CODES = new Set(["terra-ea", "aero-ea", "hydro-ea"]);
+
+const CML_PRODUCT_CODES = {
+    "terra-ea": {
+        en: "terra-ea",
+        ru: "terra-ea-ru",
+    },
+    "aero-ea": {
+        en: "aero-ea",
+        ru: "aero-ea-ru",
+    },
+    "hydro-ea": {
+        en: "hydro-ea",
+        ru: "hydro-ea-ru",
+    },
+} as const;
+
+type DeliveryLanguage = "en" | "ru";
+type BaseProductCode = keyof typeof CML_PRODUCT_CODES;
+
+const ALLOWED_PRODUCT_CODES = new Set<string>(
+    Object.keys(CML_PRODUCT_CODES),
+);
 
 type CustomerSession = { email: string; customerId: number; expiresAt: number };
 type RequestedItem = { productCode?: unknown; quantity?: unknown };
@@ -48,9 +69,10 @@ function readSession(request: NextRequest): CustomerSession | null {
     }
 }
 
-function normalizeItems(value: unknown) {
+function normalizeItems(value: unknown): BaseProductCode[] {
     if (!Array.isArray(value)) return [];
-    const uniqueCodes = new Set<string>();
+    const uniqueCodes = new Set<BaseProductCode>();
+
     for (const candidate of value as RequestedItem[]) {
         const productCode = typeof candidate?.productCode === "string"
             ? candidate.productCode.trim().toLowerCase()
@@ -61,8 +83,9 @@ function normalizeItems(value: unknown) {
         if (candidate.quantity !== undefined && Number(candidate.quantity) !== 1) {
             throw new Error(`Only one copy of ${productCode} can be purchased`);
         }
-        uniqueCodes.add(productCode);
+        uniqueCodes.add(productCode as BaseProductCode);
     }
+
     return [...uniqueCodes];
 }
 
@@ -80,6 +103,26 @@ const amountOf = (value: unknown) =>
 export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
+        const requestedDeliveryLanguage =
+            typeof body.deliveryLanguage === "string"
+                ? body.deliveryLanguage.trim().toLowerCase()
+                : "en";
+
+        if (
+            requestedDeliveryLanguage !== "en" &&
+            requestedDeliveryLanguage !== "ru"
+        ) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    error: "deliveryLanguage must be en or ru",
+                },
+                { status: 400 },
+            );
+        }
+
+        const deliveryLanguage: DeliveryLanguage =
+            requestedDeliveryLanguage;
         const referralCode =
             typeof body.referralCode === "string"
                 ? body.referralCode.trim()
@@ -102,15 +145,23 @@ export async function POST(request: NextRequest) {
         }
 
         const products = await Promise.all(productCodes.map(async productCode => {
+            const cmlProductCode =
+                CML_PRODUCT_CODES[productCode][deliveryLanguage];
+
             try {
-                const product = await getCmlProductByCode(productCode);
+                const product = await getCmlProductByCode(cmlProductCode);
                 const productId = Number(product?.id);
                 if (!Number.isInteger(productId) || productId < 1) throw new Error("product ID not returned");
                 if (String(product.currency ?? "").toUpperCase() !== "USD") throw new Error(`unexpected currency ${product.currency}`);
-                return { productCode, productId, product };
+                return {
+                    productCode,
+                    cmlProductCode,
+                    productId,
+                    product,
+                };
             } catch (error) {
                 const message = error instanceof Error ? error.message : "not found";
-                throw new Error(`CML product ${productCode} is unavailable: ${message}`);
+                throw new Error(`CML product ${cmlProductCode} is unavailable: ${message}`);
             }
         }));
 
@@ -158,9 +209,19 @@ export async function POST(request: NextRequest) {
                 status,
                 amount,
                 currency,
-                items: products.map(({ productCode, productId, product }) => ({
+                deliveryLanguage,
+                items: products.map(({
+                                         productCode,
+                                         cmlProductCode,
+                                         productId,
+                                         product,
+                                     }) => ({
                     id: productId,
-                    code: product.product?.code ?? product.code ?? productCode,
+                    code:
+                        product.product?.code ??
+                        product.code ??
+                        cmlProductCode,
+                    baseCode: productCode,
                     title: product.product?.title ?? product.title,
                     quantity: 1,
                 })),

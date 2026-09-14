@@ -97,76 +97,6 @@ const initialForm: CustomerForm = {
 };
 
 
-const OTP_TEXT = {
-    EN: {
-        title: "Verify your email",
-        description:
-            "We sent a six-digit verification code to",
-        descriptionAfter:
-            "Enter the code to continue.",
-        codeLabel: "Verification code",
-        codePlaceholder: "000000",
-        close: "Close",
-        back: "Back",
-        confirm: "Confirm",
-        verifying: "Checking...",
-        resend: "Send code again",
-        resending: "Sending...",
-        resent: "A new verification code has been sent.",
-        invalidCode:
-            "Enter the six-digit verification code.",
-        unableToVerify:
-            "Unable to verify the email address.",
-        unableToResend:
-            "Unable to send a new verification code.",
-    },
-
-    RU: {
-        title: "Подтвердите email",
-        description:
-            "Мы отправили шестизначный код подтверждения на",
-        descriptionAfter:
-            "Введите код, чтобы продолжить.",
-        codeLabel: "Код подтверждения",
-        codePlaceholder: "000000",
-        close: "Закрыть",
-        back: "Назад",
-        confirm: "Подтвердить",
-        verifying: "Проверяем...",
-        resend: "Отправить код ещё раз",
-        resending: "Отправляем...",
-        resent: "Новый код подтверждения отправлен.",
-        invalidCode:
-            "Введите шестизначный код подтверждения.",
-        unableToVerify:
-            "Не удалось подтвердить email.",
-        unableToResend:
-            "Не удалось повторно отправить код.",
-    },
-
-    UA: {
-        title: "Підтвердьте email",
-        description:
-            "Ми надіслали шестизначний код підтвердження на",
-        descriptionAfter:
-            "Введіть код, щоб продовжити.",
-        codeLabel: "Код підтвердження",
-        codePlaceholder: "000000",
-        close: "Закрити",
-        back: "Назад",
-        confirm: "Підтвердити",
-        verifying: "Перевіряємо...",
-        resend: "Надіслати код ще раз",
-        resending: "Надсилаємо...",
-        resent: "Новий код підтвердження надіслано.",
-        invalidCode:
-            "Введіть шестизначний код підтвердження.",
-        unableToVerify:
-            "Не вдалося підтвердити email.",
-        unableToResend:
-            "Не вдалося повторно надіслати код.",
-    },
-} as const;
 
 
 /* =========================
@@ -306,12 +236,6 @@ function CheckoutContent() {
     const text =
         t.checkoutCustomer;
 
-    const otpText =
-        language === "RU"
-            ? OTP_TEXT.RU
-            : language === "UA"
-                ? OTP_TEXT.UA
-                : OTP_TEXT.EN;
 
 
     const [form, setForm] =
@@ -812,7 +736,7 @@ function CheckoutContent() {
 
                     if (!receivedReference) {
                         throw new Error(
-                            otpText.unableToVerify
+                            t.emailConfirmationPopup.unableToVerify
                         );
                     }
 
@@ -865,7 +789,7 @@ function CheckoutContent() {
                     setOtpFeedback({
                         type: "error",
                         message:
-                        otpText.invalidCode,
+                        t.emailConfirmationPopup.invalidCode,
                     });
                 }
 
@@ -889,7 +813,7 @@ function CheckoutContent() {
                     result.verified !== true
                 ) {
                     throw new Error(
-                        otpText.unableToVerify
+                        t.emailConfirmationPopup.unableToVerify
                     );
                 }
 
@@ -933,7 +857,7 @@ function CheckoutContent() {
                     message:
                         error instanceof Error
                             ? error.message
-                            : otpText.unableToVerify,
+                            : t.emailConfirmationPopup.unableToVerify,
                 });
             } finally {
                 setIsVerifyingOtp(false);
@@ -985,7 +909,7 @@ function CheckoutContent() {
                     !newReference
                 ) {
                     throw new Error(
-                        otpText.unableToResend
+                        t.emailConfirmationPopup.unableToResend
                     );
                 }
 
@@ -998,7 +922,7 @@ function CheckoutContent() {
                 setOtpFeedback({
                     type: "success",
                     message:
-                    otpText.resent,
+                    t.emailConfirmationPopup.resent,
                 });
             } catch (error) {
                 setOtpFeedback({
@@ -1007,7 +931,7 @@ function CheckoutContent() {
                     message:
                         error instanceof Error
                             ? error.message
-                            : otpText.unableToResend,
+                            : t.emailConfirmationPopup.unableToResend,
                 });
             } finally {
                 setIsResendingOtp(false);
@@ -1598,7 +1522,7 @@ function CheckoutContent() {
                                 isOtpBusy
                             }
                             aria-label={
-                                otpText.close
+                                t.emailConfirmationPopup.close
                             }
                         >
                             ×
@@ -1610,12 +1534,12 @@ function CheckoutContent() {
                             }
                         >
                             <h2 id="otp-title">
-                                {otpText.title}
+                                {t.emailConfirmationPopup.title}
                             </h2>
 
                             <p>
                                 {
-                                    otpText.description
+                                    t.emailConfirmationPopup.description
                                 }{" "}
                                 <strong>
                                     {
@@ -1626,7 +1550,7 @@ function CheckoutContent() {
                                 </strong>
                                 .{" "}
                                 {
-                                    otpText.descriptionAfter
+                                    t.emailConfirmationPopup.descriptionAfter
                                 }
                             </p>
                         </header>
@@ -1637,7 +1561,7 @@ function CheckoutContent() {
                             }
                         >
                             <span>
-                                {otpText.codeLabel}
+                                {t.emailConfirmationPopup.codeLabel}
                             </span>
 
                             <input
@@ -1665,7 +1589,7 @@ function CheckoutContent() {
                                     }
                                 }
                                 placeholder={
-                                    otpText.codePlaceholder
+                                    t.emailConfirmationPopup.codePlaceholder
                                 }
                                 maxLength={6}
                                 autoFocus
@@ -1709,8 +1633,8 @@ function CheckoutContent() {
                             }
                         >
                             {isResendingOtp
-                                ? otpText.resending
-                                : otpText.resend}
+                                ? t.emailConfirmationPopup.resending
+                                : t.emailConfirmationPopup.resend}
                         </button>
 
                         <div
@@ -1730,7 +1654,7 @@ function CheckoutContent() {
                                     isOtpBusy
                                 }
                             >
-                                {otpText.back}
+                                {t.emailConfirmationPopup.back}
                             </button>
 
                             <button
@@ -1744,8 +1668,8 @@ function CheckoutContent() {
                                 }
                             >
                                 {isVerifyingOtp
-                                    ? otpText.verifying
-                                    : otpText.confirm}
+                                    ? t.emailConfirmationPopup.verifying
+                                    : t.emailConfirmationPopup.confirm}
                             </button>
                         </div>
                     </form>

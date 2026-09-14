@@ -1,5 +1,27 @@
 export const translations = {
     UA: {
+        emailConfirmationPopup: {
+            title: "Підтвердьте email",
+            description:
+                "Ми надіслали шестизначний код підтвердження на",
+            descriptionAfter:
+                "Введіть код, щоб продовжити.",
+            codeLabel: "Код підтвердження",
+            codePlaceholder: "000000",
+            close: "Закрити",
+            back: "Назад",
+            confirm: "Підтвердити",
+            verifying: "Перевіряємо...",
+            resend: "Надіслати код ще раз",
+            resending: "Надсилаємо...",
+            resent: "Новий код підтвердження надіслано.",
+            invalidCode:
+                "Введіть шестизначний код підтвердження.",
+            unableToVerify:
+                "Не вдалося підтвердити email.",
+            unableToResend:
+                "Не вдалося повторно надіслати код.",
+        },
         deliveryLanguageLabel:"Мова файлів та інструкції",
         referralLocked: "Партнерський код застосовано",
         cartPopup: {
@@ -1680,6 +1702,28 @@ export const translations = {
     },
 
     RU: {
+        emailConfirmationPopup: {
+            title: "Подтвердите email",
+            description:
+                "Мы отправили шестизначный код подтверждения на",
+            descriptionAfter:
+                "Введите код, чтобы продолжить.",
+            codeLabel: "Код подтверждения",
+            codePlaceholder: "000000",
+            close: "Закрыть",
+            back: "Назад",
+            confirm: "Подтвердить",
+            verifying: "Проверяем...",
+            resend: "Отправить код ещё раз",
+            resending: "Отправляем...",
+            resent: "Новый код подтверждения отправлен.",
+            invalidCode:
+                "Введите шестизначный код подтверждения.",
+            unableToVerify:
+                "Не удалось подтвердить email.",
+            unableToResend:
+                "Не удалось повторно отправить код.",
+        },
         deliveryLanguageLabel:"Язык файлов и инструкции",
         referralLocked: "Партнёрский код применён",
         cartPopup: {
@@ -3365,6 +3409,28 @@ export const translations = {
     },
 
     EN:{
+        emailConfirmationPopup: {
+            title: "Verify your email",
+            description:
+                "We sent a six-digit verification code to",
+            descriptionAfter:
+                "Enter the code to continue.",
+            codeLabel: "Verification code",
+            codePlaceholder: "000000",
+            close: "Close",
+            back: "Back",
+            confirm: "Confirm",
+            verifying: "Checking...",
+            resend: "Send code again",
+            resending: "Sending...",
+            resent: "A new verification code has been sent.",
+            invalidCode:
+                "Enter the six-digit verification code.",
+            unableToVerify:
+                "Unable to verify the email address.",
+            unableToResend:
+                "Unable to send a new verification code.",
+        },
         deliveryLanguageLabel:"Files and instructions language",
         referralLocked: "Partner code applied",
         cartPopup: {

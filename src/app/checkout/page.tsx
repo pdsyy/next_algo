@@ -77,17 +77,11 @@ function CheckoutContent() {
     const { items, isHydrated } = useCart();
     const { t, language } = useLanguage();
     const text = t.checkoutCustomer;
-    const deliveryLanguageLabel =
-        language === "UA"
-            ? "Мова файлів та інструкції"
-            : language === "RU"
-                ? "Язык файлов и инструкции"
-                : "Files and instructions language";
 
     const [form, setForm] = useState<CustomerForm>(() => ({
         ...initialForm,
         // For the Russian site language select RU, otherwise select EN.
-        deliveryLanguage: language === "RU" ? "ru" : "en",
+        deliveryLanguage: language === "EN" ? "en" : "ru",
     }));
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitError, setSubmitError] = useState("");
@@ -379,7 +373,7 @@ function CheckoutContent() {
                         </label>
 
                         <div className={styles.field}>
-                            <span>{deliveryLanguageLabel}</span>
+                            <span>{t.deliveryLanguageLabel}</span>
 
                             <LanguageHandler
                                 value={form.deliveryLanguage}

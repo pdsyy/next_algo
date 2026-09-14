@@ -48,7 +48,6 @@ export function readReferralCode(): string {
 export function captureReferralFromUrl(): string {
     if (typeof window === "undefined") return "";
 
-    // Первый реферер не перезаписывается.
     const existingCode = readReferralCode();
     if (existingCode) return existingCode;
 

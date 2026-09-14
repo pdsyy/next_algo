@@ -1,5 +1,6 @@
 export const translations = {
     UA: {
+        deliveryLanguageLabel:"Мова файлів та інструкції",
         referralLocked: "Партнерський код застосовано",
         cartPopup: {
             title: "Кошик",
@@ -933,12 +934,12 @@ export const translations = {
 
             lowDrawdown: {
                 title: "Низька просадка",
-                desc: "Ми розробили наших ботів з акцентом на контроль ризиків і мінімізацію просадки, зберігаючи при цьому високий потенціал результативності."
+                desc: "Ми розробили нашого бота так, щоб максимально знизити ризики, водночас зберігаючи високу результативність."
             },
 
             verified: {
                 title: "Підтверджено Myfxbook",
-                desc: "Наша торгова статистика повністю прозора та підтверджена через Myfxbook. Перевірте результати самостійно."
+                desc: "Наші торгові результати повністю прозорі та підтверджені сервісом Myfxbook. Переконайтеся в цьому самі."
             },
 
             button: "Myfxbook"
@@ -1679,6 +1680,7 @@ export const translations = {
     },
 
     RU: {
+        deliveryLanguageLabel:"Язык файлов и инструкции",
         referralLocked: "Партнёрский код применён",
         cartPopup: {
             title: "Корзина",
@@ -2611,12 +2613,12 @@ export const translations = {
 
             lowDrawdown: {
                 title: "Низкая просадка",
-                desc: "Мы разработали наших ботов с акцентом на контроль рисков и минимизацию просадки, сохраняя при этом высокий потенциал результативности."
+                desc: "Мы разработали нашего бота так, чтобы максимально снизить риски, сохранив при этом высокую результативность."
             },
 
             verified: {
                 title: "Подтверждено Myfxbook",
-                desc: "Наша торговая статистика полностью прозрачна и подтверждена через Myfxbook. Проверьте результаты самостоятельно."
+                desc: "Наши торговые результаты полностью прозрачны и подтверждены сервисом Myfxbook. Убедитесь в этом сами."
             },
 
             button: "Myfxbook"
@@ -3363,6 +3365,7 @@ export const translations = {
     },
 
     EN:{
+        deliveryLanguageLabel:"Files and instructions language",
         referralLocked: "Partner code applied",
         cartPopup: {
             title: "Cart",
@@ -4318,12 +4321,12 @@ export const translations = {
 
             lowDrawdown: {
                 title: "Low Drawdown",
-                desc: "Our bots are designed with a strong focus on risk control and minimizing drawdown while maintaining solid performance potential."
+                desc: "We designed our bot to be as low-risk as possible while still delivering strong results,"
             },
 
             verified: {
                 title: "Verified by Myfxbook",
-                desc: "Our trading performance is fully transparent and verified through Myfxbook. Check the results for yourself."
+                desc: "Our track record is fully transparent and verified by Myfxbook. Check it out for yourself."
             },
 
             button: "Myfxbook"

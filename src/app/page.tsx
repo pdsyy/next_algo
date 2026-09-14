@@ -289,7 +289,7 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                             {[...Array(12)].map((_, i) => (
                                 <img
                                     key={i}
-                                    src={marketImages[i % 11].src}
+                                    src={marketImages[i % 12].src}
                                     alt={`market-${i}`}
                                     className={`market-${i}`}
                                 />

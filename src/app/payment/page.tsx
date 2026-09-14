@@ -1,21 +1,54 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import {
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from "react";
+
 import { QRCodeSVG } from "qrcode.react";
-import "./paymentStyle.css";
-import top_lines from "@/app/images/video_block_top_lines.svg";
-import bottom_lines from "@/app/images/bottom_lines_video_block.svg";
+
 import { useLanguage } from "@/context/LanguageProvider";
 import { clearReferralCode } from "@/lib/referral";
+
+import top_lines from "@/app/images/video_block_top_lines.svg";
+import bottom_lines from "@/app/images/bottom_lines_video_block.svg";
+
+import "./paymentStyle.css";
 import "../checkout/checkout.css";
 
-const PAYMENT_KEY = "currentPayment";
-const CHECKOUT_KEY = "algo_world_checkout_v1";
-const SUCCESS_KEY = "algo_world_payment_success_v1";
-const FINAL_STATUSES = new Set(["finished", "failed", "expired", "refunded"]);
+
+const PAYMENT_KEY =
+    "currentPayment";
+
+const CHECKOUT_KEY =
+    "algo_world_checkout_v1";
+
+const SUCCESS_KEY =
+    "algo_world_payment_success_v1";
+
+const CUSTOMER_STORAGE_KEY =
+    "checkoutCustomer";
+
+const REVIEW_STORAGE_KEY =
+    "checkoutReview";
+
+const PENDING_ORDER_KEY =
+    "algo_world_pending_crypto_order_v1";
+
+
+const FINAL_STATUSES =
+    new Set([
+        "finished",
+        "failed",
+        "expired",
+        "refunded",
+    ]);
+
 
 type Payment = {
-    id: string;
+    id: string | number;
     status: string;
     payAddress: string;
     payAmount: number;
@@ -24,6 +57,7 @@ type Payment = {
     priceCurrency: string;
     orderCode?: string;
 };
+
 
 type Item = {
     id: string;
@@ -34,6 +68,7 @@ type Item = {
     quantity: number;
 };
 
+
 type Checkout = {
     items: Item[];
     currency: string;
@@ -43,137 +78,422 @@ type Checkout = {
     savedAt: number;
 };
 
-function getStatusKind(status: string) {
-    if (status === "finished" || status === "confirmed") return "success";
-    if (status === "failed" || status === "expired" || status === "refunded") return "error";
+
+function getStatusKind(
+    status: string
+) {
+    if (
+        status === "finished" ||
+        status === "confirmed"
+    ) {
+        return "success";
+    }
+
+    if (
+        status === "failed" ||
+        status === "expired" ||
+        status === "refunded"
+    ) {
+        return "error";
+    }
+
     return "pending";
 }
 
-export default function PaymentPage() {
-    const { t } = useLanguage();
-    const text = t.payment;
 
-    const [payment, setPayment] = useState<Payment | null>(null);
-    const [checkout, setCheckout] = useState<Checkout | null>(null);
-    const [loaded, setLoaded] = useState(false);
-    const [copied, setCopied] = useState(false);
-    const redirected = useRef(false);
+/* =========================
+   PAYMENT PAGE
+========================= */
+
+export default function PaymentPage() {
+    const { t } =
+        useLanguage();
+
+    const text =
+        t.payment;
+
+
+    const [
+        payment,
+        setPayment,
+    ] = useState<Payment | null>(
+        null
+    );
+
+    const [
+        checkout,
+        setCheckout,
+    ] = useState<Checkout | null>(
+        null
+    );
+
+    const [
+        loaded,
+        setLoaded,
+    ] = useState(false);
+
+    const [
+        copied,
+        setCopied,
+    ] = useState(false);
+
+    const redirected =
+        useRef(false);
+
+
+    /* =========================
+       LOAD PAYMENT
+    ========================= */
 
     useEffect(() => {
         try {
-            const paymentRaw = sessionStorage.getItem(PAYMENT_KEY);
-            const checkoutRaw = localStorage.getItem(CHECKOUT_KEY);
-            if (paymentRaw) setPayment(JSON.parse(paymentRaw));
-            if (checkoutRaw) setCheckout(JSON.parse(checkoutRaw));
+            const paymentRaw =
+                sessionStorage.getItem(
+                    PAYMENT_KEY
+                );
+
+            const checkoutRaw =
+                localStorage.getItem(
+                    CHECKOUT_KEY
+                );
+
+            if (paymentRaw) {
+                setPayment(
+                    JSON.parse(
+                        paymentRaw
+                    )
+                );
+            }
+
+            if (checkoutRaw) {
+                setCheckout(
+                    JSON.parse(
+                        checkoutRaw
+                    )
+                );
+            }
         } catch (error) {
-            console.error("PAYMENT STORAGE ERROR:", error);
+            console.error(
+                "PAYMENT STORAGE ERROR:",
+                error
+            );
         } finally {
             setLoaded(true);
         }
     }, []);
 
+
+    /* =========================
+       CHECK PAYMENT STATUS
+    ========================= */
+
     useEffect(() => {
-        if (!payment?.id || FINAL_STATUSES.has(payment.status)) return;
+        if (
+            !payment?.id ||
+            FINAL_STATUSES.has(
+                payment.status
+            )
+        ) {
+            return;
+        }
 
         let stopped = false;
 
-        const checkStatus = async () => {
-            try {
-                const response = await fetch(
-                    `/api/payments/nowpayments/status?paymentId=${encodeURIComponent(payment.id)}`,
-                    { cache: "no-store" },
-                );
-                const data = await response.json();
-                if (!response.ok) {
-                    throw new Error(data.error || text.errors.statusCheckFailed);
-                }
-                if (stopped || typeof data.payment_status !== "string") return;
 
-                setPayment(previous => {
-                    if (!previous) return previous;
-                    const next = { ...previous, status: data.payment_status };
-                    sessionStorage.setItem(PAYMENT_KEY, JSON.stringify(next));
-                    return next;
-                });
-            } catch (error) {
-                console.error("STATUS ERROR:", error);
-            }
-        };
+        const checkStatus =
+            async () => {
+                try {
+                    const response =
+                        await fetch(
+                            `/api/payments/nowpayments/status?paymentId=${
+                                encodeURIComponent(
+                                    payment.id
+                                )
+                            }`,
+                            {
+                                cache: "no-store",
+                            }
+                        );
+
+                    const data =
+                        await response.json();
+
+                    if (!response.ok) {
+                        throw new Error(
+                            data.error ||
+                            text.errors
+                                .statusCheckFailed
+                        );
+                    }
+
+                    if (
+                        stopped ||
+                        typeof data.payment_status !==
+                        "string"
+                    ) {
+                        return;
+                    }
+
+                    const nextStatus =
+                        data.payment_status
+                            .trim()
+                            .toLowerCase();
+
+                    setPayment(previous => {
+                        if (!previous) {
+                            return previous;
+                        }
+
+                        const next = {
+                            ...previous,
+                            status: nextStatus,
+                        };
+
+                        sessionStorage.setItem(
+                            PAYMENT_KEY,
+                            JSON.stringify(
+                                next
+                            )
+                        );
+
+                        return next;
+                    });
+                } catch (error) {
+                    console.error(
+                        "STATUS ERROR:",
+                        error
+                    );
+                }
+            };
+
 
         void checkStatus();
-        const timer = window.setInterval(checkStatus, 5000);
+
+        const timer =
+            window.setInterval(
+                checkStatus,
+                5000
+            );
+
 
         return () => {
             stopped = true;
-            window.clearInterval(timer);
+
+            window.clearInterval(
+                timer
+            );
         };
-    }, [payment?.id, payment?.status, text.errors.statusCheckFailed]);
+    }, [
+        payment?.id,
+        payment?.status,
+        text.errors.statusCheckFailed,
+    ]);
+
+
+    /* =========================
+       SUCCESS AND CLEANUP
+    ========================= */
 
     useEffect(() => {
-        if (payment?.status !== "finished" || redirected.current) return;
+        if (
+            payment?.status !== "finished" ||
+            redirected.current
+        ) {
+            return;
+        }
 
         redirected.current = true;
-        const successItems = checkout?.items ?? [];
 
-        sessionStorage.setItem(
-            SUCCESS_KEY,
-            JSON.stringify({
-                orderCode: payment.orderCode || "",
-                products: successItems.map(item => ({
-                    id: item.id,
-                    name: item.name,
-                    imageSrc: item.imageSrc,
-                })),
-                completedAt: Date.now(),
-            }),
+        const successItems =
+            checkout?.items ?? [];
+
+
+        try {
+            /*
+             * Сначала сохраняем минимальные данные,
+             * необходимые для success-сообщения
+             * на главной странице.
+             */
+            sessionStorage.setItem(
+                SUCCESS_KEY,
+                JSON.stringify({
+                    orderCode:
+                        payment.orderCode || "",
+
+                    products:
+                        successItems.map(
+                            item => ({
+                                id: item.id,
+                                name: item.name,
+                                imageSrc:
+                                item.imageSrc,
+                            })
+                        ),
+
+                    completedAt:
+                        Date.now(),
+                })
+            );
+
+
+            /*
+             * Реферальный код используется
+             * только для завершённой покупки.
+             */
+            clearReferralCode();
+
+
+            /*
+             * Очищаем завершённый checkout.
+             * Следующая покупка получит новый
+             * checkoutReference и новый CML order.
+             */
+            sessionStorage.removeItem(
+                CUSTOMER_STORAGE_KEY
+            );
+
+            sessionStorage.removeItem(
+                REVIEW_STORAGE_KEY
+            );
+
+            sessionStorage.removeItem(
+                PENDING_ORDER_KEY
+            );
+
+            sessionStorage.removeItem(
+                PAYMENT_KEY
+            );
+
+            localStorage.removeItem(
+                CHECKOUT_KEY
+            );
+        } catch (error) {
+            console.error(
+                "PAYMENT SUCCESS CLEANUP ERROR:",
+                error
+            );
+        } finally {
+            window.location.replace(
+                "/?payment=success"
+            );
+        }
+    }, [
+        payment?.status,
+        payment?.orderCode,
+        checkout,
+    ]);
+
+
+    /* =========================
+       FORMATTER
+    ========================= */
+
+    const formatter =
+        useMemo(
+            () =>
+                new Intl.NumberFormat(
+                    "en-US",
+                    {
+                        style: "currency",
+
+                        currency:
+                            (
+                                checkout?.currency ||
+                                payment?.priceCurrency ||
+                                "USD"
+                            ).toUpperCase(),
+
+                        maximumFractionDigits: 2,
+                    }
+                ),
+            [
+                checkout?.currency,
+                payment?.priceCurrency,
+            ]
         );
 
-        clearReferralCode();
 
-        sessionStorage.removeItem("checkoutCustomer");
+    /* =========================
+       COPY ADDRESS
+    ========================= */
 
-        window.location.replace("/?payment=success");
-    }, [payment?.status, payment?.orderCode, checkout]);
+    const copyAddress =
+        async () => {
+            if (!payment) {
+                return;
+            }
 
-    const formatter = useMemo(
-        () =>
-            new Intl.NumberFormat("en-US", {
-                style: "currency",
-                currency: (checkout?.currency || payment?.priceCurrency || "USD").toUpperCase(),
-                maximumFractionDigits: 2,
-            }),
-        [checkout?.currency, payment?.priceCurrency],
-    );
+            await navigator.clipboard.writeText(
+                payment.payAddress
+            );
 
-    const copyAddress = async () => {
-        if (!payment) return;
-        await navigator.clipboard.writeText(payment.payAddress);
-        setCopied(true);
-        window.setTimeout(() => setCopied(false), 1500);
-    };
+            setCopied(true);
+
+            window.setTimeout(
+                () => setCopied(false),
+                1500
+            );
+        };
+
+
+    /* =========================
+       PAGE STATES
+    ========================= */
 
     if (!loaded) {
         return (
             <main className="payment_page">
-                <div className="payment_state">{text.loading}</div>
-            </main>
-        );
-    }
-
-    if (!payment) {
-        return (
-            <main className="payment_page">
                 <div className="payment_state">
-                    <h1>{text.notFound.title}</h1>
-                    <p>{text.notFound.description}</p>
-                    <a href="/checkout">{text.notFound.button}</a>
+                    {text.loading}
                 </div>
             </main>
         );
     }
 
-    const statusKind = getStatusKind(payment.status);
-    const statusText = text.status[payment.status as keyof typeof text.status] || payment.status;
+
+    if (!payment) {
+        return (
+            <main className="payment_page">
+                <div className="payment_state">
+                    <h1>
+                        {text.notFound.title}
+                    </h1>
+
+                    <p>
+                        {
+                            text.notFound
+                                .description
+                        }
+                    </p>
+
+                    <a href="/checkout">
+                        {
+                            text.notFound
+                                .button
+                        }
+                    </a>
+                </div>
+            </main>
+        );
+    }
+
+
+    const statusKind =
+        getStatusKind(
+            payment.status
+        );
+
+    const statusText =
+        text.status[
+            payment.status as keyof
+                typeof text.status
+            ] ||
+        payment.status;
+
+
+    /* =========================
+       PAGE CONTENT
+    ========================= */
 
     return (
         <main className="payment_page">
@@ -186,56 +506,134 @@ export default function PaymentPage() {
             </div>
 
             <div className="payment_page_container">
-                <a href="/" className="payment_home">{text.mainPage}</a>
+                <a
+                    href="/"
+                    className="payment_home"
+                >
+                    {text.mainPage}
+                </a>
 
                 <section className="payment_card">
                     <header className="payment_card_header">
                         <div>
-                            <h1>{text.title}</h1>
-                            <p>{text.description}</p>
+                            <h1>
+                                {text.title}
+                            </h1>
+
+                            <p>
+                                {
+                                    text.description
+                                }
+                            </p>
                         </div>
-                        <span className={`payment_status payment_status_${statusKind}`}>
+
+                        <span
+                            className={`
+                                payment_status
+                                payment_status_${statusKind}
+                            `}
+                        >
                             <i aria-hidden="true" />
+
                             {statusText}
                         </span>
                     </header>
 
-                    <div className="payment_section_title">{text.paymentDetails}</div>
+                    <div className="payment_section_title">
+                        {text.paymentDetails}
+                    </div>
 
                     <div className="payment_card_body">
                         {payment.orderCode && (
                             <div className="payment_order_number">
-                                <span>{text.orderNumber}</span>
-                                <strong>#{payment.orderCode}</strong>
+                                <span>
+                                    {
+                                        text.orderNumber
+                                    }
+                                </span>
+
+                                <strong>
+                                    #
+                                    {
+                                        payment.orderCode
+                                    }
+                                </strong>
                             </div>
                         )}
 
                         <div className="payment_amount">
-                            <span>{text.sendExactly}</span>
+                            <span>
+                                {text.sendExactly}
+                            </span>
+
                             <strong>
-                                {payment.payAmount} {payment.payCurrency.toUpperCase()}
+                                {payment.payAmount}{" "}
+                                {
+                                    payment.payCurrency
+                                        .toUpperCase()
+                                }
                             </strong>
-                            <small>{formatter.format(payment.priceAmount)}</small>
+
+                            <small>
+                                {
+                                    formatter.format(
+                                        payment.priceAmount
+                                    )
+                                }
+                            </small>
                         </div>
 
                         <div className="payment_qr">
-                            <QRCodeSVG value={payment.payAddress} size={190} />
+                            <QRCodeSVG
+                                value={
+                                    payment.payAddress
+                                }
+                                size={190}
+                            />
                         </div>
 
                         <div className="payment_address_block">
-                            <span>{text.paymentAddress}</span>
+                            <span>
+                                {
+                                    text.paymentAddress
+                                }
+                            </span>
+
                             <div className="payment_address_row">
-                                <code>{payment.payAddress}</code>
-                                <button type="button" onClick={copyAddress}>
-                                    {copied ? text.copied : text.copy}
+                                <code>
+                                    {
+                                        payment.payAddress
+                                    }
+                                </code>
+
+                                <button
+                                    type="button"
+                                    onClick={
+                                        copyAddress
+                                    }
+                                >
+                                    {copied
+                                        ? text.copied
+                                        : text.copy}
                                 </button>
                             </div>
                         </div>
 
                         <p className="payment_notice">
-                            {text.paymentNotice.beforeCurrency}{" "}
-                            {payment.payCurrency.toUpperCase()}{" "}
-                            {text.paymentNotice.afterCurrency}
+                            {
+                                text.paymentNotice
+                                    .beforeCurrency
+                            }{" "}
+
+                            {
+                                payment.payCurrency
+                                    .toUpperCase()
+                            }{" "}
+
+                            {
+                                text.paymentNotice
+                                    .afterCurrency
+                            }
                         </p>
                     </div>
                 </section>
@@ -243,49 +641,135 @@ export default function PaymentPage() {
                 {checkout && (
                     <aside className="checkout_summary">
                         <header className="checkout_summary_head">
-                            <h2>{text.orderSummary}</h2>
+                            <h2>
+                                {
+                                    text.orderSummary
+                                }
+                            </h2>
+
                             <p>
-                                {checkout.items.length}{" "}
-                                {checkout.items.length === 1 ? text.item : text.items}
-                                {" · "}{formatter.format(checkout.total)}
+                                {
+                                    checkout.items
+                                        .length
+                                }{" "}
+
+                                {
+                                    checkout.items
+                                        .length === 1
+                                        ? text.item
+                                        : text.items
+                                }
+
+                                {" · "}
+
+                                {
+                                    formatter.format(
+                                        checkout.total
+                                    )
+                                }
                             </p>
                         </header>
 
-                        <div className="checkout_summary_label">{text.orderSummaryLabel}</div>
+                        <div className="checkout_summary_label">
+                            {
+                                text.orderSummaryLabel
+                            }
+                        </div>
 
                         <ul className="checkout_items">
-                            {checkout.items.map(item => (
-                                <li key={item.id} className="checkout_item">
-                                    <div className="checkout_item_image">
-                                        {item.imageSrc ? (
-                                            <img src={item.imageSrc} alt="" />
-                                        ) : (
-                                            <div className="checkout_image_placeholder">◇</div>
-                                        )}
-                                    </div>
-                                    <div className="checkout_item_info">
-                                        <strong>{item.name}</strong>
-                                        {item.subtitle && <span>{item.subtitle}</span>}
-                                    </div>
-                                    <div className="checkout_item_price">
-                                        {formatter.format(item.unitPrice)}
-                                    </div>
-                                </li>
-                            ))}
+                            {checkout.items.map(
+                                item => (
+                                    <li
+                                        key={
+                                            item.id
+                                        }
+                                        className="checkout_item"
+                                    >
+                                        <div className="checkout_item_image">
+                                            {item.imageSrc ? (
+                                                // eslint-disable-next-line @next/next/no-img-element
+                                                <img
+                                                    src={
+                                                        item.imageSrc
+                                                    }
+                                                    alt=""
+                                                />
+                                            ) : (
+                                                <div className="checkout_image_placeholder">
+                                                    ◇
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div className="checkout_item_info">
+                                            <strong>
+                                                {
+                                                    item.name
+                                                }
+                                            </strong>
+
+                                            {item.subtitle && (
+                                                <span>
+                                                    {
+                                                        item.subtitle
+                                                    }
+                                                </span>
+                                            )}
+                                        </div>
+
+                                        <div className="checkout_item_price">
+                                            {
+                                                formatter.format(
+                                                    item.unitPrice
+                                                )
+                                            }
+                                        </div>
+                                    </li>
+                                )
+                            )}
                         </ul>
 
                         <dl className="checkout_totals">
                             <div>
-                                <dt>{text.subtotal}</dt>
-                                <dd>{formatter.format(checkout.subtotal)}</dd>
+                                <dt>
+                                    {text.subtotal}
+                                </dt>
+
+                                <dd>
+                                    {
+                                        formatter.format(
+                                            checkout.subtotal
+                                        )
+                                    }
+                                </dd>
                             </div>
+
                             <div>
-                                <dt>{text.discount}</dt>
-                                <dd>{formatter.format(checkout.discount)}</dd>
+                                <dt>
+                                    {text.discount}
+                                </dt>
+
+                                <dd>
+                                    {
+                                        formatter.format(
+                                            checkout.discount
+                                        )
+                                    }
+                                </dd>
                             </div>
+
                             <div className="checkout_total">
-                                <dt>{text.total}</dt>
-                                <dd>{formatter.format(checkout.total)}</dd>
+                                <dt>
+                                    {text.total}
+                                </dt>
+
+                                <dd>
+                                    {
+                                        formatter.format(
+                                            checkout.total
+                                        )
+                                    }
+                                </dd>
                             </div>
                         </dl>
                     </aside>

@@ -64,7 +64,7 @@ const HydroPage = () => {
     };
 
     const [hoverMode, setHoverMode]:any = useState(null);
-    const [mode, setMode] = useState("mt4");
+    const [mode, setMode] = useState("mt5");
 
 
 
@@ -242,14 +242,14 @@ const HydroPage = () => {
                             {t.hydro.hero.botName}
                         </motion.div>*/}
                         <div className = "year_aero_handler">
-                            <div className="mt_handler">
+                            <div className="mt_handler only2026">
                                 <div
                                     className={`mt_top_handler ${
-                                        (hoverMode === "mt5" || (!hoverMode && mode === "mt5")) ? "active_mt5" : ""
+                                        (hoverMode === "mt5" || (!hoverMode && mode === "mt5")) ? "" : "active_mt5"
                                     }`}
                                 ></div>
 
-                                <div
+                                {/*<div
                                     className={`mt4 ${mode === "mt4" ? "active" : ""}`}
                                     onClick={() => {
                                         setHoverMode("mt4")
@@ -259,7 +259,7 @@ const HydroPage = () => {
                                     }}
                                 >
                                     mt5
-                                </div>
+                                </div>*/}
 
                                 <div
                                     className={`mt5 ${mode === "mt5" ? "active" : ""}`}
@@ -277,26 +277,20 @@ const HydroPage = () => {
                             <div className={`mt_handler ${mode === "mt4" ? "only2026" : ""}`}>
                                 <div
                                     className={`mt_top_handler ${
-                                        (hoverModeYear === "2026" || (!hoverModeYear && modeYear === "2026")) ? "" : "active_mt5"
+                                        modeYear === "2026" ? "active_mt5" : ""
                                     }`}
-                                ></div>
+                                />
 
                                 <div
                                     className={`mt4 ${modeYear === "2025" ? "active" : ""}`}
-                                    onClick={() => {
-                                        setHoverModeYear("2026")
-                                        setModeYear("2025")
-                                    }}
+                                    onClick={() => setModeYear("2025")}
                                 >
                                     2025
                                 </div>
 
                                 <div
                                     className={`mt5 ${modeYear === "2026" ? "active" : ""}`}
-                                    onClick={() => {
-                                        setHoverModeYear("2025")
-                                        setModeYear("2026")
-                                    }}
+                                    onClick={() => setModeYear("2026")}
                                 >
                                     2026
                                 </div>

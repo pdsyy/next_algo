@@ -76,6 +76,8 @@ import CartExample from "@/components/cartPopup/CartExample";
 
 const MotionImage = motion.create(Image);
 
+const FIRST_DEAL_STEP_TIMES = [0.55, 1.83, 3.54, 4.96] as const;
+
 const MainPage = ({activePopup, setActivePopup}: any) => {
 
     const [zoom, setZoom] = useState(0)
@@ -83,6 +85,7 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
 
     const [isMobile, setIsMobile] = useState(false);
     const [activeTrackRecord, setActiveTrackRecord] = useState(0);
+    const [visibleFirstDealSteps, setVisibleFirstDealSteps] = useState(0);
     const [isTrackRecordPaused, setIsTrackRecordPaused] =
         useState(false);
     useEffect(() => {
@@ -177,7 +180,7 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
     const faqElements = t.home.faq;
 
 
-    const fastEase = [0.25, 0.1, 0.25, 1.0];
+    const fastEase = [0.25, 0.1, 0.25, 1.0] as const;
 
     const pointVariants: any = {
         hidden: {
@@ -280,6 +283,49 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
         if (!video) return;
 
         let hasStarted = false;
+        let revealedSteps = 0;
+        let animationFrameId: number | null = null;
+
+        const syncStepsWithVideo = () => {
+            animationFrameId = null;
+
+            const nextRevealedSteps = FIRST_DEAL_STEP_TIMES.reduce(
+                (count, time) => count + Number(video.currentTime >= time),
+                0,
+            );
+
+            if (nextRevealedSteps !== revealedSteps) {
+                revealedSteps = nextRevealedSteps;
+                setVisibleFirstDealSteps(nextRevealedSteps);
+            }
+
+            if (!video.paused && !video.ended) {
+                animationFrameId = window.requestAnimationFrame(
+                    syncStepsWithVideo,
+                );
+            }
+        };
+
+        const startStepSync = () => {
+            if (animationFrameId === null) {
+                animationFrameId = window.requestAnimationFrame(
+                    syncStepsWithVideo,
+                );
+            }
+        };
+
+        const finishStepSync = () => {
+            revealedSteps = FIRST_DEAL_STEP_TIMES.length;
+            setVisibleFirstDealSteps(FIRST_DEAL_STEP_TIMES.length);
+
+            if (animationFrameId !== null) {
+                window.cancelAnimationFrame(animationFrameId);
+                animationFrameId = null;
+            }
+        };
+
+        video.addEventListener("play", startStepSync);
+        video.addEventListener("ended", finishStepSync);
 
         const observer = new IntersectionObserver(
             ([entry]) => {
@@ -290,6 +336,8 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                     hasStarted = true;
 
                     video.currentTime = 0;
+                    revealedSteps = 0;
+                    setVisibleFirstDealSteps(0);
 
                     video.play().catch(error => {
                         console.error(
@@ -310,9 +358,38 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
 
         return () => {
             observer.disconnect();
+
+            video.removeEventListener("play", startStepSync);
+            video.removeEventListener("ended", finishStepSync);
+
+            if (animationFrameId !== null) {
+                window.cancelAnimationFrame(animationFrameId);
+            }
+
             video.pause();
         };
     }, []);
+
+    const firstDealStepAnimation = (
+        index: number,
+    ): HTMLMotionProps<any> => ({
+        initial: {
+            opacity: 0,
+            y: 36,
+        },
+        animate:
+            isMobile || visibleFirstDealSteps > index ? {
+                    opacity: 1,
+                    y: 0,
+                } : {
+                    opacity: 0,
+                    y: 36,
+                },
+        transition: {
+            duration: 0.45,
+            ease: fastEase,
+        },
+    });
 
 
     return (
@@ -674,7 +751,10 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                     />
 
                     <Image src={first_step_bg_mobile} alt="" className="first_step_bg desk_none"/>
-                    <div className="step_container choose_algorithm">
+                    <motion.div
+                        className="step_container choose_algorithm"
+                        {...firstDealStepAnimation(0)}
+                    >
                         <div className="step_name">
                             {t.steps.chooseAlgorithm.title}
                         </div>
@@ -682,9 +762,12 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                         <div className="step_desc">
                             {t.steps.chooseAlgorithm.desc}
                         </div>
-                    </div>
+                    </motion.div>
 
-                    <div className="step_container connect">
+                    <motion.div
+                        className="step_container connect"
+                        {...firstDealStepAnimation(1)}
+                    >
                         <div className="step_name">
                             {t.steps.connect.title}
                         </div>
@@ -692,9 +775,12 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                         <div className="step_desc">
                             {t.steps.connect.desc}
                         </div>
-                    </div>
+                    </motion.div>
 
-                    <div className="step_container autonomous_trading">
+                    <motion.div
+                        className="step_container autonomous_trading"
+                        {...firstDealStepAnimation(2)}
+                    >
                         <div className="step_name">
                             {t.steps.autonomousTrading.title}
                         </div>
@@ -702,9 +788,12 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                         <div className="step_desc">
                             {t.steps.autonomousTrading.desc}
                         </div>
-                    </div>
+                    </motion.div>
 
-                    <div className="step_container monitoring">
+                    <motion.div
+                        className="step_container monitoring"
+                        {...firstDealStepAnimation(3)}
+                    >
                         <div className="step_name">
                             {t.steps.monitoring.title}
                         </div>
@@ -712,7 +801,7 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                         <div className="step_desc">
                             {t.steps.monitoring.desc}
                         </div>
-                    </div>
+                    </motion.div>
                     {/*<div className="first_deal_details">
                         <motion.div className="first_deal_image" {...fadeLeft}>
                             <img src={users_profit.src} alt=""/>

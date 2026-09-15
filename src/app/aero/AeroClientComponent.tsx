@@ -546,7 +546,7 @@ const AeroClientComponent = () => {
                             </div>
                         </div>
 
-                        <div className="bottom_buttons_block aero_purchase_block">
+                        <div className="bottom_buttons_block">{/* aero_purchase_block*/}
                             <AddToCartButton className="button_buy_bottom" product={{
                                 id: "aero-ea",
                                 name: "AERO EA",
@@ -556,13 +556,13 @@ const AeroClientComponent = () => {
                             }}>
                                 {t.terra.buy.buy}
                             </AddToCartButton>
-                            <a className="open_mql5_bottom"
+                            {/* <a className="open_mql5_bottom"
                                href="https://www.mql5.com/en/market/product/176860?source=Site+Market+My+Products+Page#description"
                                target="_blank"
                                rel="noopener noreferrer">
                                 {t.buttons.openMql}
                                 <img src={mql5_button.src} alt=""/>
-                            </a>
+                            </a>*/}
                             {/* <div className="piece_pay_bottom" onClick={() => setIsActive(true)}>
                                 {t.terra.buy.parts}
                             </div>*/}

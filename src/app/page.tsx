@@ -628,7 +628,7 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                     <motion.h2 {...fadeUp} dangerouslySetInnerHTML={{__html: t.home.steps.title}}/>
                     <video
                         ref = {videoBgRef}
-                        src="/videos/hf_20260911_131253_90364bde-5ea4-45b6-8c5b-768230db40e2.mp4"
+                        src="/videos/hf_20260915_073128_d07013bf-9ede-489a-9fcb-89e8b945e911.mp4"
                         muted
                         playsInline
                         preload = "auto"

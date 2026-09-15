@@ -154,6 +154,7 @@ const TerraPage = () => {
                         src="/images/terraMainVideo.mp4"
                         autoPlay
                         preload="metadata"
+                        poster="/terra-video-poster.jpg"
                         muted
                         loop
                         playsInline

@@ -83,6 +83,8 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
 
     const [isMobile, setIsMobile] = useState(false);
     const [activeTrackRecord, setActiveTrackRecord] = useState(0);
+    const [isTrackRecordPaused, setIsTrackRecordPaused] =
+        useState(false);
     useEffect(() => {
         if (window.innerWidth < 768) {
             setZoom(2.8)
@@ -93,6 +95,22 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
         }
     }, [])
     const {t, language, setLanguage} = useLanguage();
+
+
+    useEffect(() => {
+        if (isTrackRecordPaused) return;
+
+        const timer = window.setInterval(() => {
+            setActiveTrackRecord(current =>
+                (current + 1) % 3
+            );
+        }, 3000);
+
+        return () => {
+            window.clearInterval(timer);
+        };
+    }, [isTrackRecordPaused]);
+
 
 
     useEffect(() => {
@@ -261,12 +279,26 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
 
         if (!video) return;
 
+        let hasStarted = false;
+
         const observer = new IntersectionObserver(
             ([entry]) => {
-                if (entry.isIntersecting) {
+                if (
+                    entry.isIntersecting &&
+                    !hasStarted
+                ) {
+                    hasStarted = true;
+
+                    video.currentTime = 0;
+
                     video.play().catch(error => {
-                        console.error("VIDEO PLAY ERROR:", error);
+                        console.error(
+                            "VIDEO PLAY ERROR:",
+                            error,
+                        );
                     });
+
+                    observer.unobserve(video);
                 }
             },
             {
@@ -519,7 +551,12 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                     </div>
                 </motion.div>*/}
                 <div className="track_record_container_gradient">
-                    <div className="track_record_container">
+                    <div className="track_record_container"  onMouseEnter={() =>
+                        setIsTrackRecordPaused(true)
+                    }
+                         onMouseLeave={() =>
+                             setIsTrackRecordPaused(false)
+                         }>
                         <div className="track_record_container_grid">
 
                             <div className="track_record_info">
@@ -628,7 +665,8 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                     <motion.h2 {...fadeUp} dangerouslySetInnerHTML={{__html: t.home.steps.title}}/>
                     <video
                         ref = {videoBgRef}
-                        src="/videos/hf_20260915_073128_d07013bf-9ede-489a-9fcb-89e8b945e911.mp4"
+                        src="/videos/hf_2.mp4"
+                        poster = "/journey_video_poster.jpg"
                         muted
                         playsInline
                         preload = "auto"

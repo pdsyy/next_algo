@@ -8,9 +8,7 @@ import crypto from "crypto";
 import {getCmlOrder, recordCmlPayment,} from "@/lib/cml";
 
 import {sendTelegramPurchaseNotification,} from "@/lib/telegram";
-import {
-    sendPurchaseEmailNotification,
-} from "@/lib/order-email";
+import {sendPurchaseEmailNotification,} from "@/lib/order-email";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -774,29 +772,29 @@ export async function POST(
         const products =
             extractProductNames(order);
 
-        try {
-            await sendTelegramPurchaseNotification({
-                orderCode,
-                paymentId,
-                amount: orderAmount,
-                currency: cmlCurrency,
-                payCurrency: paymentMethod,
-                products,
-                customerName,
-                email,
-            });
+        /* try {
+             await sendTelegramPurchaseNotification({
+                 orderCode,
+                 paymentId,
+                 amount: orderAmount,
+                 currency: cmlCurrency,
+                 payCurrency: paymentMethod,
+                 products,
+                 customerName,
+                 email,
+             });
 
-            console.log(
-                "TELEGRAM PURCHASE NOTIFICATION SENT",
-            );
-        } catch (telegramError) {
-            // Ошибка Telegram не должна отменять
-            // уже успешно проведённую покупку.
-            console.error(
-                "TELEGRAM NOTIFICATION ERROR:",
-                telegramError,
-            );
-        }
+             console.log(
+                 "TELEGRAM PURCHASE NOTIFICATION SENT",
+             );
+         } catch (telegramError) {
+             // Ошибка Telegram не должна отменять
+             // уже успешно проведённую покупку.
+             console.error(
+                 "TELEGRAM NOTIFICATION ERROR:",
+                 telegramError,
+             );
+         }*/
 
 
 

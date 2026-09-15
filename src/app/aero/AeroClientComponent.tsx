@@ -149,6 +149,7 @@ const AeroClientComponent = () => {
                 <motion.div className="main_video_block" {...fadeLeft}>
                     <video
                         src="/images/aeroMainVideo.mp4"
+                        poster = "/aero-video-poster.jpg"
                         autoPlay
                         muted
                         loop

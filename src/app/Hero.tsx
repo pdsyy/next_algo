@@ -206,7 +206,6 @@ const MainHero = ({
                 </div>
             </div>
 
-            {/* На мобильном вместо видео выводится обычная картинка */}
             {isMobile && (
                 <div
                     className="mobile_hero_static"
@@ -223,7 +222,6 @@ const MainHero = ({
                 </div>
             )}
 
-            {/* Позиционируемый слой аватаров нужен только на компьютере */}
             {!isMobile && avatarPosition && (
                 <Image
                     src={avatarsSrc}

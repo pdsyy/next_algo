@@ -5,10 +5,9 @@ import {
 
 import crypto from "crypto";
 
-import {
-    getCmlOrder,
-    recordCmlPayment,
-} from "@/lib/cml";
+import {getCmlOrder, recordCmlPayment,} from "@/lib/cml";
+
+import {sendTelegramPurchaseNotification,} from "@/lib/telegram";
 
 
 export const runtime = "nodejs";
@@ -197,9 +196,84 @@ function normalizeAmount(
 }
 
 
-/* =========================
-   POST WEBHOOK
-========================= */
+function extractProductNames(order: any): string[] {
+    const items: any[] =
+        Array.isArray(order?.items)
+            ? order.items
+            : Array.isArray(order?.order_items)
+                ? order.order_items
+                : Array.isArray(order?.lines)
+                    ? order.lines
+                    : [];
+
+    const names = items.reduce<string[]>(
+        (result, item) => {
+            const value: unknown =
+                item?.product?.title ??
+                item?.product?.name ??
+                item?.product?.code ??
+                item?.product_title ??
+                item?.product_name ??
+                item?.program?.name ??
+                item?.program_name ??
+                item?.title ??
+                item?.name ??
+                item?.code;
+
+            if (typeof value === "string") {
+                const name = value.trim();
+
+                if (name) {
+                    result.push(name);
+                }
+            }
+
+            return result;
+        },
+        [],
+    );
+
+    return [...new Set<string>(names)];
+}
+
+function extractCustomer(order: any) {
+    const customer =
+        order?.customer ??
+        order?.customer_data ??
+        {};
+
+    const firstName =
+        customer?.first_name ??
+        customer?.firstName ??
+        "";
+
+    const lastName =
+        customer?.last_name ??
+        customer?.lastName ??
+        "";
+
+    const customerName =
+        [firstName, lastName]
+            .filter(Boolean)
+            .join(" ")
+            .trim();
+
+    const email =
+        customer?.email ??
+        order?.customer_email ??
+        order?.email ??
+        "";
+
+    return {
+        customerName,
+        email:
+            typeof email === "string"
+                ? email.trim()
+                : "",
+    };
+}
+
+
 
 export async function POST(
     req: NextRequest
@@ -689,6 +763,38 @@ export async function POST(
                 2
             )
         );
+
+        const {
+            customerName,
+            email,
+        } = extractCustomer(order);
+
+        const products =
+            extractProductNames(order);
+
+        try {
+            await sendTelegramPurchaseNotification({
+                orderCode,
+                paymentId,
+                amount: orderAmount,
+                currency: cmlCurrency,
+                payCurrency: paymentMethod,
+                products,
+                customerName,
+                email,
+            });
+
+            console.log(
+                "TELEGRAM PURCHASE NOTIFICATION SENT",
+            );
+        } catch (telegramError) {
+            // Ошибка Telegram не должна отменять
+            // уже успешно проведённую покупку.
+            console.error(
+                "TELEGRAM NOTIFICATION ERROR:",
+                telegramError,
+            );
+        }
 
 
         /* =========================

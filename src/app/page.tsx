@@ -254,6 +254,35 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
     };
 
 
+    const videoBgRef = useRef<HTMLVideoElement>(null);
+
+    useEffect(() => {
+        const video = videoBgRef.current;
+
+        if (!video) return;
+
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    video.play().catch(error => {
+                        console.error("VIDEO PLAY ERROR:", error);
+                    });
+                }
+            },
+            {
+                threshold: 0.4,
+            },
+        );
+
+        observer.observe(video);
+
+        return () => {
+            observer.disconnect();
+            video.pause();
+        };
+    }, []);
+
+
     return (
 
         <div className="main_page">
@@ -597,8 +626,15 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
 
                 <div className="first_deal_block" id="how-it-works">
                     <motion.h2 {...fadeUp} dangerouslySetInnerHTML={{__html: t.home.steps.title}}/>
+                    <video
+                        ref = {videoBgRef}
+                        src="/videos/hf_20260911_131253_90364bde-5ea4-45b6-8c5b-768230db40e2.mp4"
+                        muted
+                        playsInline
+                        preload = "auto"
+                        className="first_step_bg mob_none"
+                    />
 
-                    <Image src={first_step_bg} alt="" className="first_step_bg mob_none"/>
                     <Image src={first_step_bg_mobile} alt="" className="first_step_bg desk_none"/>
                     <div className="step_container choose_algorithm">
                         <div className="step_name">

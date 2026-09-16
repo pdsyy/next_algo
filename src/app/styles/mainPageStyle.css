@@ -341,7 +341,7 @@
 
     .motion_block_anim {
         animation: companyMove 40s infinite ease-in-out !important;
-        padding: 0 12px;
+        padding: 0 24px;
     }
 
     .algo_reveal_base_image {
@@ -458,10 +458,18 @@
 
 }
 
-.market-7, .market-8, .market-9, .market-10 {
+.market-9, .market-10 {
     width: 142px;
     max-height: max-content !important;
     flex-shrink: 0;
+}
+.market-11{
+    display: none;
+}
+
+.market-8{
+    max-height: 35px !important;
+    width: auto;
 }
 .market_list{
     height: 48px;
@@ -687,6 +695,22 @@
 
 .track_record_item:hover{
     background: rgba(0,0,0,0.025);
+}
+
+.market-1, .market-5, .market-7{
+    filter: brightness(0);
+}
+.market-1{
+    max-height: 35px !important;
+}
+
+.market-2{
+    height: auto !important;
+    margin: 0 -38px !important;
+}
+
+.market-5{
+    max-height: 32px !important;
 }
 
 .image_magnifier_lens {
@@ -2050,17 +2074,6 @@ h2 span {
         overflow: hidden;
     }
 
-    .market-8, .market-20{
-        height: 160% !important;
-        max-height: unset !important;
-        width: auto !important;
-    }
-
-    .market-9, .market-21{
-        width: 136px !important;
-        max-height: unset !important;
-        height: auto !important;
-    }
 
 
 
@@ -2295,9 +2308,6 @@ h2 span {
         color: #232323;
     }
 
-    .market_list img {
-        height: 100%;
-    }
 
     .advantages_point {
         border-right: none;

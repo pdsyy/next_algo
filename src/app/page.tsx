@@ -16,7 +16,6 @@ import market_image8 from "./images/market_image8.png"
 import market_image9 from "./images/market_image9.png"
 import market_image10 from "./images/market_image10.png"
 import market_image11 from "./images/market_image11.png"
-import market_image12 from "./images/market_image12.png"
 import mql_pl from "./images/mql_pl.svg"
 import mql5_2x from "./images/mql_f.png"
 import metaTrader_icon from "./images/metaTrader_icon_light.svg"
@@ -89,14 +88,20 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
     const [isTrackRecordPaused, setIsTrackRecordPaused] =
         useState(false);
     useEffect(() => {
-        if (window.innerWidth < 768) {
-            setZoom(2.8)
-            setIsMobile(true);
-        } else {
-            setIsMobile(false)
-            setZoom(1.6)
-        }
-    }, [])
+        const updateViewport = () => {
+            const mobile = window.innerWidth < 768;
+
+            setIsMobile(mobile);
+            setZoom(mobile ? 2.8 : 1.6);
+        };
+
+        updateViewport();
+        window.addEventListener("resize", updateViewport);
+
+        return () => {
+            window.removeEventListener("resize", updateViewport);
+        };
+    }, []);
     const {t, language, setLanguage} = useLanguage();
 
 
@@ -233,7 +238,7 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
 
     const marketImages = [
         market_image1, market_image2, market_image3, market_image4, market_image5, market_image6,
-        market_image7, market_image8, market_image9, market_image10, market_image11, market_image12
+        market_image7, market_image8, market_image9, market_image10, market_image11
     ];
 
     const [isActive, setIsActive] = useState(false)
@@ -372,24 +377,41 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
 
     const firstDealStepAnimation = (
         index: number,
-    ): HTMLMotionProps<any> => ({
-        initial: {
-            opacity: 0,
-            y: 36,
-        },
-        animate:
-            isMobile || visibleFirstDealSteps > index ? {
+    ): HTMLMotionProps<any> => {
+        if (isMobile) {
+            return {
+                initial: false,
+                animate: {
                     opacity: 1,
                     y: 0,
-                } : {
-                    opacity: 0,
-                    y: 36,
                 },
-        transition: {
-            duration: 0.45,
-            ease: fastEase,
-        },
-    });
+                transition: {
+                    duration: 0,
+                },
+            };
+        }
+
+        return {
+            initial: {
+                opacity: 0,
+                y: 36,
+            },
+            animate:
+                visibleFirstDealSteps > index
+                    ? {
+                        opacity: 1,
+                        y: 0,
+                    }
+                    : {
+                        opacity: 0,
+                        y: 36,
+                    },
+            transition: {
+                duration: 0.45,
+                ease: fastEase,
+            },
+        };
+    };
 
 
     return (
@@ -427,7 +449,7 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                             {[...Array(12)].map((_, i) => (
                                 <img
                                     key={i}
-                                    src={marketImages[i % 12].src}
+                                    src={marketImages[i % 11].src}
                                     alt={`market-${i}`}
                                     className={`market-${i}`}
                                 />
@@ -883,7 +905,7 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
 
                                     <div className="bot_gradient_border" key={idx}>
                                         <div className="bot_item">
-                                            {el.name === "Aero EA" ? <img src={mql_pl.src} alt="" className="mql_pl"/> : ""}
+                                            {/*el.name === "Aero EA" ? <img src={mql_pl.src} alt="" className="mql_pl"/> : ""*/}
                                             <div className="bot_image">
                                                 {/*el.prop && <div className="prop_pl">{t.home.catalog.propLabel}</div>*/}
                                                 <img src={el.image.src} alt={el.name}/>

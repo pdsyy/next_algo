@@ -3069,7 +3069,7 @@ const AlgoReveal = () => {
 
             <video
                 ref={videoRef}
-                src="/videos/hero-block-bg-video.mp4"
+                src="/videos/hero-block-bg-video2.mp4"
                 poster = "/hero-video-poster.webp"
                 autoPlay
                 muted

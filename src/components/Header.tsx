@@ -83,13 +83,13 @@ const Header = ({dark, visibleHeader, setVisibleHeader}: HeaderProps) => {
                                alt=""
                         />
                         <div className={`bots_list_desk_menu ${activeBotList ? "active_bot_list" : ""}`}>
-                            <a href="/terra">
+                            <a href="/terra" className = 'dis_none'>
                                 <div className="menu_item">Terra EA</div>
                             </a>
                             <a href="/aero">
                                 <div className="menu_item">Aero EA</div>
                             </a>
-                            <a href="/hydro">
+                            <a href="/hydro" className = 'dis_none'>
                                 <div className="menu_item">Hydro EA</div>
                             </a>
                             {/*<a href="/prop">
@@ -175,13 +175,13 @@ const Header = ({dark, visibleHeader, setVisibleHeader}: HeaderProps) => {
                     />
                 </div>
                 <div className={`bots_list_mob_menu ${activeBotList ? "active_bot_list" : ""}`}>
-                    <a href="/terra">
+                    <a href="/terra" className = 'dis_none'>
                         <div className="menu_item">Terra EA</div>
                     </a>
                     <a href="/aero">
                         <div className="menu_item">Aero EA</div>
                     </a>
-                    <a href="/hydro">
+                    <a href="/hydro" className = 'dis_none'>
                         <div className="menu_item">Hydro EA</div>
                     </a>
                     {/*<a href="/prop">

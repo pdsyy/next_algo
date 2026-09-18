@@ -1514,7 +1514,8 @@ export const translations = {
                 title: "Каталог ботів",
                 propLabel: "Підходить під проп",
                 payingLabel: "Оплата частинами",
-                moreDetails: "Детальніше"
+                moreDetails: "Детальніше",
+                comingSoon: "Незабаром"
             },
             reviews: {
                 titleAccent: "Що кажуть ті,",
@@ -3364,7 +3365,8 @@ export const translations = {
                 title: "Каталог ботов",
                 propLabel: "Подходит под проп",
                 payingLabel: "Оплата частями",
-                moreDetails: "Подробнее"
+                moreDetails: "Подробнее",
+                comingSoon: "Скоро"
             },
             reviews: {
                 titleAccent: "Что говорят те,",
@@ -5084,7 +5086,8 @@ export const translations = {
                 title: "Bot Catalog",
                 propLabel: "Suitable for Prop",
                 payingLabel: "Installments",
-                moreDetails: "More details"
+                moreDetails: "More details",
+                comingSoon: "Coming soon"
             },
             reviews: {
                 titleAccent: "What those say who",

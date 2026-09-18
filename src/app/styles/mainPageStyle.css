@@ -1110,6 +1110,105 @@ h2 {
     max-width: 258px;
 }
 
+
+@media (min-width: 768px) and (max-width: 1400px) {
+    .first_deal_block {
+        /* Ширина блока теперь плавно подстраивается под экран в этом диапазоне */
+        width: calc(100vw - 48px);
+        max-width: 1344px;
+        /* Высота автоматически следует за пропорциями картинки/видео (aspect-ratio сохраняется) */
+    }
+
+    .step_name {
+        font-size: clamp(14px, 1.49vw, 20px);
+    }
+
+    .step_desc {
+        margin-top: clamp(8px, 1.12vw, 15px);
+        font-size: clamp(11px, 1.04vw, 14px);
+    }
+
+    /* Точное позиционирование блоков с учетом пропорций макета 1344px */
+    .step_container.choose_algorithm {
+        max-width: clamp(220px, 22.47vw, 302px);
+        top: clamp(100px, 12.65vw, 170px);
+        left: clamp(30px, 4.91vw, 66px);
+    }
+
+    .step_container.connect {
+        bottom: clamp(30px, 4.17vw, 56px);
+        left: clamp(250px, 30.06vw, 404px);
+        max-width: clamp(230px, 24.11vw, 324px);
+    }
+
+    .step_container.autonomous_trading {
+        top: clamp(60px, 8.11vw, 109px);
+        right: clamp(240px, 25vw, 336px);
+        max-width: clamp(180px, 19.2vw, 258px);
+    }
+
+    .step_container.monitoring {
+        right: clamp(30px, 4.02vw, 54px);
+        bottom: clamp(30px, 4.32vw, 58px);
+        max-width: clamp(180px, 19.2vw, 258px);
+    }
+}
+
+.bot_gradient_border.coming_soon .bot_item div:not(.bot_more_details):not(.coming_soon_label){
+    filter: blur(8px);
+    pointer-events: none;
+}
+
+.bot_gradient_border.coming_soon .bot_more_details{
+    background: #DCDCDC !important;
+    color: #5C5C5C !important;
+    cursor: not-allowed;
+}
+
+.bot_gradient_border.coming_soon a{
+    pointer-events: none;
+    user-select: none;
+}
+
+.coming_soon_label{
+    display: flex;
+    align-items: center;
+    height: 77px;
+    padding: 0 25px;
+    gap: 10px;
+    color: #FFFFFF;
+    font-family: Inter;
+    font-weight: 500;
+    font-size: 25.74px;
+    line-height: 32.18px;
+    letter-spacing: -0.6%;
+    background: #0000000D;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 140px;
+    white-space: nowrap;
+    border-radius: 200px;
+
+}
+
+.coming_soon_label img{
+    width: 24px;
+}
+
+@media screen and (min-width: 768px) and (max-width: 1000px) {
+    .first_deal_block {
+        aspect-ratio: 1344 / 741 !important;
+    }
+
+    .step_container.autonomous_trading {
+        top: 91px !important;
+        transform: none !important;
+        right: 22vw !important;
+    }
+}
+
+
 @media screen and (min-width: 1919px) {
     .main_page_prop_container {
         background: #000000 url("/images/propBotBg.png") no-repeat 139px -100px;
@@ -1336,10 +1435,17 @@ h2 span {
     margin-top: auto;
 }
 
+.dis_none{
+    display: none !important;
+}
+.bots_list_mob_menu.active_bot_list{
+height: 52px !important;
+}
+
 .bot_image {
     position: relative;
     width: 100%;
-    height: 300px;
+    height: 313px;
     overflow: hidden;
     display: flex;
     justify-content: center;
@@ -2032,7 +2138,7 @@ h2 span {
     }
 
     .step_container.choose_algorithm{
-        top: 125px !important;
+        top: 137px !important;
     }
 
     .step_container.connect{
@@ -2058,16 +2164,16 @@ h2 span {
 
 
     .first_step_bg.desk_none{
-        width: 479px;
+        width: auto;
         height: unset;
-        aspect-ratio: 479 / 852;
-        left: -182px;
-        top: 17px;
+        aspect-ratio: 122 / 602;
+        left: 0;
+        top: 104px;
     }
 
     .first_deal_block{
         aspect-ratio: auto;
-        height: 810px;
+        height: 713px;
         width: 100%;
         max-width: 100%;
         display: block;

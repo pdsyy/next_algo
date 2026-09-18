@@ -5,6 +5,7 @@ import Image from "next/image";
 import track_record_main from "./images/track_record_main.png"
 import first_step_bg from "./images/first_trade_bg.png"
 import first_step_bg_mobile from "./images/first_step_bg_mobile.png"
+import clock_icon from "./images/clock_icon.svg"
 import market_image1 from "./images/market_image1.png"
 import market_image2 from "./images/market_image2.png"
 import market_image3 from "./images/market_image3.png"
@@ -858,7 +859,7 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                     <div className="bots_list">
                         {botsList.map((el: any, idx: number) => {
                                 return !isMobile ?
-                                    <motion.div className="bot_gradient_border" key={idx} {...fadeNumeric} custom={idx}>
+                                    <motion.div className={`bot_gradient_border ${el.name !== "Aero EA" ? "coming_soon" : ""}`} key={idx} {...fadeNumeric} custom={idx}>
                                         <div className="bot_item">
                                             {/*el.name === "Aero EA" ? <img src={mql_pl.src} alt="" className="mql_pl"/> : ""*/}
                                             <div className="bot_image">
@@ -893,17 +894,51 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                                                 </div>
                                             </div>
 
-                                            <a href={el.href}>
+                                            <a href={el.name === "Aero EA" ? el.href : ""}>
                                                 <div className="bot_more_details">
-                                                    {t.home.catalog.moreDetails}
+                                                    {el.name === "Aero EA" ? t.home.catalog.moreDetails : t.home.catalog.comingSoon}
                                                 </div>
                                             </a>
+                                            {el.name !== "Aero EA" ?
+                                                <div className = "coming_soon_label liquidGlass-wrapper">
+                                                    <div className="liquidGlass-tint"></div>
+                                                    <div className="liquidGlass-text"></div>
+                                                    {t.home.catalog.comingSoon} <img src = {clock_icon.src} alt = ""/>
+                                                    <svg style={{position: 'absolute', width: 0, height: 0, pointerEvents: 'none'}} aria-hidden="true">
+                                                        <filter
+                                                            id="glass-distortion"
+                                                            x="-20%"
+                                                            y="-20%"
+                                                            width="140%"
+                                                            height="140%"
+                                                            filterUnits="objectBoundingBox"
+                                                        >
+                                                            <feTurbulence type="fractalNoise" baseFrequency="0.01 0.01" numOctaves="2" seed="5"
+                                                                          result="turbulence"/>
+                                                            <feComponentTransfer in="turbulence" result="mapped">
+                                                                <feFuncR type="gamma" amplitude="1" exponent="10" offset="0.5"/>
+                                                                <feFuncG type="gamma" amplitude="0" exponent="1" offset="0"/>
+                                                                <feFuncB type="gamma" amplitude="0" exponent="1" offset="0.5"/>
+                                                            </feComponentTransfer>
+                                                            <feGaussianBlur in="turbulence" stdDeviation="3" result="softMap"/>
+                                                            <feSpecularLighting in="softMap" surfaceScale="5" specularConstant="1" specularExponent="100"
+                                                                                lightingColor="white" result="specLight">
+                                                                <fePointLight x="-200" y="-200" z="300"/>
+                                                            </feSpecularLighting>
+                                                            <feComposite in="specLight" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" result="litImage"/>
+                                                            <feDisplacementMap in="SourceGraphic" in2="softMap" scale="50" xChannelSelector="R"
+                                                                               yChannelSelector="G"/>
+                                                        </filter>
+                                                    </svg>
+                                                     </div>
+                                                : ""}
+
 
                                         </div>
                                     </motion.div>
                                     :
 
-                                    <div className="bot_gradient_border" key={idx}>
+                                    <div className={`bot_gradient_border ${el.name !== "Aero EA" ? "coming_soon" : ""}`} key={idx}>
                                         <div className="bot_item">
                                             {/*el.name === "Aero EA" ? <img src={mql_pl.src} alt="" className="mql_pl"/> : ""*/}
                                             <div className="bot_image">
@@ -941,9 +976,14 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
 
                                             <a href={el.href}>
                                                 <div className="bot_more_details">
-                                                    {t.home.catalog.moreDetails}
+                                                    {el.name == "Aero EA" ? t.home.catalog.moreDetails : t.home.catalog.comingSoon}
                                                 </div>
                                             </a>
+                                            {el.name !== "Aero EA" ?
+                                                <div className = "coming_soon_label">
+                                                    {t.home.catalog.comingSoon} <img src = {clock_icon.src} alt = ""/>
+                                                </div>
+                                                : ""}
 
                                         </div>
                                     </div>

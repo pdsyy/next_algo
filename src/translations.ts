@@ -1392,7 +1392,7 @@ export const translations = {
                 },
                 {
                     name: "Aero EA",
-                    description: "Бот з найнижчою просадкою в асортименті.",
+                    description: "Торговий бот для XAUUSD (золота), створений на основі стратегії пробою азійського діапазону.",
                     advantages: {yearProfit: "+30%", maxDrawDown: "3.7%", winRate: "86.8%"},
                     price: 1200,
                     href: "/aero",
@@ -3242,7 +3242,7 @@ export const translations = {
                 },
                 {
                     name: "Aero EA",
-                    description: "Бот с самой низкой просадкой в ассортименте.",
+                    description: "Торговый бот для XAUUSD (золота), созданный на основе стратегии пробоя азиатского диапазона.",
                     advantages: {yearProfit: "+30%", maxDrawDown: "3.7%", winRate: "86.8%"},
                     price: 1200,
                     href: "/aero",
@@ -4963,7 +4963,7 @@ export const translations = {
                 },
                 {
                     name: "Aero EA",
-                    description: "The bot with the lowest drawdown in the lineup.",
+                    description: "Expert Advisor for XAUUSD (Gold), built on a Asian Range breakout strategy.",
                     advantages: {yearProfit: "+30%", maxDrawDown: "3.7%", winRate: "86.8%"},
                     price: 1200,
                     href: "/aero",

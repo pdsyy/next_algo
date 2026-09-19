@@ -33,8 +33,9 @@ import effectiveImage1 from "./images/effectiveImage1.png"
 import effectiveImage2 from "./images/effectiveImage2.png"
 import effectiveImage3 from "./images/effectiveImage3.png"
 import effectiveImage4 from "./images/effectiveImage4.png"
-import bot_item1 from "./images/bot_item1_1.png"
-import bot_item2 from "./images/bot_item2_1.png"
+
+import bot_item2 from "./images/bot_item1_1.png"
+import bot_item1 from "./images/bot_item2_1.png"
 import bot_item3 from "./images/bot_item3_1.png"
 import prev_arrow from "./images/prev-arrow.svg"
 import next_arrow from "./images/next-arrow.svg"
@@ -166,10 +167,20 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
 
     const bot_images = [bot_item1, bot_item2, bot_item3];
 
-    const botsList = t.home.botsList.map((bot: any, index: number) => ({
-        ...bot,
-        image: bot_images[index]
-    }));
+    const botsList = [...t.home.botsList]
+        .sort((a, b) => {
+
+            const isAeroA = a.name.toLowerCase().includes('aero ea');
+            const isAeroB = b.name.toLowerCase().includes('aero ea');
+
+            if (isAeroA) return -1;
+            if (isAeroB) return 1;
+            return 0;
+        })
+        .map((bot: any, index: number) => ({
+            ...bot,
+            image: bot_images[index]
+        }));
 
     const reviews_images = [review_image1, review_image2, review_image3, review_image4, review_image5, review_image6];
 

@@ -1217,7 +1217,7 @@ export const translations = {
                     "Налаштування бота під проп-компанію"
                 ],
                 botName: "AERO EA",
-                botPrice: 1200
+                botPrice: 900
             }, hero: {
                 botName: "Aero EA",
                 theme: "Торговий бот з найнижчими просадками",
@@ -1394,7 +1394,7 @@ export const translations = {
                     name: "Aero EA",
                     description: "Торговий бот для XAUUSD (золота), створений на основі стратегії пробою азійського діапазону.",
                     advantages: {yearProfit: "+30%", maxDrawDown: "3.7%", winRate: "86.8%"},
-                    price: 1200,
+                    price: 900,
                     href: "/aero",
                     prop: true,
                     paying: true,
@@ -3067,7 +3067,7 @@ export const translations = {
                     "Настройка бота под проп-компанию"
                 ],
                 botName: "AERO EA",
-                botPrice: 1200
+                botPrice: 900
             }, hero: {
                 botName: "Aero EA",
                 theme: "Торговый бот с самыми низкими просадками",
@@ -3244,7 +3244,7 @@ export const translations = {
                     name: "Aero EA",
                     description: "Торговый бот для XAUUSD (золота), созданный на основе стратегии пробоя азиатского диапазона.",
                     advantages: {yearProfit: "+30%", maxDrawDown: "3.7%", winRate: "86.8%"},
-                    price: 1200,
+                    price: 900,
                     href: "/aero",
                     prop: true,
                     paying: true,
@@ -4777,7 +4777,7 @@ export const translations = {
                     "Bot configuration for prop firms"
                 ],
                 botName: "AERO EA",
-                botPrice: 1200
+                botPrice: 900
             },
             hero: {
                 botName: "Aero EA",
@@ -4965,7 +4965,7 @@ export const translations = {
                     name: "Aero EA",
                     description: "Expert Advisor for XAUUSD (Gold), built on a Asian Range breakout strategy.",
                     advantages: {yearProfit: "+30%", maxDrawDown: "3.7%", winRate: "86.8%"},
-                    price: 1200,
+                    price: 900,
                     href: "/aero",
                     prop: true,
                     paying: true,

@@ -2,6 +2,7 @@
 import React, {useEffect, useState} from 'react';
 import logo from "@/app/images/logo.svg";
 import tg_icon from "@/app/images/tg_icon.svg";
+import instagram_icon from "@/app/images/insta_icon.svg";
 import youtube_icon from "@/app/images/youtube_icon.svg";
 import {HTMLMotionProps, motion} from "framer-motion";
 import {useLanguage} from "@/context/LanguageProvider";
@@ -40,19 +41,19 @@ const Footer = () => {
                 {isMobile ?
                     <div className="society_block">
                         <div>
-                            <a href={language === "EN" ? "https://t.me/algoworId" : "https://t.me/+uKCqVOr1OAE2ZmQy"}
+                            <a href="https://t.me/+uKCqVOr1OAE2ZmQy"
                                target="_blank" rel="noreferrer">
                                 <img src={tg_icon.src} alt=""/>
                             </a>
                         </div>
-                        {/*<div>
+                        <div>
                             <a href="https://www.instagram.com/alg0_bots?igsh=NW82eGFuajRlYmpw" target="_blank"
                                rel="noreferrer">
                                 <img src={instagram_icon.src} alt=""/>
                             </a>
-                        </div>*/}
+                        </div>
                         <div>
-                            <a href={language === "EN" ? "https://www.youtube.com/channel/UCUdEXqsf87y8gSnz7FjxS8g" : "https://www.youtube.com/@alg0_ofx"}
+                            <a href="https://www.youtube.com/@alg0_ofx"
                                target="_blank"
                                rel="noreferrer">
                                 <img src={youtube_icon.src} alt=""/>
@@ -61,14 +62,14 @@ const Footer = () => {
                     </div>
 
                     : <div className="society_block">
-                        {/* <div>
+                         <div>
                            <a href="https://www.instagram.com/alg0_bots?igsh=NW82eGFuajRlYmpw">{t.terra.footer.instagram}</a>
-                        </div>*/}
-                        <div>
-                            <a href={language === "EN" ? "https://www.youtube.com/channel/UCUdEXqsf87y8gSnz7FjxS8g" : "https://www.youtube.com/@alg0_ofx"}>{t.terra.footer.youtube}</a>
                         </div>
                         <div>
-                            <a href={language === "EN" ? "https://t.me/algoworId" : "https://t.me/+uKCqVOr1OAE2ZmQy"}>{t.terra.footer.telegram}</a>
+                            <a href="https://www.youtube.com/@alg0_ofx">{t.terra.footer.youtube}</a>
+                        </div>
+                        <div>
+                            <a href="https://t.me/+uKCqVOr1OAE2ZmQy">{t.terra.footer.telegram}</a>
                         </div>
                     </div>}
             </motion.div>

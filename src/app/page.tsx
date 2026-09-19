@@ -904,6 +904,13 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                                                     <span>USD</span>
                                                 </div>
                                             </div>
+                                            {el.name === "Aero EA" ?
+                                            <div className="bot_marquee">
+                                                <div className="bot_marquee_group">
+                                                    <span>One-time payment · Lifetime access · All updates included · One-time payment · Lifetime access · </span>
+                                                </div>
+
+                                            </div> : ""}
 
                                             <a href={el.name === "Aero EA" ? el.href : ""}>
                                                 <div className="bot_more_details">
@@ -984,6 +991,14 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                                                     <span>USD</span>
                                                 </div>
                                             </div>
+
+                                            {el.name === "Aero EA" ?
+                                                <div className="bot_marquee">
+                                                    <div className="bot_marquee_group">
+                                                        <span>One-time payment · Lifetime access · All updates included · One-time payment · Lifetime access · </span>
+                                                    </div>
+
+                                                </div> : ""}
 
 
                                             <a href={el.name === "Aero EA" ? el.href : ""}>

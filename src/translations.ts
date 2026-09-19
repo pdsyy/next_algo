@@ -1175,7 +1175,7 @@ export const translations = {
                     totalIncome: "Загальний дохід",
                     finalBalance: "Підсумковий баланс",
                     description: "Terra EA в середньому робить стабільні +25% на рік/1.6% на місяць.<br/>Чим більший термін інвестицій, тим більша магія складного відсотку!",
-                    descriptionAero: "Aero EA в середньому робить стабільні +30% на рік/2.5% на місяць.<br/>Чим більший термін інвестицій, тим більша магія складного відсотку!",
+                    descriptionAero: "Aero EA в середньому робить стабільні +35% на рік/2.9% на місяць.<br/>Чим більший термін інвестицій, тим більша магія складного відсотку!",
                     descriptionHydro: "Hydro EA в середньому робить стабільні +50% на рік/4.2% на місяць.<br/>Чим більший термін інвестицій, тим більша магія складного відсотку!"
                 }
             }
@@ -1256,9 +1256,9 @@ export const translations = {
                 subtitle: "На live рахунку Aero демонструє феноменальний результат з дохідністю 2%/місяць при просадці 3.7%",
                 winrateText: "При цьому його winrate досягнув показника в 86.8%.",
                 stats: [
-                    {label: "Year profit", value: "+30%"},
-                    {label: "Max drawdown", value: "3.7%"},
-                    {label: "Winrate", value: "86.8%"}
+                    {label: "Year profit", value: "+35%"},
+                    {label: "Max drawdown", value: "10%"},
+                    {label: "Winrate", value: "85%"}
                 ],
                 button: "Дивитися статистику"
             },
@@ -1393,7 +1393,7 @@ export const translations = {
                 {
                     name: "Aero EA",
                     description: "Торговий бот для XAUUSD (золота), створений на основі стратегії пробою азійського діапазону.",
-                    advantages: {yearProfit: "+30%", maxDrawDown: "3.7%", winRate: "86.8%"},
+                    advantages: {yearProfit: "+35%", maxDrawDown: "10%", winRate: "85%"},
                     price: 900,
                     href: "/aero",
                     prop: true,
@@ -1469,17 +1469,13 @@ export const translations = {
                     answer: "Ліцензія безстрокова. Ви купуєте її один раз і користуєтеся без обмежень у часі. Прив’язка відбувається до номера рахунку під час першого запуску: один рахунок — одна активація. Якщо потрібен ще один рахунок — просто напишіть нам, і ми додамо його безкоштовно. Кількість рахунків для одного покупця не обмежена."
                 },
                 {
-                    question: "Чи можна втратити весь депозит?",
-                    answer: "Торгівля з плечем завжди несе ризик втрат, і ми не станемо стверджувати протилежне. Але наші налаштування підібрані так, щоб просадка залишалася в межах 15–20%, і ці показники підтверджуються статистикою."
-                },
-                {
                     question: "Чи отримаю я оновлення?",
                     answer: "Так, усі оновлення входять у вартість — доплачувати нічого не потрібно. Ми постійно оновлюємо своїх ботів: стежимо за їхньою роботою на реальних рахунках, адаптуємо до змін у брокерів і покращуємо фільтри входу. Частина налаштувань оновлюється на нашому боці та застосовується автоматично, без перевстановлення. Про великі оновлення ми повідомляємо та надсилаємо нову версію."
                 },
                 {
-                    question: "Як отримати консультацію?",
-                    answer: "Напишіть нам на пошту або в Telegram, де ми зможемо підібрати найбільш відповідний варіант під ваші цілі!"
-                }
+                    question: "Чи можна втратити весь депозит?",
+                    answer: "Торгівля з плечем завжди несе ризик втрат, і ми не станемо стверджувати протилежне. Але наші налаштування підібрані так, щоб просадка залишалася в межах 15–20%, і ці показники підтверджуються статистикою."
+                },
             ],
             steps: {
                 title: "<span>Шлях від налаштування</span> до першої угоди",
@@ -3038,7 +3034,7 @@ export const translations = {
                     totalIncome: "Общий доход",
                     finalBalance: "Итоговый баланс",
                     description: "Terra EA в среднем делает стабильные +25% в год/1.6% в месяц.<br/>Чем больше срок инвестиций, тем больше магия сложного процента!",
-                    descriptionAero: "Aero EA в среднем делает стабильные +30% в год/2.5% в месяц.<br/>Чем больше срок инвестиций, тем больше магия сложного процента!",
+                    descriptionAero: "Aero EA в среднем делает стабильные +35% в год/2.9% в месяц.<br/>Чем больше срок инвестиций, тем больше магия сложного процента!",
                     descriptionHydro: "Hydro EA в среднем делает стабильные +50% в год/4.2% в месяц.<br/>Чем больше срок инвестиций, тем больше магия сложного процента!"
                 }
             }
@@ -3118,9 +3114,9 @@ export const translations = {
                 subtitle: "На live счету Aero демонстрирует феноменальный результат с доходностью 2%/месяц при просадке 3.7%",
                 winrateText: "При этом его winrate достиг показателя в 86.8%.",
                 stats: [
-                    {label: "Year profit", value: "+30%"},
-                    {label: "Max drawdown", value: "3.7%"},
-                    {label: "Winrate", value: "86.8%"}
+                    {label: "Year profit", value: "+35%"},
+                    {label: "Max drawdown", value: "10%"},
+                    {label: "Winrate", value: "85%"}
                 ],
                 button: "Смотреть статистику"
             },
@@ -3255,7 +3251,7 @@ export const translations = {
                 {
                     name: "Aero EA",
                     description: "Торговый бот для XAUUSD (золота), созданный на основе стратегии пробоя азиатского диапазона.",
-                    advantages: {yearProfit: "+30%", maxDrawDown: "3.7%", winRate: "86.8%"},
+                    advantages: {yearProfit: "+35%", maxDrawDown: "10%", winRate: "85%"},
                     price: 900,
                     href: "/aero",
                     prop: true,
@@ -3319,17 +3315,13 @@ export const translations = {
                     answer: "Лицензия бессрочная. Вы покупаете её один раз и пользуетесь без ограничений по времени. Привязка происходит к номеру счёта при первом запуске: один счёт — одна активация. Если нужен ещё один счёт — просто напишите нам, и мы добавим его бесплатно. Количество счетов для одного покупателя не ограничено."
                 },
                 {
-                    question: "Можно ли потерять весь депозит?",
-                    answer: "Торговля с плечом всегда несёт риск потерь, и мы не станем утверждать обратное. Но наши настройки подобраны так, чтобы просадка оставалась в пределах 15–20%, и эти показатели подтверждаются статистикой."
-                },
-                {
                     question: "Получу ли я обновления?",
                     answer: "Да, все обновления входят в стоимость — доплачивать ничего не нужно. Мы постоянно обновляем своих ботов: следим за их работой на реальных счетах, адаптируем к изменениям у брокеров и улучшаем фильтры входа. Часть настроек обновляется на нашей стороне и применяется автоматически, без переустановки. О крупных обновлениях мы сообщаем и присылаем новую версию."
                 },
                 {
-                    question: "Как получить консультацию?",
-                    answer: "Напишите нам на почту или в Telegram, где мы сможем подобрать наиболее подходящий вариант под ваши цели!"
-                }
+                    question: "Можно ли потерять весь депозит?",
+                    answer: "Торговля с плечом всегда несёт риск потерь, и мы не станем утверждать обратное. Но наши настройки подобраны так, чтобы просадка оставалась в пределах 15–20%, и эти показатели подтверждаются статистикой."
+                },
             ], hero: {
                 title: "Ваш капитал растет — без вашего участия",
                 desc: "Торговые боты, которые самостоятельно работают по четкой стратегии — с минимальной просадкой и реальной историей на живых счетах.",
@@ -4760,7 +4752,7 @@ export const translations = {
                     totalIncome: "Total Income",
                     finalBalance: "Final Balance",
                     description: "Terra EA averages a stable +25% per year / 1.6% per month.<br/>The longer the investment period, the greater the magic of compound interest!",
-                    descriptionAero: "Aero EA averages a stable +30% per year / 2.5% per month.<br/>The longer the investment period, the greater the magic of compound interest!",
+                    descriptionAero: "Aero EA averages a stable +35% per year / 2.9% per month.<br/>The longer the investment period, the greater the magic of compound interest!",
                     descriptionHydro: "Hydro EA averages a stable +50% per year / 4.2% per month.<br/>The longer the investment period, the greater the magic of compound interest!"
                 }
             }
@@ -4842,9 +4834,9 @@ export const translations = {
                 subtitle: "On a live account, Aero demonstrates phenomenal results with a profitability of 2%/month at a drawdown of 3.7%",
                 winrateText: "Meanwhile, its win rate has reached 86.8%.",
                 stats: [
-                    {label: "Year profit", value: "+30%"},
-                    {label: "Max drawdown", value: "3.7%"},
-                    {label: "Winrate", value: "86.8%"}
+                    {label: "Year profit", value: "+35%"},
+                    {label: "Max drawdown", value: "10%"},
+                    {label: "Winrate", value: "85%"}
                 ],
                 button: "View statistics"
             },
@@ -4988,7 +4980,7 @@ export const translations = {
                 {
                     name: "Aero EA",
                     description: "Expert Advisor for XAUUSD (Gold), built on a Asian Range breakout strategy.",
-                    advantages: {yearProfit: "+30%", maxDrawDown: "3.7%", winRate: "86.8%"},
+                    advantages: {yearProfit: "+35%", maxDrawDown: "10%", winRate: "85%"},
                     price: 900,
                     href: "/aero",
                     prop: true,
@@ -5052,17 +5044,14 @@ export const translations = {
                     answer: "The licence is perpetual. You pay once and use it with no time limit. It is linked to your account number on first launch: one account — one activation. If you need another account, just write to us, and we will add it free of charge. There is no limit on the number of accounts per customer."
                 },
                 {
-                    question: "Can I lose my whole deposit?",
-                    answer: "Trading with leverage always carries the risk of loss, and we will not claim otherwise. However, our settings are designed to keep drawdown within 15–20%, and these figures are supported by our statistics."
-                },
-                {
                     question: "Will I get updates?",
                     answer: "Yes, all updates are included in the price — there is nothing extra to pay. We continuously maintain our bots: we monitor their performance on live accounts, adapt them to changes introduced by brokers, and improve the entry filters. Some settings are updated on our side and applied automatically, with no need to reinstall the bot. We will notify you about major updates and send you the new version."
                 },
                 {
-                    question: "How do I get a consultation?",
-                    answer: "Write to us by email or on Telegram, and we will help you choose the option that best fits your goals!"
-                }
+                    question: "Can I lose my whole deposit?",
+                    answer: "Trading with leverage always carries the risk of loss, and we will not claim otherwise. However, our settings are designed to keep drawdown within 15–20%, and these figures are supported by our statistics."
+                },
+
             ], hero: {
                 title: "Your capital grows — without your involvement",
                 desc: "Trading bots that operate autonomously using a clear strategy — with minimal drawdown and a real track record on live accounts.",

@@ -901,9 +901,10 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                                             </a>
                                             {el.name !== "Aero EA" ?
                                                 <div className = "coming_soon_label liquidGlass-wrapper">
+                                                    <div className="liquidGlass-effect"></div>
                                                     <div className="liquidGlass-tint"></div>
-                                                    <div className="liquidGlass-text"></div>
-                                                    {t.home.catalog.comingSoon} <img src = {clock_icon.src} alt = ""/>
+                                                    <div className="liquidGlass-text">{t.home.catalog.comingSoon} <img src = {clock_icon.src} alt = ""/></div>
+
                                                     <svg style={{position: 'absolute', width: 0, height: 0, pointerEvents: 'none'}} aria-hidden="true">
                                                         <filter
                                                             id="glass-distortion"
@@ -974,14 +975,43 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                                             </div>
 
 
-                                            <a href={el.href}>
+                                            <a href={el.name === "Aero EA" ? el.href : ""}>
                                                 <div className="bot_more_details">
-                                                    {el.name == "Aero EA" ? t.home.catalog.moreDetails : t.home.catalog.comingSoon}
+                                                    {el.name === "Aero EA" ? t.home.catalog.moreDetails : t.home.catalog.comingSoon}
                                                 </div>
                                             </a>
                                             {el.name !== "Aero EA" ?
-                                                <div className = "coming_soon_label">
-                                                    {t.home.catalog.comingSoon} <img src = {clock_icon.src} alt = ""/>
+                                                <div className = "coming_soon_label liquidGlass-wrapper">
+                                                    <div className="liquidGlass-effect"></div>
+                                                    <div className="liquidGlass-tint"></div>
+                                                    <div className="liquidGlass-text">{t.home.catalog.comingSoon} <img src = {clock_icon.src} alt = ""/></div>
+
+                                                    <svg style={{position: 'absolute', width: 0, height: 0, pointerEvents: 'none'}} aria-hidden="true">
+                                                        <filter
+                                                            id="glass-distortion"
+                                                            x="-20%"
+                                                            y="-20%"
+                                                            width="140%"
+                                                            height="140%"
+                                                            filterUnits="objectBoundingBox"
+                                                        >
+                                                            <feTurbulence type="fractalNoise" baseFrequency="0.01 0.01" numOctaves="2" seed="5"
+                                                                          result="turbulence"/>
+                                                            <feComponentTransfer in="turbulence" result="mapped">
+                                                                <feFuncR type="gamma" amplitude="1" exponent="10" offset="0.5"/>
+                                                                <feFuncG type="gamma" amplitude="0" exponent="1" offset="0"/>
+                                                                <feFuncB type="gamma" amplitude="0" exponent="1" offset="0.5"/>
+                                                            </feComponentTransfer>
+                                                            <feGaussianBlur in="turbulence" stdDeviation="3" result="softMap"/>
+                                                            <feSpecularLighting in="softMap" surfaceScale="5" specularConstant="1" specularExponent="100"
+                                                                                lightingColor="white" result="specLight">
+                                                                <fePointLight x="-200" y="-200" z="300"/>
+                                                            </feSpecularLighting>
+                                                            <feComposite in="specLight" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" result="litImage"/>
+                                                            <feDisplacementMap in="SourceGraphic" in2="softMap" scale="50" xChannelSelector="R"
+                                                                               yChannelSelector="G"/>
+                                                        </filter>
+                                                    </svg>
                                                 </div>
                                                 : ""}
 

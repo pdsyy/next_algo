@@ -1154,7 +1154,7 @@ h2 {
     }
 }
 
-.bot_gradient_border.coming_soon .bot_item div:not(.bot_more_details):not(.coming_soon_label){
+.bot_gradient_border.coming_soon .bot_item div:not(.bot_more_details):not(.coming_soon_label):not(.coming_soon_label div){
     filter: blur(8px);
     pointer-events: none;
 }
@@ -1171,17 +1171,12 @@ h2 {
 }
 
 .coming_soon_label{
+    overflow: hidden;
+    border: 1px solid whitesmoke;
     display: flex;
     align-items: center;
     height: 77px;
     padding: 0 25px;
-    gap: 10px;
-    color: #FFFFFF;
-    font-family: Inter;
-    font-weight: 500;
-    font-size: 25.74px;
-    line-height: 32.18px;
-    letter-spacing: -0.6%;
     background: #0000000D;
     position: absolute;
     left: 50%;
@@ -1190,6 +1185,19 @@ h2 {
     white-space: nowrap;
     border-radius: 200px;
 
+}
+
+.coming_soon_label .liquidGlass-text{
+    color: #FFFFFF;
+    font-family: Inter;
+    font-weight: 500;
+    font-size: 25.74px;
+    line-height: 32.18px;
+    letter-spacing: -0.6%;
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
 }
 
 .coming_soon_label img{

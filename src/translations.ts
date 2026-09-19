@@ -1450,23 +1450,35 @@ export const translations = {
             }, faq: [
                 {
                     question: "Як підібрати бота?",
-                    answer: "Усі ризики щодо кожного бота прописані на його сторінці. Ми працюємо виключно зі стабільними налаштуваннями ризику, які не перевищують 15-20% просідання від депозиту."
+                    answer: "Боти відрізняються стратегією, інструментом і характером. Вибір завжди індивідуальний — він залежить від вашого депозиту та цілей. Усі деталі ви знайдете на сторінці кожного бота. Для консультації пишіть на пошту або в Telegram."
                 },
                 {
-                    question: "Чи потрібно постійно тримати комп'ютер увімкненим?",
-                    answer: "Ні. Боти працюють на віддалених серверах. Ви можете вимкнути телефон або ноутбук — процес не перерветься."
+                    question: "Що потрібно для запуску?",
+                    answer: "Рахунок у брокера, MetaTrader 5 і підключення до інтернету. Усе інше буде в детальних інструкціях після покупки."
                 },
                 {
                     question: "Чи потрібен великий досвід у трейдингу?",
-                    answer: "Абсолютно ні, все що потрібно — це створити акаунт і підключити бота. Відеоінструкції будуть доступні одразу після покупки."
+                    answer: "Ні. Створити рахунок і підключити бота — усе, що потрібно. Усі кроки передбачені в інструкціях!"
+                },
+                {
+                    question: "Який депозит потрібен?",
+                    answer: "Мінімальна сума вказана на сторінці кожного бота. На меншому депозиті бот автоматично повідомить, що ризик виходить за задані межі, і підкаже, що робити."
+                },
+                {
+                    question: "На скільки рахунків діє ліцензія?",
+                    answer: "Ліцензія безстрокова. Ви купуєте її один раз і користуєтеся без обмежень у часі. Прив’язка відбувається до номера рахунку під час першого запуску: один рахунок — одна активація. Якщо потрібен ще один рахунок — просто напишіть нам, і ми додамо його безкоштовно. Кількість рахунків для одного покупця не обмежена."
                 },
                 {
                     question: "Чи можна втратити весь депозит?",
-                    answer: "Наші боти протестовані на різних етапах ринку та в критичних ситуаціях. З нашими налаштуваннями злив депозиту неможливий."
+                    answer: "Торгівля з плечем завжди несе ризик втрат, і ми не станемо стверджувати протилежне. Але наші налаштування підібрані так, щоб просадка залишалася в межах 15–20%, і ці показники підтверджуються статистикою."
+                },
+                {
+                    question: "Чи отримаю я оновлення?",
+                    answer: "Так, усі оновлення входять у вартість — доплачувати нічого не потрібно. Ми постійно оновлюємо своїх ботів: стежимо за їхньою роботою на реальних рахунках, адаптуємо до змін у брокерів і покращуємо фільтри входу. Частина налаштувань оновлюється на нашому боці та застосовується автоматично, без перевстановлення. Про великі оновлення ми повідомляємо та надсилаємо нову версію."
                 },
                 {
                     question: "Як отримати консультацію?",
-                    answer: "Для правильного підбору рекомендуємо ознайомитися з кожним ботом або звернутися за консультацією в телеграм, де ми визначимо підходящий вам алгоритм."
+                    answer: "Напишіть нам на пошту або в Telegram, де ми зможемо підібрати найбільш відповідний варіант під ваші цілі!"
                 }
             ],
             steps: {
@@ -3288,23 +3300,35 @@ export const translations = {
             faq: [
                 {
                     question: "Как подобрать бота?",
-                    answer: "Все риски по каждому боту прописаны на его странице. Мы работаем исключительно со стабильными настройками риска, которые не превышают 15-20% просадки от депозита."
+                    answer: "Боты отличаются стратегией, инструментом и характером. Выбор всегда индивидуален — он зависит от вашего депозита и целей. Все детали вы найдёте на странице каждого бота. Для консультации пишите на почту или в Telegram."
                 },
                 {
-                    question: "Нужно ли постоянно держать компьютер включенным?",
-                    answer: "Нет. Боты работают на удаленных серверах. Вы можете выключить телефон или ноутбук — процесс не прервется."
+                    question: "Что нужно для запуска?",
+                    answer: "Счёт у брокера, MetaTrader 5 и подключение к интернету. Всё остальное будет в детальных инструкциях после покупки."
                 },
                 {
                     question: "Нужен ли большой опыт в трейдинге?",
-                    answer: "Абсолютно нет, все что нужно — это создать аккаунт и подключить бота. Видео-инструкции будут доступны сразу после покупки."
+                    answer: "Нет. Создать счёт и подключить бота — всё, что требуется. Все шаги предусмотрены в инструкциях!"
+                },
+                {
+                    question: "Какой депозит нужен?",
+                    answer: "Минимальная сумма указана на странице каждого бота. На меньшем депозите бот автоматически сообщит, что риск получается выше заданного, и подскажет, что делать."
+                },
+                {
+                    question: "На сколько счетов действует лицензия?",
+                    answer: "Лицензия бессрочная. Вы покупаете её один раз и пользуетесь без ограничений по времени. Привязка происходит к номеру счёта при первом запуске: один счёт — одна активация. Если нужен ещё один счёт — просто напишите нам, и мы добавим его бесплатно. Количество счетов для одного покупателя не ограничено."
                 },
                 {
                     question: "Можно ли потерять весь депозит?",
-                    answer: "Наши боты протестированы на разных этапах рынка и в критических ситуациях. С нашими настройками слив депозита невозможен."
+                    answer: "Торговля с плечом всегда несёт риск потерь, и мы не станем утверждать обратное. Но наши настройки подобраны так, чтобы просадка оставалась в пределах 15–20%, и эти показатели подтверждаются статистикой."
+                },
+                {
+                    question: "Получу ли я обновления?",
+                    answer: "Да, все обновления входят в стоимость — доплачивать ничего не нужно. Мы постоянно обновляем своих ботов: следим за их работой на реальных счетах, адаптируем к изменениям у брокеров и улучшаем фильтры входа. Часть настроек обновляется на нашей стороне и применяется автоматически, без переустановки. О крупных обновлениях мы сообщаем и присылаем новую версию."
                 },
                 {
                     question: "Как получить консультацию?",
-                    answer: "Для правильного подбора рекомендуем ознакомиться с каждым ботом или обратиться за консультацией в телеграм, где мы определим подходящий вам алгоритм."
+                    answer: "Напишите нам на почту или в Telegram, где мы сможем подобрать наиболее подходящий вариант под ваши цели!"
                 }
             ], hero: {
                 title: "Ваш капитал растет — без вашего участия",
@@ -5008,24 +5032,36 @@ export const translations = {
             ],
             faq: [
                 {
-                    question: "How do I choose a bot?",
-                    answer: "All risks for each bot are detailed on its page. We work exclusively with stable risk settings that do not exceed a 15-20% drawdown of the deposit."
+                    question: "How do I choose an Expert Advisor?",
+                    answer: "Our bots differ in strategy, instrument, and character. The choice is always individual — it depends on your deposit and your goals. You will find all the details on each bot's page. For a consultation, write to us by email or on Telegram."
                 },
                 {
-                    question: "Do I need to keep my computer on all the time?",
-                    answer: "No. The bots work on remote servers. You can turn off your phone or laptop — the process will not be interrupted."
+                    question: "What do I need to get started?",
+                    answer: "A broker account, MetaTrader 5, and an internet connection. Everything else is covered in the detailed instructions you receive after purchase."
                 },
                 {
-                    question: "Do I need extensive trading experience?",
-                    answer: "Absolutely not. All you need to do is create an account and connect the bot. Video instructions will be available immediately after purchase."
+                    question: "Do I need a lot of trading experience?",
+                    answer: "No. Open an account and connect the bot — that is all it takes. Every step is covered in the instructions!"
                 },
                 {
-                    question: "Can I lose my entire deposit?",
-                    answer: "Our bots have been tested at various market stages and in critical situations. With our settings, losing the entire deposit is impossible."
+                    question: "What deposit do I need?",
+                    answer: "The minimum amount is stated on each bot's page. With a smaller deposit, the Expert Advisor will automatically tell you that the risk is higher than the level you set and explain what to do about it."
                 },
                 {
-                    question: "How can I get a consultation?",
-                    answer: "For the correct selection, we recommend familiarizing yourself with each bot or contacting us for a consultation via Telegram, where we will help determine the right algorithm for you."
+                    question: "How many accounts does the licence cover?",
+                    answer: "The licence is perpetual. You pay once and use it with no time limit. It is linked to your account number on first launch: one account — one activation. If you need another account, just write to us, and we will add it free of charge. There is no limit on the number of accounts per customer."
+                },
+                {
+                    question: "Can I lose my whole deposit?",
+                    answer: "Trading with leverage always carries the risk of loss, and we will not claim otherwise. However, our settings are designed to keep drawdown within 15–20%, and these figures are supported by our statistics."
+                },
+                {
+                    question: "Will I get updates?",
+                    answer: "Yes, all updates are included in the price — there is nothing extra to pay. We continuously maintain our bots: we monitor their performance on live accounts, adapt them to changes introduced by brokers, and improve the entry filters. Some settings are updated on our side and applied automatically, with no need to reinstall the bot. We will notify you about major updates and send you the new version."
+                },
+                {
+                    question: "How do I get a consultation?",
+                    answer: "Write to us by email or on Telegram, and we will help you choose the option that best fits your goals!"
                 }
             ], hero: {
                 title: "Your capital grows — without your involvement",

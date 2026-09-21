@@ -995,7 +995,7 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                                             {el.name === "Aero EA" ?
                                                 <div className="bot_marquee">
                                                     <div className="bot_marquee_group">
-                                                        <span>One-time payment · Lifetime access · All updates included · One-time payment · Lifetime access · </span>
+                                                        <span>{el.oneTimePayment} · {el.lifetimeAccess} · {el.allUpdatesIncluded} · {el.oneTimePayment} · {el.lifetimeAccess} · {el.allUpdatesIncluded}</span>
                                                     </div>
 
                                                 </div> : ""}

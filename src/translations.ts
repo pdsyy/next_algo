@@ -1398,6 +1398,9 @@ export const translations = {
                     href: "/aero",
                     prop: true,
                     paying: true,
+                    oneTimePayment: "Одноразова оплата",
+                    lifetimeAccess: "Безстроковий доступ",
+                    allUpdatesIncluded: "Усі оновлення включено",
                 },
                 {
                     name: "Hydro EA",
@@ -3256,6 +3259,9 @@ export const translations = {
                     href: "/aero",
                     prop: true,
                     paying: true,
+                    oneTimePayment: "Единоразовая оплата",
+                    lifetimeAccess: "Бессрочный доступ",
+                    allUpdatesIncluded: "Все обновления включены",
                 },
                 {
                     name: "Hydro EA",
@@ -4985,6 +4991,9 @@ export const translations = {
                     href: "/aero",
                     prop: true,
                     paying: true,
+                    oneTimePayment: "One-time payment",
+                    lifetimeAccess: "Lifetime access",
+                    allUpdatesIncluded: "All updates included",
                 },
                 {
                     name: "Hydro EA",

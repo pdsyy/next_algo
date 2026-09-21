@@ -176,7 +176,7 @@ const AeroClientComponent = () => {
                             name: "AERO EA",
                             subtitle: t.aero.hero.theme,
                             imageSrc: bottom_product_image.src,
-                            unitPrice: 1200,
+                            unitPrice: 900,
                         }}>
                             {t.aero.hero.buy}
                         </AddToCartButton>
@@ -552,7 +552,7 @@ const AeroClientComponent = () => {
                                 name: "AERO EA",
                                 subtitle: t.aero.hero.theme,
                                 imageSrc: bottom_product_image.src,
-                                unitPrice: 1200,
+                                unitPrice: 900,
                             }}>
                                 {t.terra.buy.buy}
                             </AddToCartButton>

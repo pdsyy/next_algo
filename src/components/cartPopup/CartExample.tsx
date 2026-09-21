@@ -25,7 +25,7 @@ export default function CartExample({
             if (existing) return current.map(item => item.id === "aero-ea"
                 ? { ...item, quantity: Math.min(99, item.quantity + 1) } : item);
             return [...current, {
-                id: "aero-ea", name: "AERO EA", unitPrice: 1200, quantity: 1,
+                id: "aero-ea", name: "AERO EA", unitPrice: 900, quantity: 1,
             }];
         });
         setIsOpen(true);

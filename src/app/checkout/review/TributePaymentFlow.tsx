@@ -30,6 +30,7 @@ const copy = {
         unsupported: "Tribute currently supports a single Aero license. Use crypto for other products or a mixed cart.",
         error: "Unable to prepare the payment. Please try again.",
         statusError: "Unable to check status. Retrying…",
+        restoreError: "Unable to restore this order. Open Return to order in the Telegram bot again.",
         order: "Order"
     },
     RU: {
@@ -48,6 +49,7 @@ const copy = {
         unsupported: "Через Tribute пока доступна одна лицензия Aero. Для других товаров и смешанной корзины используйте криптооплату.",
         error: "Не удалось подготовить оплату. Попробуйте ещё раз.",
         statusError: "Не удалось проверить статус. Повторяем…",
+        restoreError: "Не удалось восстановить заказ. Снова нажмите «Вернуться к заказу» в Telegram-боте.",
         order: "Заказ"
     },
     UA: {
@@ -66,12 +68,14 @@ const copy = {
         unsupported: "Через Tribute поки доступна одна ліцензія Aero. Для інших товарів і змішаного кошика використовуйте криптооплату.",
         error: "Не вдалося підготувати оплату. Спробуйте ще раз.",
         statusError: "Не вдалося перевірити статус. Повторюємо…",
+        restoreError: "Не вдалося відновити замовлення. Знову натисніть «Повернутися до замовлення» в Telegram-боті.",
         order: "Замовлення"
     },
 };
-export default function TributePaymentFlow({isOpen, onClose, customer, items}: {
+export default function TributePaymentFlow({isOpen, onClose, customer, items, recoveryToken}: {
     isOpen: boolean; onClose: () => void; customer: Customer;
     items: { id: string; quantity: number }[];
+    recoveryToken?: string;
 }) {
     const {language} = useLanguage();
     const {items: cartItems} = useCart();
@@ -84,7 +88,8 @@ export default function TributePaymentFlow({isOpen, onClose, customer, items}: {
     const [error, setError] = useState("");
     const inFlight = useRef(false);
     const supported = items.length === 1 && items[0].id === "aero-ea" && items[0].quantity === 1;
-    const key = `aw_tribute_session_v1:${customer.checkoutReference}:${customer.deliveryLanguage}`;
+    const key = recoveryToken ? `aw_tribute_recovery_v1:${recoveryToken.slice(0, 32)}` :
+        `aw_tribute_session_v1:${customer.checkoutReference}:${customer.deliveryLanguage}`;
     useEffect(() => {
         setSession(null);
         setState("created");
@@ -101,6 +106,7 @@ export default function TributePaymentFlow({isOpen, onClose, customer, items}: {
             const details = savedItems.find(p => p.id === item.id) ?? cartItems.find(p => p.id === item.id);
             return {id: item.id, name: details?.name ?? "Aero", imageSrc: details?.imageSrc};
         });
+        if (recoveryToken) return;
         try {
             const value = JSON.parse(sessionStorage.getItem(key) ?? "null");
             if (value && typeof value.token === "string" && typeof value.botUrl === "string" && typeof value.orderCode === "string" &&
@@ -113,7 +119,43 @@ export default function TributePaymentFlow({isOpen, onClose, customer, items}: {
             }
         } catch { /* Storage is optional; the server still controls payment state. */
         }
-    }, [key]);
+    }, [key, recoveryToken]);
+    useEffect(() => {
+        if (!recoveryToken || !isOpen) return;
+        let cancelled = false;
+        let retryTimer: ReturnType<typeof setTimeout> | undefined;
+        const controller = new AbortController();
+        setBusy(true);
+        setError("");
+        async function restore() {
+            try {
+                const response = await fetch("/api/payments/tribute/restore", {
+                    headers: { Authorization: `Bearer ${recoveryToken}` }, cache: "no-store", signal: controller.signal,
+                });
+                if (response.status === 404) {
+                    if (!cancelled) setError(t.restoreError);
+                    return;
+                }
+                const result = await response.json();
+                if (!response.ok || result.success !== true || result.session?.token !== recoveryToken ||
+                    typeof result.session.orderCode !== "string" || typeof result.session.botUrl !== "string" ||
+                    typeof result.session.testMode !== "boolean") throw new Error("Restore failed");
+                if (cancelled) return;
+                setSession({ ...result.session, products: [{ id: "aero-ea", name: "Aero", imageSrc: cartItems.find(p => p.id === "aero-ea")?.imageSrc }] });
+                successProducts.current = [{ id: "aero-ea", name: "Aero", imageSrc: cartItems.find(p => p.id === "aero-ea")?.imageSrc }];
+                setState(result.state);
+            } catch {
+                if (!cancelled) {
+                    setError(t.statusError);
+                    retryTimer = setTimeout(() => { void restore(); }, 5000);
+                }
+            } finally {
+                if (!cancelled) setBusy(false);
+            }
+        }
+        void restore();
+        return () => { cancelled = true; clearTimeout(retryTimer); controller.abort(); };
+    }, [recoveryToken, isOpen, t.statusError, t.restoreError]);
     useEffect(() => {
         if (!isOpen || !session) return;
         let cancelled = false;
@@ -154,7 +196,7 @@ export default function TributePaymentFlow({isOpen, onClose, customer, items}: {
                         clearReferralCode();
                     } catch { /* Do not block a confirmed payment. */
                     }
-                    for (const storageKey of ["checkoutCustomer", "checkoutReview", "algo_world_pending_crypto_order_v1", "currentPayment", key]) {
+                    for (const storageKey of ["checkoutCustomer", "checkoutReview", "algo_world_pending_crypto_order_v1", "currentPayment", "aw_tribute_return_token_v1", key]) {
                         try {
                             sessionStorage.removeItem(storageKey);
                         } catch { /* best effort */
@@ -182,7 +224,7 @@ export default function TributePaymentFlow({isOpen, onClose, customer, items}: {
     }, [isOpen, session, key, t.statusError]);
 
     async function start() {
-        if (!supported || inFlight.current) return;
+        if (recoveryToken || !supported || inFlight.current) return;
         inFlight.current = true;
         setBusy(true);
         setError("");
@@ -224,7 +266,12 @@ export default function TributePaymentFlow({isOpen, onClose, customer, items}: {
             >
                 <h3 id="tribute-title">{t.title}</h3>
 
-                {!supported ? (
+                {recoveryToken && !session ? (
+                    <div className="tribute-payment-prepare">
+                        <p aria-live="polite">{busy ? t.busy : t.restoreError}</p>
+                        <button type="button" className="tribute-payment-close" onClick={onClose}>{t.close}</button>
+                    </div>
+                ) : !supported ? (
                     <div className="tribute-payment-unsupported">
                         <p>{t.unsupported}</p>
                     </div>
@@ -256,6 +303,11 @@ export default function TributePaymentFlow({isOpen, onClose, customer, items}: {
                                 </button>
                             </div>
 
+                        )}
+                        {!["created", "bound"].includes(state) && (
+                            <div className="tribute-payment-prepare">
+                                <button type="button" className="tribute-payment-close" onClick={onClose}>{t.close}</button>
+                            </div>
                         )}
                     </div>
                 ) : (

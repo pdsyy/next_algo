@@ -84,15 +84,37 @@ export async function createTributeSession(order: any, reference: string, email:
     return { token, orderCode: s.order_code, botUrl: `https://t.me/${c.bot}?start=${token}`, testMode: s.test_mode };
 }
 
-export async function telegramMessage(chatId: number | string, text: string, url?: string) {
+export async function telegramMessage(chatId: number | string, text: string, url?: string, returnUrl?: string) {
     const response = await fetch(`https://api.telegram.org/bot${required("TELEGRAM_BOT_TOKEN")}/sendMessage`, {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ chat_id: chatId, text,
-            ...(url ? { reply_markup: { inline_keyboard: [[{ text: "Pay for Aero / Оплатить Aero", url }]] } } : {}),
+            ...((url || returnUrl) ? { reply_markup: { inline_keyboard: [
+                ...(url ? [[{ text: "Pay for Aero / Оплатить Aero", url }]] : []),
+                ...(returnUrl ? [[{ text: "Return to order / Вернуться к заказу", url: returnUrl }]] : []),
+            ] } } : {}),
         }), signal: AbortSignal.timeout(10000),
     });
     const data = await response.json();
     if (!response.ok || !data.ok) throw new Error("Telegram sendMessage failed");
+}
+
+// Only called after the Telegram webhook authenticates a private-chat sender.
+export async function openTelegramSession(telegramId: string) {
+    const c = config();
+    const sql = db();
+    const rows = await sql`SELECT * FROM aw_tribute_sessions
+        WHERE account=${c.account} AND telegram_id=${telegramId} AND product_id=${c.productId}
+          AND state IN ('bound','processing','manual_review')`;
+    if (rows.length !== 1) return null;
+    const session = rows[0];
+    if (String(session.period_id) !== c.periodId || session.test_mode !== c.testMode) return null;
+    return session;
+}
+export function tributeReturnUrl(id: string) {
+    const base = new URL(required("APP_URL"));
+    if (base.protocol !== "https:" || base.username || base.password) throw new Error("APP_URL must be HTTPS");
+    // Fragment is not sent to HTTP servers, request logs, or Referer headers.
+    return new URL(`/checkout/tribute#token=${tokenFor(id)}`, base.origin).toString();
 }
 
 export async function bindTelegram(token: string, telegramId: string) {
@@ -104,6 +126,8 @@ export async function bindTelegram(token: string, telegramId: string) {
     if (!session.telegram_id && new Date(session.created_at).getTime() < Date.now() - 24 * 60 * 60 * 1000) {
         return { error: "This link has expired. Start a new checkout." };
     }
+    const current = await openTelegramSession(telegramId);
+    if (current && current.id !== session.id) return { session: current, resumed: true };
     const sql = db();
     const key = `subscription:${String(session.product_id)}:${String(session.period_id)}:${telegramId}`;
     const fulfilled = await sql`SELECT 1 FROM aw_tribute_subscription_payments
@@ -121,7 +145,11 @@ export async function bindTelegram(token: string, telegramId: string) {
               AND (telegram_id IS NULL OR telegram_id = ${telegramId}) RETURNING *`;
         return rows[0] ? { session: rows[0] } : { error: "The order state changed. Reopen checkout." };
     } catch (error: any) {
-        if (error?.code === "23505") return { error: "You already have an unfinished Aero order. Complete it before linking another order." };
+        if (error?.code === "23505") {
+            const existing = await openTelegramSession(telegramId);
+            if (existing) return { session: existing, resumed: true };
+            return { error: "An unfinished Aero order requires support review. Do not pay again." };
+        }
         throw error;
     }
 }

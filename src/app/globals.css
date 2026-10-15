@@ -1045,7 +1045,9 @@
     }
 }
 
-
+.more_reviews_button{
+    white-space: nowrap;
+}
 @media screen and (width < 1300px) {
     .desktop_header_menu{
         gap: 26px;

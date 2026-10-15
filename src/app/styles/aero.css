@@ -2157,7 +2157,7 @@
         padding-top: 24px;
     }
 
-    .more_reviews_button{
+    .product_page.aero .more_reviews_button{
         margin-top: 24px;
         width: calc(100% - 40px);
     }

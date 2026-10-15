@@ -1,0 +1,187 @@
+.earth_container_fs{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.earth_footer_container{
+    height: 497px;
+    margin-top: 56px;
+    width: 100%;
+    padding: 30px 48px 0px 48px;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+
+    max-width: 1440px;
+}
+.algo_world_label_bottom {
+    position: absolute;
+    bottom: 16px;
+    width: calc(100% - 96px);
+    height: clamp(40px, 7.569444vw, 109px);
+    left: 50%;
+    transform: translateX(-50%);
+    user-select: none;
+}
+
+.algo_world_label_bottom text {
+    font-family: var(--font-benzin-bold), sans-serif;
+    font-size: 148px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+
+
+.left_footer_menu{
+    display: flex;
+    flex-direction: column;
+    z-index: 1;
+}
+
+.right_footer_menu{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    position: relative;
+    z-index: 1;
+}
+
+.left_footer_menu .footer_menu_item, .right_footer_menu .footer_menu_item{
+  color: #232323;
+    font-family: Inter;
+    font-weight: 500;
+    margin-bottom: 12px;
+    font-size: 12px;
+    line-height: 100%;
+    letter-spacing: -1%;
+    text-transform: uppercase;
+    cursor: pointer;
+
+}
+
+.left_footer_menu .footer_algo_logo{
+    margin-bottom: 32px;
+}
+
+.left_footer_menu .logo_img{
+    height: 28px;
+}
+
+.left_footer_menu .copyrights_algo{
+    margin-top: 124px;
+    color: #232323;
+    font-family: Inter;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 100%;
+    letter-spacing: -1%;
+    text-transform: uppercase;
+
+}
+
+.tech_page_footer_list{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    width: 175px;
+    text-align: right;
+    bottom: 157px;
+    right: 0px;
+    position: absolute;
+}
+
+
+
+
+.earth_container {
+    position: absolute;
+    top: -32px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 160px);
+    max-width: 1176px;
+    height: 529px;
+    margin: 0;
+    overflow: hidden;
+    z-index: 0;
+
+    mask-image: linear-gradient(
+            to bottom,
+            #000 0%,
+            #000 20%,
+            rgba(0, 0, 0, 0.55) 45%,
+            transparent 75%
+    );
+
+    -webkit-mask-image: linear-gradient(
+            to bottom,
+            #000 0%,
+            #000 20%,
+            rgba(0, 0, 0, 0.55) 45%,
+            transparent 75%
+    );
+}
+
+.particle_sphere_canvas {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+@media screen and (width < 768px){
+
+    .left_footer_menu{
+
+    }
+    .product_page.aero .earth_footer_container{
+        margin-top: 36px;
+        padding: 0 16px 14px 16px;
+    }
+
+    .footer_algo_logo{
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        margin-bottom: 0;
+    }
+
+    .earth_footer_container{
+        height: 216px;
+    }
+
+    .algo_world_label_bottom{
+        width: calc(100% - 8px);
+    }
+
+    .earth_container{
+        height: 200px;
+        width: 100%;
+    }
+
+
+
+
+    .earth_footer_container {
+        position: relative;
+        height: 216px;
+        padding: 0 16px 14px;
+    }
+
+    .earth_container {
+
+        width: 100%;
+        max-width: none;
+
+        height: 200px;
+        margin: 0;
+        margin-top: 50px;
+        flex: none;
+        z-index: 0;
+    }
+
+
+}

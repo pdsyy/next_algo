@@ -12,12 +12,9 @@ import { useLanguage } from "@/context/LanguageProvider";
 import { useCart } from "@/components/cartPopup/CartProvider";
 import { readReferralCode } from "@/lib/referral";
 
-import Mql5PaymentFlow from "./Mql5PaymentFlow";
+import TributePaymentFlow from "./TributePaymentFlow";
 
 import editIcon from "./images/edit-line.svg";
-import cloudIcon from "./images/cloude.svg";
-import closeIcon from "./images/close_cross.svg";
-import deleteIcon from "./images/delete_icon.svg";
 import tether_icon from "./images/tether.svg";
 
 import topLines from "@/app/images/video_block_top_lines.svg";
@@ -258,8 +255,8 @@ export default function ReviewPage() {
     ] = useState(false);
 
     const [
-        isMql5Open,
-        setIsMql5Open,
+        isTributeOpen,
+        setIsTributeOpen,
     ] = useState(false);
 
 
@@ -343,11 +340,7 @@ export default function ReviewPage() {
                     );
 
                 if (
-                    isStoredReview(
-                        parsedReview
-                    ) &&
-                    parsedReview.paymentMethod ===
-                    "crypto"
+                    isStoredReview(parsedReview)
                 ) {
                     setPaymentMethod(
                         parsedReview.paymentMethod
@@ -463,7 +456,7 @@ export default function ReviewPage() {
         if (
             paymentMethod === "card"
         ) {
-            setIsMql5Open(true);
+            setIsTributeOpen(true);
             return;
         }
 
@@ -860,7 +853,7 @@ export default function ReviewPage() {
 
                         <label
                             className={`
-                                ${styles.disabled_payment_method}
+                                
                                 ${styles.paymentOption}
                                 ${
                                 paymentMethod ===
@@ -883,7 +876,6 @@ export default function ReviewPage() {
                                         "card"
                                     )
                                 }
-                                disabled
                             />
 
                             <span
@@ -1138,27 +1130,11 @@ export default function ReviewPage() {
                 />
             </div>
 
-            <Mql5PaymentFlow
-                isOpen={isMql5Open}
-                onClose={() =>
-                    setIsMql5Open(false)
-                }
+            <TributePaymentFlow
+                isOpen={isTributeOpen}
+                onClose={() => setIsTributeOpen(false)}
                 customer={customer}
-                items={items.map(item => ({
-                    id: item.id,
-                    quantity:
-                    item.quantity,
-                }))}
-                icons={{
-                    cloud:
-                    cloudIcon.src,
-
-                    close:
-                    closeIcon.src,
-
-                    delete:
-                    deleteIcon.src,
-                }}
+                items={items.map(item => ({ id: item.id, quantity: item.quantity }))}
             />
         </main>
     );

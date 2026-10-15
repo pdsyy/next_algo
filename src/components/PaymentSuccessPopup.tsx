@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useCart } from "@/components/cartPopup/CartProvider";
 import styles from "./PaymentSuccessPopup.module.css";
+import {useLanguage} from "@/context/LanguageProvider";
 
 const SUCCESS_KEY = "algo_world_payment_success_v1";
 
@@ -35,6 +36,7 @@ function readSuccess(): SuccessData | null {
 }
 
 export default function PaymentSuccessPopup() {
+    const {t, language} = useLanguage();
     const pathname = usePathname();
     const searchParams = useSearchParams();
     const { clearCart, closeCart } = useCart();
@@ -83,15 +85,15 @@ export default function PaymentSuccessPopup() {
                         </div>
                     ))}
                 </div>
-                <h2 id="payment-success-title">Payment Successful!</h2>
+                <h2 id="payment-success-title">{t.paymentSuccessful}</h2>
                 <p>
-                    Your {productNames.join(", ")} {productNames.length === 1 ? "license is" : "licenses are"} being generated.
-                    Check your email for activation instructions and setup guide.
+                    {productNames.join(", ")} {productNames.length === 1 ? t.oneLicenseGenerated : t.moreThanOneLicenseGenerated}
+                    {t.successMessage}
                 </p>
                 {/*<small>Order #{data.orderCode}</small>*/}
                 <div className={styles.actions}>
-                    <button type="button" className={styles.done} onClick={close}>Done</button>
-                    <a className={styles.help} href="https://t.me/vladimirbabak_mql" target = "_blank">Need help?</a>
+                    <button type="button" className={styles.done} onClick={close}>{t.done}</button>
+                    <a className={styles.help} href="https://t.me/vladimirbabak_mql" target = "_blank">{t.needHelp}</a>
                 </div>
             </section>
         </div>

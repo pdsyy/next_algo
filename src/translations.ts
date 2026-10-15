@@ -1,5 +1,16 @@
 export const translations = {
     UA: {
+        legalFooter: {
+            termsAndConditions: "Умови використання",
+            softwareUseTradingRiskDisclosure: "Використання програмного забезпечення та розкриття торгових ризиків",
+            privacyPolicy: "Політика конфіденційності",
+        },
+        done: "Готово",
+        needHelp: "Потрібна допомога?",
+        paymentSuccessful: "Оплата пройшла успішно!",
+        oneLicenseGenerated: "Ваша ліцензія створюється.",
+        moreThanOneLicenseGenerated: "Ваші ліцензії створюються.",
+        successMessage: "Лист з інструкціями з активації та посібником із налаштування надійде на вашу електронну пошту протягом 20 хвилин.",
         emailConfirmationPopup: {
             title: "Підтвердьте email",
             description:
@@ -1183,6 +1194,79 @@ export const translations = {
 
         },
         aero: {
+            features: {
+                label: "КЛЮЧОВІ МОЖЛИВОСТІ",
+                title: "Що всередині Aero?",
+                main: {
+                    title: "Розроблений з урахуванням проп-трейдингу",
+                    description: "Без заборонених методів, із передбачуваним ризиком на угоду та входами через лімітні ордери. Алгоритм працює в межах правил проп-компаній без ручного втручання.",
+                },
+                strategy: {
+                    title: "Без мартингейлу та сітки ордерів",
+                    description: "Стратегія з акцентом на управління капіталом. Повністю виключає мартингейл, сітки ордерів та інші токсичні методи торгівлі.",
+                },
+                protection: {
+                    title: "Захист з урахуванням волатильності",
+                    description: "Стоп-лос і трейлінг-стоп на основі ATR адаптуються до змін ринкової волатильності.",
+                },
+                setup: {
+                    title: "Один графік. Просте налаштування.",
+                    description: "Запустіть Aero на одному графіку XAUUSD із таймфреймом D1. Налаштовувати кілька графіків не потрібно.",
+                },
+                news: {
+                    title: "Вбудований фільтр новин",
+                    description: "Заздалегідь завантажені дати подій дозволяють призупиняти торгівлю перед і після запланованих новин. Підключати зовнішній календар не потрібно.",
+                },
+            },
+            workflow: {
+                label: "ПРОЦЕС ТОРГІВЛІ",
+                title: "Як проходить угода",
+                description: "Від пробою, що пройшов фільтрацію, до чіткого торгового плану.",
+                breakout: {
+                    title: "Пробій і перевірка kNN",
+                    description: "Ціна пробиває ключовий рівень, а торговий сигнал проходить фільтр kNN.",
+                },
+                retest: {
+                    title: "Лімітний ордер на ретесті",
+                    description: "Aero розміщує лімітний ордер на рівні пробою та чекає на повернення ціни.",
+                },
+                stop: {
+                    title: "Захисний стоп на основі ATR",
+                    description: "Відстань до стоп-лосу визначається поточною волатильністю, а не фіксованим значенням.",
+                },
+                hedge: {
+                    title: "Додаткове хеджування",
+                    description: "Якщо функцію ввімкнено й дозволено правилами, ордер у протилежному напрямку може частково компенсувати збиток у разі розвороту ціни.",
+                },
+            },
+            statistics: {
+                label: "СТАТИСТИКА РАХУНКІВ",
+                title: "Історія результатів Aero",
+                description: "Перегляньте історію торгівлі та результати кожного рахунку",
+                accounts: {
+                    legacy: {
+                        title: "Архівний рахунок MT4",
+                        description: "Низький ризик",
+                    },
+                    current: {
+                        title: "Поточний рахунок MT5",
+                        description: "Середній ризик",
+                    },
+                    darwinex: {
+                        title: "Darwinex Zero",
+                        description: "Рахунок на 100 тисяч",
+                    },
+                },
+                archivedTitle: "Чому MT4 в архіві",
+                archivedDescription: "Після зміни брокера ми перевели Aero на MT5. Результати MT4 залишаються доступними як історичні дані.",
+                openMyfxbook: "Відкрити на Myfxbook",
+            },
+            portfolio: {
+                elements: "Terra - Aero - Hydro",
+                title: "Один портфель. Усі торгові стихії.",
+                deposit: "Депозит",
+                myfxbook: "Портфель на Myfxbook",
+            },
             reviewsList: [
                 {
                     name: "Dmytro P.",
@@ -1219,6 +1303,11 @@ export const translations = {
                 botName: "AERO EA",
                 botPrice: 900
             }, hero: {
+                title: "Автоматична торгівля золотом на пробоях діапазону азійської сесії",
+                description: "Aero відбирає можливості для торгівлі на пробоях за допомогою машинного навчання, автоматично виконує угоди та дозволяє налаштовувати ризик.",
+                viewPerformance: "Переглянути результати торгівлі",
+                exploreStrategy: "Дослідити стратегію",
+                getAero: "Готові почати? Отримати Aero →",
                 botName: "Aero EA",
                 theme: "Торговий бот з найнижчими просадками",
                 desc: "Має понад 11 місяців підтвердженої статистики і 10 років тестів зі стабільними результатами.",
@@ -1714,6 +1803,17 @@ export const translations = {
     },
 
     RU: {
+        legalFooter: {
+            termsAndConditions: "Условия использования",
+            softwareUseTradingRiskDisclosure: "Использование программного обеспечения и раскрытие торговых рисков",
+            privacyPolicy: "Политика конфиденциальности",
+        },
+        done: "Готово",
+        needHelp: "Нужна помощь?",
+        paymentSuccessful: "Оплата прошла успешно!",
+        oneLicenseGenerated: "Ваша лицензия создаётся.",
+        moreThanOneLicenseGenerated: "Ваши лицензии создаются.",
+        successMessage: "Письмо с инструкциями по активации и руководством по настройке придёт на вашу электронную почту в течение 20 минут.",
         emailConfirmationPopup: {
             title: "Подтвердите email",
             description:
@@ -3044,6 +3144,79 @@ export const translations = {
 
 
         }, aero: {
+            features: {
+                label: "КЛЮЧЕВЫЕ ВОЗМОЖНОСТИ",
+                title: "Что внутри Aero?",
+                main: {
+                    title: "Разработан с учётом проп-трейдинга",
+                    description: "Без запрещённых методов, с предсказуемым риском на сделку и входами через лимитные ордера. Алгоритм работает в рамках правил проп-компаний без ручного вмешательства.",
+                },
+                strategy: {
+                    title: "Без мартингейла и сетки ордеров",
+                    description: "Стратегия с акцентом на управление капиталом. Полностью исключает мартингейл, сетки ордеров и другие токсичные методы торговли.",
+                },
+                protection: {
+                    title: "Защита с учётом волатильности",
+                    description: "Стоп-лосс и трейлинг-стоп на основе ATR адаптируются к изменениям рыночной волатильности.",
+                },
+                setup: {
+                    title: "Один график. Простая настройка.",
+                    description: "Запустите Aero на одном графике XAUUSD с таймфреймом D1. Настраивать несколько графиков не требуется.",
+                },
+                news: {
+                    title: "Встроенный фильтр новостей",
+                    description: "Заранее загруженные даты событий позволяют приостанавливать торговлю перед и после запланированных новостей. Подключать внешний календарь не требуется.",
+                },
+            },
+            workflow: {
+                label: "ПРОЦЕСС ТОРГОВЛИ",
+                title: "Как проходит сделка",
+                description: "От пробоя, прошедшего фильтрацию, до чёткого торгового плана.",
+                breakout: {
+                    title: "Пробой и проверка kNN",
+                    description: "Цена пробивает ключевой уровень, а торговый сигнал проходит фильтр kNN.",
+                },
+                retest: {
+                    title: "Лимитный ордер на ретесте",
+                    description: "Aero размещает лимитный ордер на уровне пробоя и ждёт возвращения цены.",
+                },
+                stop: {
+                    title: "Защитный стоп на основе ATR",
+                    description: "Расстояние до стоп-лосса определяется текущей волатильностью, а не фиксированным значением.",
+                },
+                hedge: {
+                    title: "Дополнительное хеджирование",
+                    description: "Если функция включена и разрешена правилами, ордер в противоположном направлении может частично компенсировать убыток при развороте цены.",
+                },
+            },
+            statistics: {
+                label: "СТАТИСТИКА СЧЕТОВ",
+                title: "История результатов Aero",
+                description: "Посмотрите историю торговли и результаты каждого счёта",
+                accounts: {
+                    legacy: {
+                        title: "Архивный счёт MT4",
+                        description: "Низкий риск",
+                    },
+                    current: {
+                        title: "Текущий счёт MT5",
+                        description: "Средний риск",
+                    },
+                    darwinex: {
+                        title: "Darwinex Zero",
+                        description: "Счёт на 100 тысяч",
+                    },
+                },
+                archivedTitle: "Почему MT4 в архиве",
+                archivedDescription: "После смены брокера мы перевели Aero на MT5. Результаты MT4 остаются доступны как исторические данные.",
+                openMyfxbook: "Открыть на Myfxbook",
+            },
+            portfolio: {
+                elements: "Terra - Aero - Hydro",
+                title: "Один портфель. Все торговые стихии.",
+                deposit: "Депозит",
+                myfxbook: "Портфель на Myfxbook",
+            },
             reviewsList: [
                 {
                     name: "Dmytro P.",
@@ -3080,6 +3253,11 @@ export const translations = {
                 botName: "AERO EA",
                 botPrice: 900
             }, hero: {
+                title: "Автоматическая торговля золотом на пробоях диапазона азиатской сессии",
+                description: "Aero отбирает возможности для торговли на пробоях с помощью машинного обучения, автоматически исполняет сделки и позволяет настраивать риск.",
+                viewPerformance: "Смотреть результаты торговли",
+                exploreStrategy: "Изучить стратегию",
+                getAero: "Готовы начать? Получить Aero →",
                 botName: "Aero EA",
                 theme: "Торговый бот с самыми низкими просадками",
                 desc: "Более 11 месяцев подтвержденной статистики и 10 лет тестов со стабильными результатами.",
@@ -3433,6 +3611,17 @@ export const translations = {
     },
 
     EN:{
+        legalFooter: {
+            termsAndConditions: "Terms & Conditions",
+            softwareUseTradingRiskDisclosure: "Software Use & Trading Risk Disclosure",
+            privacyPolicy: "Privacy Policy",
+        },
+        done: "Done",
+        needHelp: "Need help?",
+        paymentSuccessful:"Payment Successful!",
+        oneLicenseGenerated: "Your license is being generated.",
+        moreThanOneLicenseGenerated: "Your licenses are being generated.",
+        successMessage: "An email with activation instructions and a setup guide will arrive in your inbox within 20 minutes.",
         emailConfirmationPopup: {
             title: "Verify your email",
             description:
@@ -4765,6 +4954,79 @@ export const translations = {
         },
 
         aero: {
+            features: {
+                label: "KEY FEATURES",
+                title: "What’s inside Aero?",
+                main: {
+                    title: "Designed with prop trading in mind",
+                    description: "No prohibited techniques, predictable risk per trade, entries by limit order. The algorithm works within prop rules without manual intervention.",
+                },
+                strategy: {
+                    title: "No Martingale / No Grid",
+                    description: "Pure strategy focused on capital management. Completely excludes martingale, grids, and other toxic trading methods.",
+                },
+                protection: {
+                    title: "Volatility-based protection",
+                    description: "ATR-based stops and trailing adapt to changing market volatility.",
+                },
+                setup: {
+                    title: "One chart. Simple setup.",
+                    description: "Run Aero on a single XAUUSD D1 chart. No multi-chart setup required.",
+                },
+                news: {
+                    title: "Built-in news filter",
+                    description: "Preloaded event dates pause trading around scheduled news. No external calendar connection required.",
+                },
+            },
+            workflow: {
+                label: "TRADE WORKFLOW",
+                title: "What a trade looks like",
+                description: "From a filtered breakout to a defined trading plan.",
+                breakout: {
+                    title: "Breakout + kNN check",
+                    description: "A key level breaks and the setup passes the kNN filter.",
+                },
+                retest: {
+                    title: "Limit order at the retest",
+                    description: "Aero places a limit order at the breakout level and waits for price to return.",
+                },
+                stop: {
+                    title: "ATR-based protective stop",
+                    description: "The stop distance follows current volatility rather than a fixed distance.",
+                },
+                hedge: {
+                    title: "Optional hedge",
+                    description: "Where enabled and permitted, an opposite-side order may offset part of a reversal loss.",
+                },
+            },
+            statistics: {
+                label: "ACCOUNT STATISTICS",
+                title: "Explore Aero’s track record",
+                description: "View the trading history and results of each account",
+                accounts: {
+                    legacy: {
+                        title: "Legacy MT4 account",
+                        description: "Low risk",
+                    },
+                    current: {
+                        title: "Current MT5 account",
+                        description: "Medium risk",
+                    },
+                    darwinex: {
+                        title: "Darwinex Zero",
+                        description: "100k account",
+                    },
+                },
+                archivedTitle: "Why MT4 is archived",
+                archivedDescription: "After changing brokers, we moved Aero to MT5. MT4 results remain available as historical data.",
+                openMyfxbook: "Open on Myfxbook",
+            },
+            portfolio: {
+                elements: "Terra - Aero - Hydro",
+                title: "One portfolio. All trading elements.",
+                deposit: "Deposit",
+                myfxbook: "Portfolio on Myfxbook",
+            },
             reviewsList: [
                 {
                     name: "William",
@@ -4802,6 +5064,11 @@ export const translations = {
                 botPrice: 900
             },
             hero: {
+                title: "Automated gold trading. Built around Asian range breakouts",
+                description: "Aero filters breakout opportunities using machine learning, with automated execution and adjustable risk settings.",
+                viewPerformance: "View live performance",
+                exploreStrategy: "Explore the strategy",
+                getAero: "Ready to start? Get Aero →",
                 botName: "Aero EA",
                 theme: "Trading bot with the lowest drawdowns",
                 desc: "Over 11 months of verified statistics and 10 years of tests with stable results.",

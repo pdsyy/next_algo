@@ -52,6 +52,7 @@ async function cmlRequest<T = any>(
         {
             method: "POST",
             headers: createCmlHeaders(body),
+            signal: AbortSignal.timeout(10000),
             body,
             cache: "no-store",
         }
@@ -404,6 +405,7 @@ export async function getCmlOrder(
 ========================= */
 
 interface RecordCmlPaymentParams {
+    provider?: "nowpayments" | "tribute";
     orderCode: string;
     providerTransactionId: string;
     amount: number;
@@ -412,6 +414,7 @@ interface RecordCmlPaymentParams {
 }
 
 export async function recordCmlPayment({
+                                           provider = "nowpayments",
                                            orderCode,
                                            providerTransactionId,
                                            amount,
@@ -424,7 +427,7 @@ export async function recordCmlPayment({
             payment: {
                 order_code: orderCode,
 
-                provider: "nowpayments",
+                provider,
 
                 provider_txn_id:
                 providerTransactionId,

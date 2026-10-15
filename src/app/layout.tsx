@@ -14,12 +14,20 @@ import "./styles/prop.css";
 import Providers from "@/components/Providers";
 import PaymentSuccessPopup from "@/components/PaymentSuccessPopup";
 import { Language } from "@/context/LanguageProvider";
+import localFont from "next/font/local";
 
 const geistSans=Geist({variable:"--font-geist-sans",subsets:["latin"]});
 const geistMono=Geist_Mono({variable:"--font-geist-mono",subsets:["latin"]});
 const geologica=Geologica({subsets:["latin","cyrillic"],variable:"--font-geologica"});
 const inter=Inter({subsets:["latin","cyrillic"],variable:"--font-inter"});
 const manrope=Manrope({subsets:["latin","cyrillic"],variable:"--font-manrope",preload:true});
+const benzinBold = localFont({
+    src: "./fonts/Benzin-Bold.woff2",
+    variable: "--font-benzin-bold",
+    weight: "700",
+    style: "normal",
+    display: "swap",
+});
 
 export const metadata:Metadata={
     title:"ALGO — Algorithmic Trading and Trading Bots | ALGO Trading",
@@ -36,7 +44,7 @@ export default async function RootLayout({children}:Readonly<{children:React.Rea
     const cookieStore=await cookies();
     const savedLanguage=cookieStore.get("algo_lang")?.value;
     const initialLanguage:Language=isLanguage(savedLanguage)?savedLanguage:"EN";
-    return <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${geologica.variable} ${inter.variable} ${manrope.variable}`}>
+    return <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${geologica.variable} ${inter.variable} ${manrope.variable} ${benzinBold.variable}`}>
     <body>
     <Providers initialLanguage={initialLanguage}>
         {children}

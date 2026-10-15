@@ -1,3 +1,4 @@
+import { createTributeSession, getTributeProduct } from "@/lib/tribute";
 import crypto from "crypto";
 import {
     NextRequest,
@@ -15,6 +16,7 @@ import {
 } from "@/lib/cml";
 
 export const runtime = "nodejs";
+export const maxDuration = 60;
 export const dynamic = "force-dynamic";
 
 
@@ -522,6 +524,15 @@ async function handleCreateOrder(
     }
 
 
+    const isTribute = body.paymentProvider === "tribute";
+    let tributeProduct: any = null;
+    if (isTribute) {
+        if (productCodes.length !== 1 || productCodes[0] !== "aero-ea") {
+            return jsonError("Tribute currently supports one Aero license only");
+        }
+        tributeProduct = await getTributeProduct();
+    }
+
     const products =
         await Promise.all(
             productCodes.map(
@@ -723,8 +734,13 @@ async function handleCreateOrder(
     }
 
 
+    const tribute = isTribute
+        ? await createTributeSession({ code: orderCode, amount, currency }, checkoutReference, email, tributeProduct.amount)
+        : undefined;
+
     return NextResponse.json({
         success: true,
+        ...(tribute ? { tribute } : {}),
 
         order: {
             id: orderId,

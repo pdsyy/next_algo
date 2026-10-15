@@ -8,6 +8,27 @@ import mt4_stat from "./images/mt4_stat_s.png"
 import mt4_stat_2026 from "./images/2026mt4.png"
 import mt5_stat from "./images/mt5_stat.png"
 import how_to_image from "./images/how_to_image.png"
+
+import bento_row from "./images/Bento Row 2 (1).png"
+import info_icon_mt4 from "./images/info-icon-mt4.svg"
+import test_results_aero from "./images/aero_test_results.png"
+import feature_shield_mobile from "./images/feature_shield_mobile.webp"
+import refresh_feature_mobile1 from "./images/refresh_feature_mobile.webp"
+import flashlight_feature_mobile from "./images/flashlight_feature_mobile.webp"
+import chart_feature_mobile from "./images/chart_feature_mobile.webp"
+import filter_feature_mobile from "./images/filter_feature_mobile.webp"
+
+
+import feature_shield from "./images/feature_shield.png"
+import refresh_feature from "./images/refresh_feature.png"
+import flashlight_feature from "./images/flashlight_feature.png"
+import chart_feature from "./images/chart_feature.png"
+import filter_feature from "./images/filter_feature.png"
+import shield_line from "./images/shield-check-line.svg"
+import refresh_line from "./images/refresh-line.svg"
+import flashlight_line from "./images/flashlight-line (1).svg"
+import line_chart from "./images/line-chart-line (1).svg"
+import filter_line from "./images/filter_line.svg"
 import prev_arrow from "../images/prev-arrow.svg";
 import next_arrow from "../images/next-arrow.svg";
 import mql5_button from "../images/mql_button.svg";
@@ -18,7 +39,7 @@ import review_image3 from "./images/review_image3.png";
 import review_image4 from "./images/review_image4.png";
 import review_image5 from "./images/review_image5.png";
 import test_image from "./images/test_image.png";
-import bottom_product_image from "./images/aero_product_image.png";
+import bottom_product_image from "./images/bottom_product_image.webp";
 import logo from "../images/logo.svg";
 import PopupBot from "@/components/PopupBot";
 import {Pagination} from "swiper/modules";
@@ -35,11 +56,14 @@ import Image from "next/image";
 import lines from "@/app/images/bottom_lines.svg";
 import Footer from "@/components/Footer";
 import AddToCartButton from "@/components/cartPopup/AddToCartButton";
+import TripleHandler from "@/app/aero/components/TripleHandler";
+import EarthFooter from "@/app/aero/components/EarthFooter";
 
 const AeroClientComponent = () => {
     const {t, language} = useLanguage();
     const {activePopup, setActivePopup} = useThxContext()
     const [isMobile, setIsMobile] = useState(false);
+    const [selectedValue, setSelectedValue] = useState("1");
     useEffect(() => {
         setIsMobile(window.innerWidth < 768);
     }, []);
@@ -121,7 +145,7 @@ const AeroClientComponent = () => {
     const [hoverModeYear, setHoverModeYear]: any = useState(null);
     const [modeYear, setModeYear] = useState("2026");
 
-
+    const botsList = [...t.home.botsList]
     const [isPlaying, setIsPlaying] = useState(false);
 
     const handlePlay = () => {
@@ -139,302 +163,405 @@ const AeroClientComponent = () => {
                 activeThx={activePopup}
                 setActiveThx={setActivePopup}
             />
-            {/* <SEO
-                title="Aero EA — Безпечний торговий бот з просадкою 3.7%"
-                description="Aero EA: алгоритм на базі AI для XAUUSD (Gold). Без мартингейла та сіток. Ідеально підходить для проп-компаній. Winrate 86.8% та стабільний прибуток."
-                keywords="Aero EA, бот для проп компаній, безпечний трейдинг бот, робот для золота XAUUSD, трейдинг без мартингейла, торгові боти AI"
-                image={preview}
-            />*/}
-            <div className="bot_info_main">
-                <motion.div className="main_video_block" {...fadeLeft}>
-                    <video
-                        src="/images/aeroMainVideo.mp4"
-                        poster = "/aero-video-poster.jpg"
-                        autoPlay
-                        muted
-                        loop
-                        preload="metadata"
-                        playsInline
-                        className="my-video-class"
+
+
+            <div className="hero_block_aero">
+                <div className="aero_hero_information">
+                    <motion.h1
+                        className="aero_hero_h1"
+                        {...fadeNumeric}
+                        custom={1}
                     >
-                        {t.aero.hero.videoFallback}
-                    </video>
-                </motion.div>
-                <div className="product_info_main">
-                    <motion.div className="product_name" {...fadeNumeric} custom={1}>
-                        {t.aero.hero.botName}
+                        {t.aero.hero.title}
+                    </motion.h1>
+
+                    <motion.div
+                        className="aero_hero_desc"
+                        {...fadeNumeric}
+                        custom={2}
+                    >
+                        {t.aero.hero.description}
                     </motion.div>
-                    <motion.div className="bot_main_theme" {...fadeNumeric} custom={2}>
-                        {t.aero.hero.theme}
-                    </motion.div>
-                    <motion.div className="bot_main_desc" {...fadeNumeric} custom={3}>
-                        {t.aero.hero.desc}
-                    </motion.div>
-                    <div className="top_buttons_cont">
-                        <AddToCartButton className="button_buy_bot" product={{
-                            id: "aero-ea",
-                            name: "AERO EA",
-                            subtitle: t.aero.hero.theme,
-                            imageSrc: bottom_product_image.src,
-                            unitPrice: 900,
-                        }}>
-                            {t.aero.hero.buy}
-                        </AddToCartButton>
+
+                    <div className="aero_hero_buttons">
                         <motion.a
-                            href="https://www.mql5.com/en/market/product/176860?source=Site+Market+My+Products+Page#description"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            {...fadeNumeric} custom={4} className="mql_link">
-                            {/* <div className="open_mql5">
-                                {t.buttons.openMql}
-                                <img src={mql5_button.src} alt=""/>
-                            </div>*/}
+                            className="view_live_performance"
+                            href="#"
+                            {...fadeNumeric}
+                            custom={3}
+                        >
+                            {t.aero.hero.viewPerformance}
+                        </motion.a>
+
+                        <motion.a
+                            className="explore_the_strategy"
+                            href="#"
+                            {...fadeNumeric}
+                            custom={4}
+                        >
+                            {t.aero.hero.exploreStrategy}
                         </motion.a>
                     </div>
-                    <motion.div className="product_slogan" {...fadeNumeric} custom={5}>
-                        {t.aero.hero.slogan}
-                    </motion.div>
-                    <motion.div
-                        className="product_description"
+
+                    <motion.a
+                        href="#"
+                        className="ready_to_start"
                         {...fadeNumeric}
-                        custom={6}
-                        dangerouslySetInnerHTML={{__html: t.aero.hero.about}}
-                    />
+                        custom={5}
+                    >
+                        {t.aero.hero.getAero}
+                    </motion.a>
                 </div>
             </div>
 
-            <div className="product_advantages">
+            <motion.div className="positive_features" {...fadeUp}>
+                {t.aero.features.label}
+            </motion.div>
+
+            <div className="inside_aero_container">
                 <motion.h2 {...fadeUp}>
-                    {t.aero.advantages.title} <span>{t.aero.hero.botName}</span>
+                    {t.aero.features.title}
                 </motion.h2>
-                <div className="product_advantages_list_aero">
-                    {t.aero.advantages.items.map((item: any, index: number) => (
-                        <motion.div key={index} className="product_advantage_item_gradient" {...fadeNumeric}
-                                    custom={index + 1}>
-                            <div className="product_advantage_item">
-                                <div className="product_advantage_name">
-                                    <img
-                                        src={index === 0 ? advantageIcon1.src : index === 1 ? advantageIcon2.src : index === 2 ? advantageIcon3.src : advantageIcon4.src}
-                                        alt=""/>
-                                    {item.title}
-                                    <div className="product_advantage_num">0{index + 1}</div>
-                                </div>
-                                <div className="product_advantage_desc">
-                                    {item.desc}
-                                </div>
+
+                <div className="inside_aero_features_list">
+                    <motion.div
+                        className="feature feature--main"
+                        {...fadeNumeric}
+                        custom={1}
+                    >
+                        <div className="feature-title">
+                            <img src={shield_line.src} alt="" />
+                            {t.aero.features.main.title}
+                        </div>
+
+                        <div className="feature-desc">
+                            {t.aero.features.main.description}
+                        </div>
+
+                        <picture>
+                            <source
+                                media="(max-width: 767px)"
+                                srcSet={feature_shield_mobile.src}
+                            />
+
+                            <img
+                                src={feature_shield.src}
+                                alt=""
+                                className="feature_shield_img"
+                            />
+                        </picture>
+                    </motion.div>
+
+                    <motion.div
+                        className="feature feature--strategy"
+                        {...fadeNumeric}
+                        custom={2}
+                    >
+                        <div className="feature_info_container">
+                            <div className="feature-title">
+                                <img src={refresh_line.src} alt="" />
+                                {t.aero.features.strategy.title}
                             </div>
-                        </motion.div>
-                    ))}
+
+                            <div className="feature-desc">
+                                {t.aero.features.strategy.description}
+                            </div>
+                        </div>
+
+                        <picture>
+                            <source
+                                media="(max-width: 767px)"
+                                srcSet={refresh_feature_mobile1.src}
+                            />
+
+                            <img src={refresh_feature.src} alt="" />
+                        </picture>
+                    </motion.div>
+
+                    <motion.div
+                        className="feature feature--protection"
+                        {...fadeNumeric}
+                        custom={3}
+                    >
+                        <div className="feature_info_container">
+                            <div className="feature-title">
+                                <img src={flashlight_line.src} alt="" />
+                                {t.aero.features.protection.title}
+                            </div>
+
+                            <div className="feature-desc">
+                                {t.aero.features.protection.description}
+                            </div>
+                        </div>
+
+                        <picture>
+                            <source
+                                media="(max-width: 767px)"
+                                srcSet={flashlight_feature_mobile.src}
+                            />
+
+                            <img src={flashlight_feature.src} alt="" />
+                        </picture>
+                    </motion.div>
+
+                    <motion.div
+                        className="feature feature--setup"
+                        {...fadeNumeric}
+                        custom={4}
+                    >
+                        <div className="feature_info_container">
+                            <div className="feature-title">
+                                <img src={line_chart.src} alt="" />
+                                {t.aero.features.setup.title}
+                            </div>
+
+                            <div className="feature-desc">
+                                {t.aero.features.setup.description}
+                            </div>
+                        </div>
+
+                        <picture>
+                            <source
+                                media="(max-width: 767px)"
+                                srcSet={chart_feature_mobile.src}
+                            />
+
+                            <img src={chart_feature.src} alt="" />
+                        </picture>
+                    </motion.div>
+
+                    <motion.div
+                        className="feature feature--news"
+                        {...fadeNumeric}
+                        custom={5}
+                    >
+                        <div className="feature_info_container">
+                            <div className="feature-title">
+                                <img src={filter_line.src} alt="" />
+                                {t.aero.features.news.title}
+                            </div>
+
+                            <div className="feature-desc">
+                                {t.aero.features.news.description}
+                            </div>
+                        </div>
+
+                        <picture>
+                            <source
+                                media="(max-width: 767px)"
+                                srcSet={filter_feature_mobile.src}
+                            />
+
+                            <img src={filter_feature.src} alt="" />
+                        </picture>
+                    </motion.div>
                 </div>
             </div>
 
             <div className="product_result_fs">
-                <div className="product_result">
-                    <motion.div className="product_result_info" {...fadeNumeric} custom={1}>
-                        {/*<div className="product_name">
-                            {t.aero.hero.botName}
-                        </div>*/}
-
-                        <div className = "year_aero_handler">
-                            <div className="mt_handler only2026">
-                                <div
-                                    className={`mt_top_handler ${
-                                        (hoverMode === "mt5" || (!hoverMode && mode === "mt5")) ? "" : "active_mt5"
-                                    }`}
-                                ></div>
-
-                                <div
-                                    className={`mt4 ${mode === "mt4" ? "active" : ""}`}
-                                    onClick={() => {
-                                        setHoverMode("mt4")
-                                        setHoverModeYear("2026")
-                                        setMode("mt4")
-                                        setModeYear("2026")
-                                    }}
-                                    style={{display:"none"}}
-                                >
-                                    mt5
-                                </div>
-
-                                <div
-                                    className={`mt5 ${mode === "mt5" ? "active" : ""}`}
-                                    onClick={() => {
-                                        setHoverMode("mt5")
-                                        setMode("mt5")
-                                        setHoverModeYear("2025")
-                                    }}
-                                >
-                                    mt4
-                                </div>
-                            </div>
-
-
-                            <div className={`mt_handler ${mode === "mt4" ? "only2026" : ""}`}>
-                                <div
-                                    className={`mt_top_handler ${
-                                        modeYear === "2026" ? "active_mt5" : ""
-                                    }`}
-                                />
-
-                                <div
-                                    className={`mt4 ${modeYear === "2025" ? "active" : ""}`}
-                                    onClick={() => setModeYear("2025")}
-                                >
-                                    2025
-                                </div>
-
-                                <div
-                                    className={`mt5 ${modeYear === "2026" ? "active" : ""}`}
-                                    onClick={() => setModeYear("2026")}
-                                >
-                                    2026
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="result_block_name_aero">
-                            {t.aero.results.subtitle}
-                        </div>
-                        <div className="plus_result">
-                            {t.aero.results.winrateText}
-                        </div>
-                        <div className="result_advantages">
-                            {t.aero.results.stats.map((stat: any, index: number) => (
-                                <div className="result_item" key={index}>
-                                    <div className="result_name">{stat.label}</div>
-                                    <div className="result_numbers">{stat.value}</div>
-                                </div>
-                            ))}
-                        </div>
-                        <a href={mode === "mt5" ? "https://www.myfxbook.com/portfolio/aero-mt4--1year-live/12118216" : "https://www.myfxbook.com/portfolio/aero-mt5--7-months/12118223"}
-                           target="_blank"
-                           rel="noreferrer">
-                            <div className="see_stat_button">
-                                {t.aero.results.button}
-                            </div>
-                        </a>
+                <div className="what_trading_looks_like_container">
+                    <motion.div className="positive_features" {...fadeUp}>
+                        {t.aero.workflow.label}
                     </motion.div>
-                    <motion.div className="result_image" {...fadeNumeric} custom={2}>
-                        <img src={mode === "mt5" ? modeYear === "2026" ? mt4_stat_2026.src : mt4_stat.src : mt5_stat.src} alt="Statistics"/>
+
+                    <motion.h2 {...fadeUp}>
+                        {t.aero.workflow.title}
+                    </motion.h2>
+
+                    <div className="container_main_description">
+                        {t.aero.workflow.description}
+                    </div>
+
+                    <div className="what_trading_looks_like">
+                        <motion.div
+                            className="trading_look_item"
+                            {...fadeNumeric}
+                            custom={1}
+                        >
+                            <div className="number_item">01</div>
+
+                            <div className="title_item">
+                                {t.aero.workflow.breakout.title}
+                            </div>
+
+                            <div className="description_item">
+                                {t.aero.workflow.breakout.description}
+                            </div>
+                        </motion.div>
+
+                        <motion.div
+                            className="trading_look_item"
+                            {...fadeNumeric}
+                            custom={2}
+                        >
+                            <div className="number_item">02</div>
+
+                            <div className="title_item">
+                                {t.aero.workflow.retest.title}
+                            </div>
+
+                            <div className="description_item">
+                                {t.aero.workflow.retest.description}
+                            </div>
+                        </motion.div>
+
+                        <motion.div
+                            className="trading_look_item"
+                            {...fadeNumeric}
+                            custom={3}
+                        >
+                            <div className="number_item">03</div>
+
+                            <div className="title_item">
+                                {t.aero.workflow.stop.title}
+                            </div>
+
+                            <div className="description_item">
+                                {t.aero.workflow.stop.description}
+                            </div>
+                        </motion.div>
+                    </div>
+
+                    <Image
+                        src={bento_row}
+                        alt=""
+                        className="bento_row_image"
+                    />
+
+                    <motion.div className="optional_hedge_block" {...fadeUp}>
+                        <div className="optional_hedge_main">
+                            <img src={refresh_line.src} alt="" />
+                            {t.aero.workflow.hedge.title}
+                        </div>
+
+                        <div className="optional_hedge_info">
+                            {t.aero.workflow.hedge.description}
+                        </div>
                     </motion.div>
                 </div>
             </div>
 
-            <div className="video_demonstration">
-                <motion.div className="video_text" {...fadeLeft}>
-                    <h2 dangerouslySetInnerHTML={{__html: t.aero.video.title}}/>
-                </motion.div>
-                <motion.div className="video_block" {...fadeRight}>
-                    <iframe
-                        key={isPlaying ? "playing" : "stopped"}
-                        style={{
-                            width: '100%',
-                            height: '100%',
-                            border: 'none',
-                            background: isPlaying ? "black" : "",
-                            borderRadius: isPlaying ? "24px" : "32px"
-                        }}
-                        src={isPlaying
-                            ? "https://www.youtube.com/embed/xesKDIFx0EM?autoplay=1&mute=0&si=stKJz6oasfygiEZk"
-                            : "about:blank"
-                        }
-                        title="YouTube video player"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        allowFullScreen
-                    ></iframe>
+            <div className="explore_aeros_record_container">
+                <div className="explore_aeros_record">
+                    <motion.div className="positive_features">
+                        {t.aero.statistics.label}
+                    </motion.div>
 
-                    <AnimatePresence>
-                        {!isPlaying && (
-                            <motion.div
-                                key="cover"
-                                initial={{opacity: 1}}
-                                exit={{opacity: 0, scale: 1.05}}
-                                transition={{duration: 0.5, ease: "easeInOut"}}
-                                className="video_cover_wrapper"
-                                onClick={handlePlay}
-                            >
-                                <Image src={aeroPreview} priority style={{height: "100%"}} alt="Video Cover"/>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
-                </motion.div>
-            </div>
+                    <motion.h2 {...fadeUp}>
+                        {t.aero.statistics.title}
+                    </motion.h2>
 
+                    <div className="container_main_description">
+                        {t.aero.statistics.description}
+                    </div>
 
-            <div className="test_result">
-                <h2>
-                    {t.terra.tests.title} <span>{t.terra.tests.titleAccent}</span>
-                </h2>
-                <div className="test_details_block_fs">
-                    <div className="test_details_block">
-                        <div className="test_info">
-                            <div className="test_theme">
-                                {t.terra.tests.period}
-                            </div>
-                            <div className="test_detail_item">
-                                {t.terra.tests.timeframe}
-                                <div className="test_detail_number">
-                                    {t.terra.tests.timeframeValue}
-                                </div>
-                            </div>
-                            <div className="test_detail_item">
-                                {t.terra.tests.dates}
-                                <div className="test_detail_number">
-                                    2016.01.04 — 2026.01.01
-                                </div>
-                            </div>
+                    <div className="explore_aeros_record_video_container">
+                        <TripleHandler
+                            items={[
+                                {
+                                    value: "1",
+                                    label: (
+                                        <div className="handler_explore_item">
+                                            <div className="handler_title">
+                                                {t.aero.statistics.accounts.legacy.title}
+                                            </div>
 
-                            <div className="test_theme mt24">
-                                {t.terra.tests.depositProfit}
-                            </div>
-                            <div className="test_numbers_grid">
-                                <div className="test_numbers_grid_item">
-                                    <div className="test_item_name">
-                                        {t.terra.tests.startDeposit}
-                                    </div>
-                                    <div className="test_item_number">
-                                        10000.00
-                                    </div>
-                                </div>
-                                <div className="test_numbers_grid_item">
-                                    <div className="test_item_name">
-                                        {t.terra.tests.netProfit}
-                                    </div>
-                                    <div className="test_item_number">
-                                        +1113%
-                                    </div>
+                                            <div className="handler_desc">
+                                                {t.aero.statistics.accounts.legacy.description}
+                                            </div>
+                                        </div>
+                                    ),
+                                },
+                                {
+                                    value: "2",
+                                    label: (
+                                        <div className="handler_explore_item">
+                                            <div className="handler_title">
+                                                {t.aero.statistics.accounts.current.title}
+                                            </div>
+
+                                            <div className="handler_desc">
+                                                {t.aero.statistics.accounts.current.description}
+                                            </div>
+                                        </div>
+                                    ),
+                                },
+                                {
+                                    value: "3",
+                                    label: (
+                                        <div className="handler_explore_item">
+                                            <div className="handler_title">
+                                                {t.aero.statistics.accounts.darwinex.title}
+                                            </div>
+
+                                            <div className="handler_desc">
+                                                {t.aero.statistics.accounts.darwinex.description}
+                                            </div>
+                                        </div>
+                                    ),
+                                },
+                            ]}
+                            handleValue={selectedValue}
+                            setHandleValue={setSelectedValue}
+                        />
+
+                        <div className="archived_mt4">
+                            <div className="top_mobile_archived">
+                                <img src={info_icon_mt4.src} alt="" />
+
+                                <div className="mt4_archived_text">
+                                    {t.aero.statistics.archivedTitle}
                                 </div>
                             </div>
 
-                            <div className="test_detail_item">
-                                {t.terra.tests.pairs}
-                                <div className="test_detail_number">
-                                    XAUUSD ( GOLD )
-                                </div>
-                            </div>
-
-                            <div className="test_theme mt24">
-                                {t.terra.tests.risk}
-                            </div>
-                            <div className="test_detail_item">
-                                {t.terra.tests.maxDrawdown}
-                                <div className="test_detail_number">
-                                    12.31%
-                                </div>
-                            </div>
-
-                            <div className="test_theme mt24">
-                                {t.terra.tests.trades}
-                            </div>
-                            <div className="test_detail_item">
-                                {t.aero.tests.winTrades}
-                                <div className="test_detail_number">
-                                    85.66%
-                                </div>
+                            <div className="mt4_archived_info">
+                                {t.aero.statistics.archivedDescription}
                             </div>
                         </div>
-                        <div className="test_result_image">
-                            <img src={test_image.src} alt="Test results chart"/>
+
+                        <div className="mt4_vidget_container">
+                            <div className="mt4_vidget_block">
+                                <div className="mt4_vidget_block_header">
+                            <span>
+                                {t.aero.statistics.archivedTitle}
+                            </span>
+
+                                    <a
+                                        href="#"
+                                        className="open_mt4_myfxbook"
+                                    >
+                                        {t.aero.statistics.openMyfxbook}
+                                    </a>
+                                </div>
+
+                                <div className="mt4_vidget_block_content" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="all_element_container">
+                        <div className="elements_block">
+                            <div className="elements_list_text">
+                                {t.aero.portfolio.elements}
+                            </div>
+
+                            <div className="one_portfolio_text">
+                                {t.aero.portfolio.title}
+                            </div>
+                        </div>
+
+                        <div className="deposit_elements">
+                            <div className="deposit_label">
+                                {t.aero.portfolio.deposit}
+                            </div>
+
+                            <div className="deposit_money">
+                                $160,000
+                            </div>
+                        </div>
+
+                        <div className="myfxbook_deposit_button">
+                            {t.aero.portfolio.myfxbook}
                         </div>
                     </div>
                 </div>
@@ -463,6 +590,7 @@ const AeroClientComponent = () => {
                         pagination={{clickable: true, el: '.custom-pagination'}}
                         spaceBetween={24}
                         slidesPerView={3}
+
                         onBeforeInit={(swiper) => {
                             swiperRef.current = swiper;
                         }}
@@ -484,12 +612,96 @@ const AeroClientComponent = () => {
                 </motion.div>
 
                 <motion.div className="center-btn" {...fadeUp}>
-                    <a href="https://t.me/+ZjmgYnV_mh9jOGMy" target="_blank" rel="noreferrer">
-                        <div className="more_reviews_button">
+                    <a href="https://t.me/+ZjmgYnV_mh9jOGMy" target="_blank" rel="noreferrer" className="more_reviews_button">
                             {t.terra.reviews1.more}
-                        </div>
                     </a>
                 </motion.div>
+            </div>
+
+            <div className="test_result">
+                <h2>
+                    {t.terra.tests.title} <span>{t.terra.tests.titleAccent}</span>
+                </h2>
+                <div className="test_details_block_fs">
+                    <div className="test_details_block">
+
+                        <div className = "test_grid_container">
+                            <div className = "test_result_f">
+                                <div className="test_theme">
+                                    {t.terra.tests.period}
+                                </div>
+                                <div className="test_detail_item">
+                                    {t.terra.tests.timeframe}
+                                    <div className="test_detail_number">
+                                        {t.terra.tests.timeframeValue}
+                                    </div>
+                                </div>
+                                <div className="test_detail_item">
+                                    {t.terra.tests.dates}
+                                    <div className="test_detail_number">
+                                        2016.01.04 — 2026.01.01
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div className="test_theme">
+                                    {t.terra.tests.depositProfit}
+                                </div>
+                                <div className="test_numbers_grid">
+                                    <div className="test_numbers_grid_item">
+                                        <div className="test_item_name">
+                                            {t.terra.tests.startDeposit}
+                                        </div>
+                                        <div className="test_item_number">
+                                            10000.00
+                                        </div>
+                                    </div>
+                                    <div className="test_numbers_grid_item">
+                                        <div className="test_item_name">
+                                            {t.terra.tests.netProfit}
+                                        </div>
+                                        <div className="test_item_number">
+                                            +1113%
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="test_detail_item">
+                                    {t.terra.tests.pairs}
+                                    <div className="test_detail_number">
+                                        XAUUSD ( GOLD )
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className = "test_result_f">
+                                <div className="test_theme">
+                                    {t.terra.tests.risk}
+                                </div>
+                                <div className="test_detail_item mb16">
+                                    {t.terra.tests.maxDrawdown}
+                                    <div className="test_detail_number">
+                                        12.31%
+                                    </div>
+                                </div>
+
+                                <div className="test_theme mt-auto">
+                                    {t.terra.tests.trades}
+                                </div>
+                                <div className="test_detail_item">
+                                    {t.aero.tests.winTrades}
+                                    <div className="test_detail_number">
+                                        85.66%
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="test_result_image">
+                            <img src={test_results_aero.src} alt="Test results chart"/>
+                        </div>
+                    </div>
+                </div>
             </div>
 
 
@@ -517,13 +729,12 @@ const AeroClientComponent = () => {
             <div className="buy_block_fs">
                 <div className="buy_block">
 
-                    <motion.div className="buy_block_image mob_none" {...fadeNumeric} custom={1}>
-                        <img src={bottom_product_image.src} alt="Aero EA" />
+                    <motion.div className="buy_block_image" {...fadeNumeric} custom={1}>
+                        <img src={bottom_product_image.src} alt="Aero EA"/>
                     </motion.div>
 
                     <motion.div className="buy_block_info" {...fadeNumeric} custom={2}>
                         <div className="product_name_bottom">
-                            <img src={bottom_product_image.src} alt="" className = "desk_none"/>
                             {t.aero.hero.botName}
                         </div>
                         <div className="product_desc_bottom">
@@ -544,6 +755,15 @@ const AeroClientComponent = () => {
                                 {t.aero.botInfoPopup.botPrice}
                                 <span>USD</span>
                             </div>
+                        </div>
+                        <div className="bot_marquee">
+                            <div className="bot_marquee_group">
+                                {botsList.map((el) =>
+                                    el.name === "Aero EA" ? <span>{el.oneTimePayment} · {el.lifetimeAccess} · {el.allUpdatesIncluded} · {el.oneTimePayment} · {el.lifetimeAccess} · {el.allUpdatesIncluded}</span> : ""
+                                )}
+
+                            </div>
+
                         </div>
 
                         <div className="bottom_buttons_block">{/* aero_purchase_block*/}
@@ -570,9 +790,25 @@ const AeroClientComponent = () => {
                     </motion.div>
                 </div>
             </div>
-
+            {/*
             <Footer/>
-            <Image src={lines} alt="" className="bottom_lines" style={{width: '100%', height: 'auto'}} loading="eager"/>
+            */}
+            <EarthFooter/>
+
+            <div className="tech_page_footer_list desk_none">
+                <a href="/terms-and-conditions" className="footer_menu_item">
+                    {t.legalFooter.termsAndConditions}
+                </a>
+                <a href="/software-use-trading-risk-disclosure" className="footer_menu_item">
+                    {t.legalFooter.softwareUseTradingRiskDisclosure}
+                </a>
+                <a href="/privacy-policy" className="footer_menu_item">
+                    {t.legalFooter.privacyPolicy}
+                </a>
+                <div className="copyrights_algo desk_none_none">
+                    @algo 2026
+                </div>
+            </div>
         </div>
     );
 };

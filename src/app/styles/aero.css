@@ -953,3 +953,1158 @@
 
     transform: translate(calc(100% + 4px)) !important;
 }
+
+
+
+.hero_block_aero{
+    width: 100%;
+    overflow: hidden;
+    aspect-ratio: 1440 / 744;
+    background: url("../aero/images/heroBlock_bg.png") no-repeat;
+    background-size: contain;
+
+}
+
+.product_page.aero{
+    background: #fdfdfd !important;
+    padding-bottom: 0;
+}
+
+.positive_features{
+    width: 100%;
+    color: #0088FF4D;
+    text-align: center;
+    font-family: Inter;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 16px;
+    letter-spacing: 47%;
+    text-transform: uppercase;
+}
+
+.inside_aero_container {
+    flex-direction: column;
+    align-items: center;
+    margin-top: 24px;
+    padding: 0 48px;
+    display: flex;
+}
+
+.inside_aero_features_list {
+    grid-gap: 24px;
+    grid-template-columns: 1fr 1fr;
+    width: 1344px;
+    max-width: 100%;
+    margin-top: 48px;
+    display: grid;
+}
+
+
+.inside_aero_features_list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(3, minmax(180px, 190px));
+    grid-template-areas:
+    "main strategy"
+    "main protection"
+    "setup news";
+    gap: 16px;
+}
+
+.feature {
+    min-width: 0;
+    padding: 24px;
+    background: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 24px;
+    box-shadow: 0 2px 24px 0 #B5B5B540;
+    overflow: hidden;
+}
+
+.feature picture{
+    height: 100%;
+}
+
+.feature--main       { grid-area: main; }
+.feature--strategy   { grid-area: strategy; }
+.feature--protection { grid-area: protection; }
+.feature--setup      { grid-area: setup; }
+.feature--news       { grid-area: news; }
+
+@media (max-width: 768px) {
+    .features-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: none;
+        grid-template-areas:
+      "main"
+      "strategy"
+      "protection"
+      "setup"
+      "news";
+    }
+}
+
+
+.inside_aero_features_list > div:not(.feature.feature--main){
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.inside_aero_features_list > div:not(.feature.feature--main) img{
+    height: 100%;
+}
+
+.feature.feature--main{
+    display: flex;
+    flex-direction: column;
+}
+
+.feature.feature--main .feature_shield_img{
+    width: 100%;
+    height: auto;
+    margin-top: auto;
+}
+
+.feature-desc{
+    color: #727272;
+    font-family: Inter;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 120%;
+    letter-spacing: -2%;
+
+}
+
+.feature.feature--main .feature-desc{
+    margin-bottom: 20px;
+
+}
+
+.feature-title{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    white-space: nowrap;
+    color: #171717;
+    font-family: Inter;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 100%;
+    letter-spacing: -1%;
+
+}
+
+.feature-title img{
+    height: 28px;
+}
+
+.container_main_description{
+    margin-top: 24px;
+    width: 100%;
+    text-align: center;
+    color: #727272;
+    font-family: Inter;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 120%;
+    letter-spacing: -2%;
+
+}
+
+.what_trading_looks_like{
+    width: 100%;
+    margin-top: 48px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 16px;
+
+}
+
+.trading_look_item{
+    position: relative;
+}
+
+.trading_look_item .number_item{
+    color: #1717173D;
+    font-family: Inter;
+    font-weight: 800;
+    font-size: 64px;
+    line-height: 100%;
+    letter-spacing: -1%;
+
+
+}
+
+.what_trading_looks_like_container h2{
+    margin-top: 24px;
+}
+
+.trading_look_item .title_item{
+    color: #171717;
+    font-family: Inter;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 100%;
+    letter-spacing: -1%;
+    margin-top: 12px;
+
+}
+
+.trading_look_item .description_item{
+    margin-top: 20px;
+    color: #727272;
+    font-family: Inter;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 120%;
+    letter-spacing: -2%;
+
+}
+
+.what_trading_looks_like_container {
+    width: 100%;
+    max-width: 1344px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.bento_row_image{
+    width: 100%;
+    margin-top: 12px;
+    height: auto;
+    position: relative;
+}
+
+.optional_hedge_block{
+    margin-top: 12px;
+    width: 698px;
+    max-width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 24px;
+    background: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    box-shadow: 0 2px 24px 0 #B5B5B540;
+    border-radius: 24px;
+
+}
+
+.optional_hedge_main{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #171717;
+    font-family: Inter;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 100%;
+    letter-spacing: -1%;
+    margin-right: 16px;
+
+}
+
+.optional_hedge_main img{
+    height: 28px;
+}
+
+.optional_hedge_info{
+    padding-left: 16px;
+    color: #727272;
+    font-family: Inter;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 120%;
+    letter-spacing: -2%;
+    flex: 1;
+    border-left: 1px solid #0000001F;
+
+}
+
+
+.explore_aeros_record_container{
+    justify-content: center;
+    width: 100%;
+    margin-top: 80px;
+    padding: 0 48px;
+    display: flex;
+}
+
+.explore_aeros_record{
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 1344px;
+    display: flex;
+}
+
+.explore_aeros_record h2{
+    margin-top: 24px;
+}
+
+.explore_aeros_record_video_container{
+    margin-top: 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 24px;
+    width: 100%;
+    background: #FFFFFF;
+    border-radius: 24px;
+    box-shadow: 0 2px 24px 0 #B5B5B540;
+
+}
+
+.handler_title{
+    font-family: Inter;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 100%;
+    letter-spacing: -1%;
+    text-align: center;
+    color: #868686;
+    transition: 0.3s;
+
+}
+
+.handler_desc{
+    font-family: Inter;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 100%;
+    letter-spacing: -1%;
+    text-align: center;
+    color: #868686;
+    margin-top: 8px;
+    transition: 0.3s;
+
+}
+
+.handler_explore_item{
+    padding: 12px 0;
+    width: 100%;
+    text-align: center;
+}
+
+.triple_handler.explore_records{
+    height: 62px;
+    margin-top: 0;
+    border-radius: 12px;
+}
+
+.triple_handler.explore_records .top_handler_calc{
+    border-radius: 12px;
+}
+
+.handler_item.active .handler_explore_item .handler_title, .handler_item.active .handler_explore_item .handler_desc{
+    color: #000000;
+}
+
+.archived_mt4{
+    width: 100%;
+    border: 1px solid #E6E6E6;
+    background: rgba(241, 243, 245, 0.38);
+    min-height: 46px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    padding: 14px 24px;
+}
+
+.archived_mt4 img{
+    height: 18px;
+}
+
+.mt4_archived_text{
+    margin: 0 16px;
+    color: #171717;
+    font-family: Inter;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 100%;
+
+}
+
+.mt4_archived_info{
+    padding-left: 16px;
+    border-left: 1px solid #E6E6E6;
+    color: #727272;
+    font-family: Inter;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 100%;
+
+}
+
+.mt4_vidget_container{
+    width: 100%;
+    padding: 24px;
+    border: 1px solid #E6E6E6;
+    background: #FFFFFF;
+    border-radius: 24px;
+
+}
+
+.mt4_vidget_block{
+    width: 100%;
+}
+
+.mt4_vidget_block_header{
+    width: 100%;
+    background: #d3d3d3;
+    display: flex;
+    align-items: center;
+    height: 40px;
+    padding: 0 25px 0 12px;
+}
+
+.mt4_vidget_block_header span{
+    color: #171717;
+    font-family: Inter;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 100%;
+
+}
+
+.open_mt4_myfxbook{
+    font-family: Inter;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 100%;
+    text-decoration: underline;
+    color: #171717;
+    margin-left: auto;
+
+
+}
+
+.mt4_vidget_block_content{
+    min-height: 270px;
+    width: 100%;
+    margin-top: 0;
+    background: #f1f1f1;
+}
+
+.all_element_container{
+    margin-top: 24px;
+    border-radius: 24px;
+    border: 1px solid #E6E6E6;
+    background: #FFFFFF;
+    padding: 24px;
+    min-height: 98px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 24px #b5b5b540;
+}
+
+.elements_block{
+    display: flex;
+    flex-direction: column;
+    margin-right: 55px;
+
+}
+
+.elements_list_text{
+    color: #727272;
+    font-family: Inter;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 100%;
+    text-transform: uppercase;
+
+}
+
+.one_portfolio_text{
+    margin-top: auto;
+    color: #171717;
+    font-family: Inter;
+    font-weight: 500;
+    font-size: 32px;
+    line-height: 120%;
+    letter-spacing: -2%;
+
+}
+
+.deposit_elements{
+    margin-left: auto;
+    border-left: 1px solid #0000001F;
+    height: 100%;
+    padding-left: 55px;
+
+}
+
+.deposit_label{
+    color: #727272;
+    font-family: Inter;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 100%;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+
+}
+
+.deposit_money{
+    color: #171717;
+    font-family: Inter;
+    font-weight: 500;
+    font-size: 32px;
+    line-height: 120%;
+    letter-spacing: -2%;
+    margin-top: auto;
+
+}
+
+.myfxbook_deposit_button{
+    margin-left: 55px;
+    height: 40px;
+    background: linear-gradient(0deg, #232323, #232323),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0) 100%);
+    box-shadow: 0 1px 3px 0 #0E121B1F;
+    border-radius: 200px;
+    padding: 0 14px;
+    display: flex;
+    align-items: center;
+    color: #FFFFFF;
+    font-family: Inter;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: -0.6%;
+
+
+
+}
+
+.product_page.aero .review_item{
+    border: 1px solid #D1D1D1;
+
+}
+
+.product_page.aero .nav-btn{
+    box-shadow: 0 2px 24px 0 #B5B5B540;
+
+}
+
+.product_page.aero .slider-container{
+    margin-top: 0;
+}
+
+.product_page.aero .swiper-wrapper{
+    padding-top: 48px;
+}
+
+.product_page.aero .test_details_block{
+    box-shadow: 0 2px 24px 0 #B5B5B540;
+    border: 1px solid #F6F6F6;
+
+
+}
+
+.test_grid_container{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 24px;
+}
+
+.product_page.aero .test_details_block{
+    grid-template-columns: 1fr;
+}
+
+
+.product_page.aero .test_result_image img{
+    width: 100%;
+}
+
+.test_result_f{
+    display: flex;
+    flex-direction: column;
+}
+
+.test_result_f .test_detail_item{
+    flex: 1;
+}
+
+.product_page.aero .calculate_block, .product_page.aero .calculate_table{
+    border: 1px solid #F6F6F6;
+    box-shadow: 0 2px 24px 0 #B5B5B540;
+
+}
+
+.product_page.aero .bot_stat_item, .product_page.aero .bot_stat_price{
+    background: #F5F5F5;
+}
+
+.product_page.aero .buy_block {
+    grid-gap: 24px;
+    background: #FFFFFF;
+    border: 3px solid #F6F6F6;
+    border-radius: 24px;
+    grid-template-columns: 384fr 616fr;
+    width: 100%;
+    max-width: 1072px;
+    align-items: center;
+    padding: 24px;
+    display: grid;
+}
+
+.product_page.aero .bot_stat_price{
+    padding: 6px 12px;
+}
+
+.product_page.aero .bot_marquee, .product_page.aero .bottom_buttons_block{
+    margin-top: 10px;
+}
+
+.hero_block_aero{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 48px;
+}
+
+.aero_hero_h1{
+    font-family: Inter;
+    font-weight: 700;
+    font-size: 48px;
+    line-height: 100%;
+    letter-spacing: -1%;
+    color: #232323;
+    text-align: left;
+
+
+}
+
+.aero_hero_desc{
+    margin-top: 24px;
+    color: #232323;
+    font-family: Inter;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 120%;
+    letter-spacing: -1%;
+
+}
+
+.aero_hero_buttons {
+    margin-top: 24px;
+    display: flex;
+    gap: 12px;
+
+}
+
+.view_live_performance{
+    box-shadow: 0 0 0 1.2px #3F3F3F, 0 1.2px 2.4px 0 #0E121B3D;
+    background: linear-gradient(0deg, #232323, #232323),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0) 100%);
+    height: 48px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    color: #FFFFFF;
+    font-family: Inter;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 20px;
+    letter-spacing: -0.6%;
+    border-radius: 200px;
+    text-decoration: none;
+    justify-content: center;
+
+}
+
+
+.explore_the_strategy{
+    border-radius: 200px;
+    border: 1px solid #000000;
+    box-shadow: 0 1px 3px 0 #0E121B1F;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    color: #000000;
+    font-family: Inter;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 20px;
+    letter-spacing: -0.6%;
+    justify-content: center;
+
+
+}
+
+.aero_hero_information{
+    width: 100%;
+    max-width: 612px;
+}
+
+.ready_to_start{
+    display: block;
+    margin-top: 26px;
+    padding-left: 20px;
+    text-decoration: none;
+    font-family: Inter;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 20px;
+    letter-spacing: -0.6%;
+    color: #000000;
+
+}
+
+.top_mobile_archived{
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+@media screen and (width < 768px){
+    .hero_block_aero{
+        aspect-ratio: auto;
+        width: 100%;
+        height: 680px;
+        background-position: 8% 0;
+        background-size: auto 475px;
+        justify-content: center;
+        align-items: flex-end;
+        padding-bottom: 14px;
+        padding-right: 0;
+
+    }
+    .aero_hero_information{
+        max-width: calc(100% - 40px);
+        text-align: center;
+    }
+
+    .aero_hero_h1{
+        width: 100%;
+        text-align: center;
+        font-family: Inter;
+        font-weight: 700;
+        font-size: 24px;
+        line-height: 100%;
+        letter-spacing: -1%;
+    }
+
+    .aero_hero_desc{
+        margin-top: 16px;
+        font-family: Inter;
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 120%;
+        letter-spacing: -2%;
+        text-align: center;
+
+    }
+
+    .aero_hero_buttons{
+        margin-top: 16px;
+        flex-direction: column;
+    }
+
+    .ready_to_start{
+        padding-left: 0;
+        margin-top: 22px;
+    }
+
+    .positive_features{
+        margin-top: 36px;
+        font-family: Inter;
+        font-weight: 600;
+        font-size: 12px;
+        line-height: 12px;
+        letter-spacing: 47%;
+        text-transform: uppercase;
+
+    }
+
+    .inside_aero_container{
+        margin-top: 16px;
+        padding: 0 20px;
+    }
+
+    .inside_aero_features_list{
+        margin-top: 16px;
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: none;
+        grid-auto-rows: auto;
+
+        grid-template-areas:
+            "main"
+            "strategy"
+            "protection"
+            "setup"
+            "news";
+    }
+
+    .inside_aero_features_list > div{
+        flex-direction: column !important;
+    }
+
+    .feature > img{
+        width: 100%;
+    }
+
+    .feature-title{
+        white-space: normal;
+    }
+
+    .inside_aero_features_list > div > picture > img{
+        height: auto;
+        width: 100%;
+    }
+
+    .inside_aero_features_list picture{
+        width: 100%;
+    }
+
+    .feature{
+        padding: 0;
+    }
+
+    .feature_info_container{
+        padding: 16px;
+    }
+
+    .feature-title{
+        margin-bottom: 12px;
+    }
+
+    .feature.feature--main .feature-title{
+        padding: 16px 16px 0 16px;
+    }
+
+    .feature.feature--main .feature-desc{
+        padding: 0 16px 16px 16px;
+    }
+
+    .product_page.aero .product_result_fs{
+       margin-top: 36px;
+    }
+
+    .what_trading_looks_like_container h2{
+        margin-top: 16px;
+    }
+
+    .container_main_description{
+        margin-top: 16px;
+    }
+
+    .what_trading_looks_like{
+        margin-top: 24px;
+        grid-template-columns: 1fr;
+    }
+
+
+    .trading_look_item .number_item{
+        position: absolute;
+        top: 0;
+        right: 15px;
+        font-family: Inter;
+        font-weight: 800;
+        font-size: 42.91px;
+        line-height: 100%;
+        letter-spacing: -1%;
+        z-index: 1;
+    }
+
+    .trading_look_item .title_item{
+        font-family: Inter;
+        font-weight: 400;
+        font-size: 18px;
+        line-height: 100%;
+        letter-spacing: -1%;
+
+    }
+
+    .trading_look_item .description_item{
+        font-family: Inter;
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 120%;
+        letter-spacing: -2%;
+    }
+
+    .bento_row_image {
+        width: 146%;
+        left: -39px;
+        margin-top: 12px;
+    }
+
+    .optional_hedge_block{
+        flex-direction: column;
+        padding: 20px;
+    }
+
+    .optional_hedge_main{
+        margin-right: 0;
+        margin-bottom: 12px;
+    }
+
+    .optional_hedge_info{
+        padding-top: 12px;
+        border-left: none;
+        border-top: 1px solid #e5e7eb;
+        padding-left: 0;
+        text-align: center;
+    }
+
+    .explore_aeros_record_container{
+        margin-top: 72px;
+        padding: 0 20px;
+    }
+
+    .positive_features{
+        margin-top: 0;
+    }
+
+    .explore_aeros_record h2{
+        margin-top: 16px;
+    }
+
+    .explore_aeros_record_video_container{
+        margin-top: 24px;
+        padding: 16px;
+    }
+
+    .handler_explore_item{
+        padding: 10px;
+    }
+
+    .handler_title{
+        font-family: Inter;
+        font-weight: 400;
+        font-size: 10px;
+        line-height: 12px;
+        letter-spacing: -1%;
+        text-align: center;
+
+    }
+
+    .handler_desc{
+        margin-top: 4px;
+        font-family: Inter;
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 14px;
+        letter-spacing: -1%;
+        text-align: center;
+
+    }
+
+    .top_mobile_archived{
+        height: auto;
+    }
+
+    .archived_mt4{
+        flex-direction: column;
+        padding: 16px;
+        gap: 8px;
+        align-items: flex-start;
+    }
+
+    .mt4_archived_text{
+        line-height: 18px;
+        margin: 0 0 0 8px;
+    }
+
+    .mt4_vidget_container{
+        padding: 12px;
+    }
+
+    .mt4_archived_info{
+        padding-left: 0;
+        line-height: 20px;
+    }
+
+
+    .mt4_vidget_block_header{
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 12px;
+        height: 68px;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .open_mt4_myfxbook{
+        margin-left: unset;
+    }
+
+    .all_element_container{
+        flex-direction: column;
+        padding: 16px;
+        align-items: flex-start;
+
+    }
+
+    .elements_block{
+        margin-right: 0;
+    }
+
+    .deposit_elements{
+        margin-left: 0;
+        padding-left: 0;
+    }
+
+    .myfxbook_deposit_button{
+        margin-left: 0;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        flex-shrink: 0;
+        margin-top: 12px;
+        background: linear-gradient(0deg, #232323, #232323),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0) 100%);
+
+    }
+
+    .deposit_money{
+        font-family: Inter;
+        font-weight: 500;
+        font-size: 32px;
+        line-height: 120%;
+        letter-spacing: -2%;
+
+    }
+
+    .deposit_label{
+        margin-bottom: 4px;
+        font-family: Inter;
+        font-weight: 500;
+        font-size: 10px;
+        line-height: 100%;
+        text-transform: uppercase;
+
+    }
+
+    .deposit_elements{
+        border-left: none;
+        border-top: 1px solid #EBEBEB;
+        padding-top: 12px;
+        margin-top: 12px;
+    }
+
+    .one_portfolio_text{
+        font-family: Inter;
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 120%;
+        letter-spacing: -2%;
+        margin-top: 12px;
+
+    }
+
+    .elements_list_text{
+        font-family: Inter;
+        font-weight: 500;
+        font-size: 10px;
+        line-height: 100%;
+        text-transform: uppercase;
+
+    }
+
+    .algo_feedback_block{
+        margin-top: 24px;
+    }
+
+    .product_page.aero .swiper-wrapper{
+        padding-top: 24px;
+    }
+
+    .more_reviews_button{
+        margin-top: 24px;
+        width: calc(100% - 40px);
+    }
+
+    .product_page.aero .test_result{
+        margin-top: 24px;
+    }
+
+    .test_grid_container{
+        grid-template-columns: 1fr;
+    }
+
+    .product_page.aero .test_result_f:nth-child(3) .test_detail_item{
+        flex-direction: row;
+    }
+
+    .product_page.aero .test_numbers_grid{
+        grid-template-columns: 1fr;
+    }
+
+    .product_page.aero .calculate_block_container {
+        margin-top: 24px;
+    }
+
+    .calculate_block_container h2{
+        width: calc(100% - 40px);
+    }
+
+    .calculate_block_container h2 span{
+        color: #23232380;
+    }
+
+    .product_page.aero .buy_block_fs{
+        margin-top: 24px;
+    }
+
+    .product_page.aero .buy_block{
+        grid-template-columns: 1fr;
+        padding: 20px;
+        grid-gap: 16px;
+    }
+
+    .product_page.aero .product_name_bottom{
+        font-family: Inter;
+        font-weight: 500;
+        font-size: 20px;
+        line-height: 120%;
+        letter-spacing: -2%;
+
+    }
+
+    .product_desc_bottom{
+        margin-top: 16px;
+        font-family: Inter;
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 120%;
+        letter-spacing: -2%;
+
+    }
+
+    .product_page.aero .tech_page_footer_list {
+        text-align: center;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: auto;
+        display: flex;
+        position: relative;
+        bottom: 0;
+        right: 0;
+        gap: 12px;
+        padding-bottom: 14px;
+    }
+
+    .product_page.aero .tech_page_footer_list a, .copyrights_algo{
+
+        max-width: 175px;
+        color: #232323;
+        text-decoration: none;
+        font-family: Inter;
+        font-weight: 500;
+        font-size: 10px;
+        line-height: 100%;
+        letter-spacing: -1%;
+        text-align: center;
+        text-transform: uppercase;
+
+    }
+
+}

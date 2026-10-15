@@ -14,7 +14,6 @@ export default function TributeOrderReturnPage() {
             try { saved = sessionStorage.getItem("aw_tribute_return_token_v1") ?? ""; } catch { /* optional */ }
             captured.current = fromLink ?? saved;
             if (fromLink) {
-                // Avoid leaving the bearer token in the address bar or navigation history.
                 window.history.replaceState(null, "", window.location.pathname);
                 try { sessionStorage.setItem("aw_tribute_return_token_v1", fromLink); } catch { /* optional */ }
             }

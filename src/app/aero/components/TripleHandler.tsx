@@ -1,14 +1,14 @@
 import React from "react";
 
 interface HandlerItem {
-    value: string;
+    value: number;
     label: React.ReactNode;
 }
 
 interface TripleHandlerTypes {
     items: HandlerItem[];
-    handleValue: string;
-    setHandleValue: (value: string) => void;
+    handleValue: number;
+    setHandleValue: (value: number) => void;
 }
 
 const TripleHandler = ({

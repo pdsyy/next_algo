@@ -1,13 +1,5 @@
 "use client"
 import React, {useEffect, useRef, useState} from 'react';
-import advantageIcon1 from "./images/strategy_icon.svg"
-import advantageIcon2 from "./images/connection_icon.svg"
-import advantageIcon3 from "./images/connetction_icon2.svg"
-import advantageIcon4 from "./images/bot_icon.svg"
-import mt4_stat from "./images/mt4_stat_s.png"
-import mt4_stat_2026 from "./images/2026mt4.png"
-import mt5_stat from "./images/mt5_stat.png"
-import how_to_image from "./images/how_to_image.png"
 
 import bento_row from "./images/Bento Row 2 (1).png"
 import info_icon_mt4 from "./images/info-icon-mt4.svg"
@@ -58,14 +50,32 @@ import Footer from "@/components/Footer";
 import AddToCartButton from "@/components/cartPopup/AddToCartButton";
 import TripleHandler from "@/app/aero/components/TripleHandler";
 import EarthFooter from "@/app/aero/components/EarthFooter";
+import {useScroll} from "@/context/ScrollContext";
 
 const AeroClientComponent = () => {
     const {t, language} = useLanguage();
     const {activePopup, setActivePopup} = useThxContext()
     const [isMobile, setIsMobile] = useState(false);
-    const [selectedValue, setSelectedValue] = useState("1");
+    const [selectedValue, setSelectedValue] = useState(1);
+    const [widgetSize, setWidgetSize] = useState<{
+        width: number;
+        height: number;
+    } | null>(null);
+
     useEffect(() => {
-        setIsMobile(window.innerWidth < 768);
+        const handleResize = () => {
+            const mobile = window.innerWidth < 768;
+
+            setWidgetSize({
+                width: mobile ? 450 : 800,
+                height: mobile ? 600 : 270,
+            });
+        };
+
+        handleResize();
+        window.addEventListener("resize", handleResize);
+
+        return () => window.removeEventListener("resize", handleResize);
     }, []);
 
 
@@ -106,6 +116,7 @@ const AeroClientComponent = () => {
             }
         })
     };
+    const {scrollToSection} = useScroll()!;
 
     const fadeNumeric: HTMLMotionProps<any> = {
         initial: "hidden",
@@ -125,32 +136,9 @@ const AeroClientComponent = () => {
     };
 
 
-    const fadeLeft: HTMLMotionProps<any> = {
-        initial: {opacity: 0, x: -40, translateZ: 0},
-        whileInView: {opacity: 1, x: 0, translateZ: 0},
-        viewport: baseViewport,
-        transition: baseTransition
-    };
-
-    const fadeRight: HTMLMotionProps<any> = {
-        initial: {opacity: 0, x: 40, translateZ: 0},
-        whileInView: {opacity: 1, x: 0, translateZ: 0},
-        viewport: baseViewport,
-        transition: baseTransition
-    };
-
-
-    const [hoverMode, setHoverMode]: any = useState(null);
-    const [mode, setMode] = useState("mt5"); //reverse mt4 mt5
-    const [hoverModeYear, setHoverModeYear]: any = useState(null);
-    const [modeYear, setModeYear] = useState("2026");
-
     const botsList = [...t.home.botsList]
-    const [isPlaying, setIsPlaying] = useState(false);
 
-    const handlePlay = () => {
-        setIsPlaying(true);
-    };
+    console.log(selectedValue)
     return (
         <div className="product_page aero">
 
@@ -186,7 +174,7 @@ const AeroClientComponent = () => {
                     <div className="aero_hero_buttons">
                         <motion.a
                             className="view_live_performance"
-                            href="#"
+                            href="#view-live-performance"
                             {...fadeNumeric}
                             custom={3}
                         >
@@ -195,7 +183,7 @@ const AeroClientComponent = () => {
 
                         <motion.a
                             className="explore_the_strategy"
-                            href="#"
+                            href="#explore-strategy"
                             {...fadeNumeric}
                             custom={4}
                         >
@@ -204,12 +192,15 @@ const AeroClientComponent = () => {
                     </div>
 
                     <motion.a
-                        href="#"
-                        className="ready_to_start"
+                        href="#purchase-bot"
                         {...fadeNumeric}
                         custom={5}
+                        className="ready_to_start"
+
                     >
-                        {t.aero.hero.getAero}
+
+                        {t.aero.hero.getAero}<span>→</span>
+
                     </motion.a>
                 </div>
             </div>
@@ -230,7 +221,7 @@ const AeroClientComponent = () => {
                         custom={1}
                     >
                         <div className="feature-title">
-                            <img src={shield_line.src} alt="" />
+                            <img src={shield_line.src} alt=""/>
                             {t.aero.features.main.title}
                         </div>
 
@@ -259,7 +250,7 @@ const AeroClientComponent = () => {
                     >
                         <div className="feature_info_container">
                             <div className="feature-title">
-                                <img src={refresh_line.src} alt="" />
+                                <img src={refresh_line.src} alt=""/>
                                 {t.aero.features.strategy.title}
                             </div>
 
@@ -274,7 +265,7 @@ const AeroClientComponent = () => {
                                 srcSet={refresh_feature_mobile1.src}
                             />
 
-                            <img src={refresh_feature.src} alt="" />
+                            <img src={refresh_feature.src} alt=""/>
                         </picture>
                     </motion.div>
 
@@ -285,7 +276,7 @@ const AeroClientComponent = () => {
                     >
                         <div className="feature_info_container">
                             <div className="feature-title">
-                                <img src={flashlight_line.src} alt="" />
+                                <img src={flashlight_line.src} alt=""/>
                                 {t.aero.features.protection.title}
                             </div>
 
@@ -300,7 +291,7 @@ const AeroClientComponent = () => {
                                 srcSet={flashlight_feature_mobile.src}
                             />
 
-                            <img src={flashlight_feature.src} alt="" />
+                            <img src={flashlight_feature.src} alt=""/>
                         </picture>
                     </motion.div>
 
@@ -311,7 +302,7 @@ const AeroClientComponent = () => {
                     >
                         <div className="feature_info_container">
                             <div className="feature-title">
-                                <img src={line_chart.src} alt="" />
+                                <img src={line_chart.src} alt=""/>
                                 {t.aero.features.setup.title}
                             </div>
 
@@ -326,7 +317,7 @@ const AeroClientComponent = () => {
                                 srcSet={chart_feature_mobile.src}
                             />
 
-                            <img src={chart_feature.src} alt="" />
+                            <img src={chart_feature.src} alt=""/>
                         </picture>
                     </motion.div>
 
@@ -337,7 +328,7 @@ const AeroClientComponent = () => {
                     >
                         <div className="feature_info_container">
                             <div className="feature-title">
-                                <img src={filter_line.src} alt="" />
+                                <img src={filter_line.src} alt=""/>
                                 {t.aero.features.news.title}
                             </div>
 
@@ -352,13 +343,13 @@ const AeroClientComponent = () => {
                                 srcSet={filter_feature_mobile.src}
                             />
 
-                            <img src={filter_feature.src} alt="" />
+                            <img src={filter_feature.src} alt=""/>
                         </picture>
                     </motion.div>
                 </div>
             </div>
 
-            <div className="product_result_fs">
+            <div className="product_result_fs" id = "explore-strategy">
                 <div className="what_trading_looks_like_container">
                     <motion.div className="positive_features" {...fadeUp}>
                         {t.aero.workflow.label}
@@ -430,7 +421,7 @@ const AeroClientComponent = () => {
 
                     <motion.div className="optional_hedge_block" {...fadeUp}>
                         <div className="optional_hedge_main">
-                            <img src={refresh_line.src} alt="" />
+                            <img src={refresh_line.src} alt=""/>
                             {t.aero.workflow.hedge.title}
                         </div>
 
@@ -459,7 +450,7 @@ const AeroClientComponent = () => {
                         <TripleHandler
                             items={[
                                 {
-                                    value: "1",
+                                    value: 1,
                                     label: (
                                         <div className="handler_explore_item">
                                             <div className="handler_title">
@@ -473,7 +464,7 @@ const AeroClientComponent = () => {
                                     ),
                                 },
                                 {
-                                    value: "2",
+                                    value: 2,
                                     label: (
                                         <div className="handler_explore_item">
                                             <div className="handler_title">
@@ -487,7 +478,7 @@ const AeroClientComponent = () => {
                                     ),
                                 },
                                 {
-                                    value: "3",
+                                    value: 3,
                                     label: (
                                         <div className="handler_explore_item">
                                             <div className="handler_title">
@@ -507,7 +498,7 @@ const AeroClientComponent = () => {
 
                         <div className="archived_mt4">
                             <div className="top_mobile_archived">
-                                <img src={info_icon_mt4.src} alt="" />
+                                <img src={info_icon_mt4.src} alt=""/>
 
                                 <div className="mt4_archived_text">
                                     {t.aero.statistics.archivedTitle}
@@ -519,22 +510,40 @@ const AeroClientComponent = () => {
                             </div>
                         </div>
 
-                        <div className="mt4_vidget_container">
+                        <div className="mt4_vidget_container" id = "view-live-performance">
                             <div className="mt4_vidget_block">
-                                <div className="mt4_vidget_block_header">
-                            <span>
-                                {t.aero.statistics.archivedTitle}
-                            </span>
+                                <a href={selectedValue === 1 ?
+                                    "https://www.myfxbook.com/members/alg0_o/aero-mt4--archive-1/12232265" :
+                                    selectedValue === 2 ? "https://www.myfxbook.com/members/alg0_o/aero-mt5--current-account/12205723" :
+                                        "https://www.myfxbook.com/members/alg0_o/aero-darwinex-zero--oenc/12209314"}
+                                   className="open_mt4_myfxbook" target="_blank">
+                                    {t.aero.statistics.openMyfxbook}
+                                </a>
 
-                                    <a
-                                        href="#"
-                                        className="open_mt4_myfxbook"
-                                    >
-                                        {t.aero.statistics.openMyfxbook}
-                                    </a>
+                                <div className="mt4_vidget_block_content">
+                                    {widgetSize && (selectedValue === 1 ?
+                                        (
+                                            <a href="https://www.myfxbook.com/members/alg0_o/aero-mt4--archive-1/12232265" target="_blank">
+                                                <img className="widget_image_myfxbook" alt="widget"
+                                                     src={`https://widgets.mfbcdn.net/custom-widget?id=12232265&width=${widgetSize.width}&height=${widgetSize.height}&bart=0&linet=2&symbol=GOLD&magic=-1&title=AeroMT4(Archive%2B1year)&titles=12&bgColor=ffffff&gridColor=bdbdbd&lineColor=ff0505&barColor=ffadad&bar1Color=ffadad&fontColor=525252&chartbgc=ffffff&equityColor=eff45a`}/></a>
+                                        )
+                                        : selectedValue === 2 ?
+                                            (
+                                                <a href="https://www.myfxbook.com/members/alg0_o/aero-mt5--current-account/12205723" target="_blank">
+                                                    <img className="widget_image_myfxbook" alt="widget"
+                                                         src={`https://widgets.mfbcdn.net/custom-widget?id=12205723&width=${widgetSize.width}&height=${widgetSize.height}&bart=0&linet=2&symbol=GOLD&magic=-1&title=AeroMT5(CurrentAccount)&titles=12&bgColor=ffffff&gridColor=bdbdbd&lineColor=ff0505&barColor=ffadad&bar1Color=ffadad&fontColor=525252&chartbgc=ffffff&equityColor=eff45a`}/></a>
+                                            )
+                                            :
+                                            (
+                                                <a href="https://www.myfxbook.com/members/alg0_o/aero-darwinex-zero--oenc/12209314" target="_blank">
+                                                    <img className="widget_image_myfxbook" alt="widget"
+                                                         src={`https://widgets.mfbcdn.net/custom-widget?id=12209314&width=${widgetSize.width}&height=${widgetSize.height}&bart=0&linet=2&symbol=GOLD&magic=-1&title=AeroDarwinexZero(OENC)&titles=12&bgColor=ffffff&gridColor=bdbdbd&lineColor=ff0505&barColor=ffadad&bar1Color=ffadad&fontColor=525252&chartbgc=ffffff&equityColor=eff45a`}/>
+                                                </a>
+                                            )
+                                    )}
+
+
                                 </div>
-
-                                <div className="mt4_vidget_block_content" />
                             </div>
                         </div>
                     </div>
@@ -560,9 +569,9 @@ const AeroClientComponent = () => {
                             </div>
                         </div>
 
-                        <div className="myfxbook_deposit_button">
+                        <a className="myfxbook_deposit_button" href = "https://www.myfxbook.com/members/alg0_o" target = "_blank">
                             {t.aero.portfolio.myfxbook}
-                        </div>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -612,8 +621,9 @@ const AeroClientComponent = () => {
                 </motion.div>
 
                 <motion.div className="center-btn" {...fadeUp}>
-                    <a href="https://t.me/+ZjmgYnV_mh9jOGMy" target="_blank" rel="noreferrer" className="more_reviews_button">
-                            {t.terra.reviews1.more}
+                    <a href="https://t.me/+ZjmgYnV_mh9jOGMy" target="_blank" rel="noreferrer"
+                       className="more_reviews_button">
+                        {t.terra.reviews1.more}
                     </a>
                 </motion.div>
             </div>
@@ -625,8 +635,8 @@ const AeroClientComponent = () => {
                 <div className="test_details_block_fs">
                     <div className="test_details_block">
 
-                        <div className = "test_grid_container">
-                            <div className = "test_result_f">
+                        <div className="test_grid_container">
+                            <div className="test_result_f">
                                 <div className="test_theme">
                                     {t.terra.tests.period}
                                 </div>
@@ -675,7 +685,7 @@ const AeroClientComponent = () => {
                                 </div>
                             </div>
 
-                            <div className = "test_result_f">
+                            <div className="test_result_f">
                                 <div className="test_theme">
                                     {t.terra.tests.risk}
                                 </div>
@@ -726,7 +736,7 @@ const AeroClientComponent = () => {
 
             <CalculatorSectionAero startPercentage={30}/>
 
-            <div className="buy_block_fs">
+            <div className="buy_block_fs" id = "purchase-bot">
                 <div className="buy_block">
 
                     <motion.div className="buy_block_image" {...fadeNumeric} custom={1}>
@@ -759,7 +769,8 @@ const AeroClientComponent = () => {
                         <div className="bot_marquee">
                             <div className="bot_marquee_group">
                                 {botsList.map((el) =>
-                                    el.name === "Aero EA" ? <span>{el.oneTimePayment} · {el.lifetimeAccess} · {el.allUpdatesIncluded} · {el.oneTimePayment} · {el.lifetimeAccess} · {el.allUpdatesIncluded}</span> : ""
+                                    el.name === "Aero EA" ?
+                                        <span>{el.oneTimePayment} · {el.lifetimeAccess} · {el.allUpdatesIncluded} · {el.oneTimePayment} · {el.lifetimeAccess} · {el.allUpdatesIncluded}</span> : ""
                                 )}
 
                             </div>

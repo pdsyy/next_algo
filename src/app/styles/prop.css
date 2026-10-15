@@ -1961,7 +1961,8 @@
 .read_more_button, .telegram_btn,
 .bot_more_details, .consult_button,
 .piece_pay_bottom, .send_button,
-.open_mql5_black{
+.open_mql5_black, .view_live_performance,
+.explore_the_strategy{
     transition: all 0.1s, background-color 0.4s;
 }
 
@@ -1970,7 +1971,8 @@
 .see_stat_button:active, .more_reviews_button:active,
 .calculate_button:active, .button_buy_bottom:active,
 .read_more_button:active, .telegram_btn:active,
-.bot_more_details:active, .consult_button:active {
+.bot_more_details:active, .consult_button:active
+ {
     background: #000000;
     box-shadow: 0px 1px 3px 0px #0E121B1F;
     transform: scale(0.98);

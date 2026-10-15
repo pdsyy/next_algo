@@ -1,3 +1,19 @@
+*{
+    scroll-behavior: smooth;
+}
+
+#purchase-bot{
+    scroll-margin-top: 30vh;
+}
+
+#explore-strategy{
+    scroll-margin-top: 10vh;
+}
+
+#view-live-performance{
+    scroll-margin-top: 50vh;
+}
+
 .product_page{
     padding-bottom: 27px;
 }
@@ -1349,6 +1365,7 @@
 
 .mt4_vidget_block{
     width: 100%;
+    position: relative;
 }
 
 .mt4_vidget_block_header{
@@ -1369,6 +1386,10 @@
 
 }
 
+.widget_image_myfxbook{
+    width: 100%;
+}
+
 .open_mt4_myfxbook{
     font-family: Inter;
     font-weight: 700;
@@ -1377,6 +1398,9 @@
     text-decoration: underline;
     color: #171717;
     margin-left: auto;
+    position: absolute;
+    right: 0;
+    top: 0;
 
 
 }
@@ -1643,6 +1667,9 @@
 }
 
 .ready_to_start{
+    background: none;
+    border: none;
+    cursor: pointer;
     display: block;
     margin-top: 26px;
     padding-left: 20px;
@@ -1662,7 +1689,121 @@
     height: 100%;
 }
 
+.explore_the_strategy:active, .view_live_performance:active{
+    transform: scale(0.98) !important;
+}
+
+.ready_to_start span {
+    display: inline-block;
+    transition: transform 0.2s;
+    font-weight: 700;
+}
+
+.ready_to_start:hover span {
+    transform: translateX(3px);
+}
+
+
+@media screen and (width < 1199px) {
+    .aero_hero_information {
+        max-width: 415px;
+    }
+
+    .aero_hero_h1 {
+        font-size: 32px;
+    }
+
+    .aero_hero_desc{
+        font-size: 16px;
+        margin-top: 16px;
+    }
+
+    .aero_hero_buttons{
+        margin-top: 16px;
+    }
+
+    .view_live_performance, .explore_the_strategy{
+        height: 36px;
+        font-size: 14px;
+    }
+
+    .hero_block_aero {
+        padding-bottom: 6vw;
+        align-items: flex-end;
+    }
+
+    .ready_to_start{
+        margin-top: 16px;
+        font-size: 14px;
+    }
+
+    .mt4_vidget_block_content {
+        background: #FFFFFF;
+        width: 100%;
+        min-height: 270px;
+        display: flex;
+        margin-top: 0;
+        align-items: center;
+    }
+
+    .deposit_money {
+        color: #171717;
+        letter-spacing: -2%;
+        margin-top: 4px;
+        font-family: Inter;
+        font-size: 32px;
+        font-weight: 500;
+        line-height: 120%;
+    }
+
+    .deposit_elements{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .myfxbook_deposit_button {
+        color: #fff;
+        height: 40px;
+        letter-spacing: -0.6%;
+        background: linear-gradient(0deg, #232323, #232323), linear-gradient(#ffffff29 0%, #fff0 100%);
+        border-radius: 200px;
+        align-items: center;
+        margin-left: 32px;
+        padding: 0 14px;
+        font-family: Inter;
+        font-size: 15px;
+        white-space: nowrap;
+        font-weight: 500;
+        line-height: 20px;
+        display: flex;
+        box-shadow: 0 1px 3px #0e121b1f;
+    }
+}
+
 @media screen and (width < 768px){
+
+    #purchase-bot{
+        scroll-margin-top: 10vh;
+    }
+    .view_live_performance, .view_live_performance{
+        height: 40px;
+    }
+
+    .aero_hero_information{
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .aero_hero_buttons{
+        width: 100%;
+    }
+    .view_live_performance, .view_live_performance{
+        width: 100%;
+        flex-shrink: 0;
+    }
     .hero_block_aero{
         aspect-ratio: auto;
         width: 100%;
@@ -2105,6 +2246,20 @@
         text-align: center;
         text-transform: uppercase;
 
+    }
+
+
+    .open_mt4_myfxbook {
+        right: 0;
+        bottom: 0 !important;
+        margin-bottom: 0;
+        height: fit-content;
+        top: unset;
+    }
+
+    .mt4_vidget_block_content{
+        padding-bottom: 20px;
+        background: #FFFFFF;
     }
 
 }

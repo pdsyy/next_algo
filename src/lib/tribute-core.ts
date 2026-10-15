@@ -28,19 +28,23 @@ export function extractOrder(response: any) {
         response?.data?.order ?? response?.order;
 }
 
+// A lifetime subscription can fulfill only one order per Telegram user and tariff.
+// Subscription webhooks do not expose a digital-product purchase/transaction ID.
+export function subscriptionKey(p: any) {
+    return `subscription:${positiveId(p.subscription_id)}:${positiveId(p.period_id)}:${positiveId(p.telegram_user_id)}`;
+}
 export function parsePurchase(body: any) {
     const p = body?.payload;
-    if (body?.name !== "new_digital_product" || !p) throw new Error("Unsupported event");
-    if (!Number.isSafeInteger(p.amount) || p.amount <= 0) throw new Error("Invalid amount");
-    const createdAt = new Date(p.purchase_created_at);
-    if (!Number.isFinite(createdAt.getTime())) throw new Error("Invalid purchase date");
+    if (body?.name !== "new_subscription" || !p) throw new Error("Unsupported event");
+    if (p.period !== "onetime" || p.type !== "regular") throw new Error("Only regular onetime subscriptions are supported");
+    if (!Number.isSafeInteger(p.price) || p.price <= 0) throw new Error("Invalid gross price");
+    const createdAt = new Date(body.created_at);
+    if (!Number.isFinite(createdAt.getTime()) || createdAt.getTime() > Date.now() + 5 * 60 * 1000) throw new Error("Invalid event date");
+    const key = subscriptionKey(p);
     return {
-        purchaseId: positiveId(p.purchase_id),
-        transactionId: positiveId(p.transaction_id),
-        productId: positiveId(p.product_id),
-        telegramId: positiveId(p.telegram_user_id),
-        amount: p.amount as number,
-        currency: String(p.currency).toUpperCase(),
-        createdAt,
+        purchaseId: key, transactionId: key,
+        productId: positiveId(p.subscription_id), periodId: positiveId(p.period_id),
+        telegramId: positiveId(p.telegram_user_id), amount: p.price as number,
+        currency: String(p.currency).toUpperCase(), createdAt,
     };
 }

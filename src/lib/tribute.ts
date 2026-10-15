@@ -14,7 +14,8 @@ export function config() {
     return {
         testMode,
         account: required("TRIBUTE_ACCOUNT_ID"),
-        productId: positiveId(required("TRIBUTE_AERO_PRODUCT_ID")),
+        productId: positiveId(required("TRIBUTE_AERO_SUBSCRIPTION_ID")),
+        periodId: positiveId(required("TRIBUTE_AERO_PERIOD_ID")),
         url: required("TRIBUTE_AERO_URL"),
         bot: required("TELEGRAM_BOT_USERNAME").replace(/^@/, ""),
     };
@@ -36,24 +37,32 @@ export async function sessionByToken(token: string) {
     return rows[0] ?? null;
 }
 
+// Keep the existing function contract for checkout and Telegram routes.
 export async function getTributeProduct() {
     const c = config();
-    const response = await fetch(`https://tribute.tg/api/v1/products/${c.productId}`, {
+    const response = await fetch("https://tribute.tg/api/v1/subscriptions", {
         headers: { "Api-Key": required("TRIBUTE_API_KEY") },
         cache: "no-store", signal: AbortSignal.timeout(10000),
     });
-    if (!response.ok) throw new Error(`Tribute product request failed (${response.status})`);
-    const product = await response.json();
-    if (String(product.id) !== c.productId || String(product.currency).toUpperCase() !== "USD" ||
-        !Number.isSafeInteger(product.amount) || product.amount <= 0) throw new Error("Invalid Tribute product");
-    if (!c.testMode && (product.status !== "approved" || product.acceptCards !== true)) {
-        throw new Error("Tribute product is not approved for card payments");
+    if (!response.ok) throw new Error(`Tribute subscription request failed (${response.status})`);
+    const data = await response.json();
+    if (!Array.isArray(data.result)) throw new Error("Invalid Tribute catalog");
+    const matches = data.result.filter((s: any) => String(s.subscriptionId) === c.productId);
+    if (matches.length !== 1) throw new Error("Subscription not found in this Tribute account");
+    const subscription = matches[0];
+    const periods = (subscription.periods ?? []).filter((p: any) => String(p.periodId) === c.periodId);
+    if (periods.length !== 1 || periods[0].period !== "onetime" || String(subscription.currency).toUpperCase() !== "USD") {
+        throw new Error("Aero must use the selected onetime USD tariff");
     }
-    // Only use the product URL returned by the authenticated API.
-    if (product.webLink !== c.url || new URL(c.url).hostname !== "web.tribute.tg") {
-        throw new Error("TRIBUTE_AERO_URL does not match the selected product");
+    // Catalog prices are dollars. Webhook prices are cents.
+    const amount = cents(periods[0].price);
+    const url = new URL(c.url);
+    if (url.protocol !== "https:" || url.hostname !== "web.tribute.tg" ||
+        !/^\/s\/[A-Za-z0-9]+$/.test(url.pathname) || url.search || url.hash || url.username || url.password) {
+        throw new Error("Invalid Tribute subscription URL");
     }
-    return product;
+    // Catalog has no URL field: operator must verify this link belongs to this subscription.
+    return { id: c.productId, amount, currency: "usd", link: c.url, webLink: c.url };
 }
 
 export async function createTributeSession(order: any, reference: string, email: string, price: number) {
@@ -63,12 +72,12 @@ export async function createTributeSession(order: any, reference: string, email:
     }
     const sql = db();
     const rows = await sql`INSERT INTO aw_tribute_sessions
-        (account, checkout_reference, order_code, email, amount_cents, product_id, test_mode)
-        VALUES (${c.account}, ${reference}, ${order.code}, ${email}, ${price}, ${c.productId}, ${c.testMode})
+        (account, checkout_reference, order_code, email, amount_cents, product_id, period_id, test_mode)
+        VALUES (${c.account}, ${reference}, ${order.code}, ${email}, ${price}, ${c.productId}, ${c.periodId}, ${c.testMode})
         ON CONFLICT (account, checkout_reference) DO UPDATE SET updated_at = now()
         RETURNING *`;
     const s = rows[0];
-    if (s.email !== email || Number(s.amount_cents) !== price || String(s.product_id) !== c.productId || s.test_mode !== c.testMode) {
+    if (s.email !== email || Number(s.amount_cents) !== price || String(s.product_id) !== c.productId || s.test_mode !== c.testMode || String(s.period_id) !== c.periodId) {
         throw new Error("Checkout session settings changed. Start a new checkout.");
     }
     const token = tokenFor(s.id);
@@ -96,6 +105,15 @@ export async function bindTelegram(token: string, telegramId: string) {
         return { error: "This link has expired. Start a new checkout." };
     }
     const sql = db();
+    const key = `subscription:${String(session.product_id)}:${String(session.period_id)}:${telegramId}`;
+    const fulfilled = await sql`SELECT 1 FROM aw_tribute_subscription_payments
+        WHERE account=${config().account} AND purchase_id=${key}`;
+    const cancelled = await sql`SELECT 1 FROM aw_tribute_subscription_cancellations
+        WHERE account=${config().account} AND purchase_id=${key}`;
+    if (fulfilled.length || cancelled.length) return { error: "This lifetime subscription already has a payment/event. Contact support instead of paying again." };
+    if (String(session.period_id) !== config().periodId || String(session.product_id) !== config().productId || session.test_mode !== config().testMode) {
+        return { error: "Checkout settings changed. Start a new checkout." };
+    }
     try {
         const rows = await sql`UPDATE aw_tribute_sessions SET telegram_id = ${telegramId},
             bound_at = COALESCE(bound_at, now()), state = 'bound', updated_at = now()
@@ -111,15 +129,16 @@ export async function bindTelegram(token: string, telegramId: string) {
 export async function handlePurchase(body: any) {
     const p = parsePurchase(body);
     const c = config();
+    if (p.productId !== c.productId || p.periodId !== c.periodId || p.currency !== "USD") return { state: "ignored" };
     const sql = db();
-    const refunds = await sql`SELECT 1 FROM aw_tribute_refunds WHERE account=${c.account} AND purchase_id=${p.purchaseId}`;
-    if (refunds.length) return { state: "refunded" };
+    const refunds = await sql`SELECT 1 FROM aw_tribute_subscription_cancellations WHERE account=${c.account} AND purchase_id=${p.purchaseId}`;
+    if (refunds.length) return { state: "manual_review" };
     // Persist first. Replays and concurrent deliveries share one immutable purchase row.
-    await sql`INSERT INTO aw_tribute_purchases
+    await sql`INSERT INTO aw_tribute_subscription_payments
         (account, purchase_id, transaction_id, product_id, telegram_id, amount_cents, currency, purchased_at)
         VALUES (${c.account}, ${p.purchaseId}, ${p.transactionId}, ${p.productId}, ${p.telegramId}, ${p.amount}, ${p.currency}, ${p.createdAt.toISOString()})
         ON CONFLICT (account, purchase_id) DO NOTHING`;
-    const existing = (await sql`SELECT * FROM aw_tribute_purchases WHERE account=${c.account} AND purchase_id=${p.purchaseId}`)[0];
+    const existing = (await sql`SELECT * FROM aw_tribute_subscription_payments WHERE account=${c.account} AND purchase_id=${p.purchaseId}`)[0];
     if (String(existing.transaction_id) !== p.transactionId || String(existing.product_id) !== p.productId ||
         String(existing.telegram_id) !== p.telegramId || Number(existing.amount_cents) !== p.amount || existing.currency !== p.currency) {
         throw new Error("Conflicting data for an existing purchase");
@@ -129,33 +148,42 @@ export async function handlePurchase(body: any) {
     // Never match by amount alone, or select the most recent of several orders.
     const sessions = await sql`SELECT * FROM aw_tribute_sessions
         WHERE account=${c.account} AND telegram_id=${p.telegramId} AND product_id=${p.productId}
-          AND state='bound' AND amount_cents=${p.amount} AND currency=${p.currency}
+          AND period_id=${p.periodId} AND state='bound' AND amount_cents=${p.amount} AND currency=${p.currency}
           AND bound_at <= ${p.createdAt.toISOString()}::timestamptz`;
     if (sessions.length !== 1) {
-        await sql`UPDATE aw_tribute_purchases SET state='manual_review', note='No unique matching bound order'
+        await sql`UPDATE aw_tribute_subscription_payments SET state='manual_review', note='No unique matching bound order'
             WHERE account=${c.account} AND purchase_id=${p.purchaseId} AND state='received'`;
         return { state: "manual_review" };
     }
     const session = sessions[0];
+    if (session.test_mode !== c.testMode) {
+        await sql`UPDATE aw_tribute_subscription_payments SET state='manual_review', note='Session mode differs from deployment'
+            WHERE account=${c.account} AND purchase_id=${p.purchaseId} AND state='received'`;
+        return { state: "manual_review" };
+    }
     // One statement atomically claims both the session and the purchase.
     const claimed = await sql`WITH claimed_session AS (
         UPDATE aw_tribute_sessions SET state='processing', updated_at=now()
         WHERE id=${session.id} AND state='bound' RETURNING id
-    ) UPDATE aw_tribute_purchases SET state='processing', session_id=(SELECT id FROM claimed_session)
+    ) UPDATE aw_tribute_subscription_payments SET state='processing', session_id=(SELECT id FROM claimed_session)
       WHERE account=${c.account} AND purchase_id=${p.purchaseId} AND state='received'
         AND EXISTS (SELECT 1 FROM claimed_session) RETURNING *`;
     if (!claimed.length) {
-        await sql`UPDATE aw_tribute_purchases SET state='manual_review', note='Another purchase claimed the order'
+        await sql`UPDATE aw_tribute_subscription_payments SET state='manual_review', note='Another purchase claimed the order'
             WHERE account=${c.account} AND purchase_id=${p.purchaseId} AND state='received'`;
         return { state: "processing" };
     }
-    if (session.test_mode) {
+    async function complete(state: "paid" | "test_paid") {
         await sql.transaction([
-            sql`UPDATE aw_tribute_sessions SET state='test_paid', updated_at=now() WHERE id=${session.id}`,
-            sql`UPDATE aw_tribute_purchases SET state='test_paid' WHERE account=${c.account} AND purchase_id=${p.purchaseId}`,
+            sql`UPDATE aw_tribute_sessions SET state=CASE WHEN EXISTS (
+                    SELECT 1 FROM aw_tribute_subscription_cancellations WHERE account=${c.account} AND purchase_id=${p.purchaseId}
+                ) THEN 'manual_review' ELSE ${state} END, updated_at=now() WHERE id=${session.id}`,
+            sql`UPDATE aw_tribute_subscription_payments SET state=(SELECT state FROM aw_tribute_sessions WHERE id=${session.id})
+                WHERE account=${c.account} AND purchase_id=${p.purchaseId}`,
         ]);
-        return { state: "test_paid" };
+        return (await sql`SELECT state FROM aw_tribute_sessions WHERE id=${session.id}`)[0].state as string;
     }
+    if (session.test_mode) return { state: await complete("test_paid") };
     // Mark intent before the external call. Do not blindly retry an ambiguous CML write.
     try {
         const order = extractOrder(await getCmlOrder(session.order_code));
@@ -163,15 +191,16 @@ export async function handlePurchase(body: any) {
         if (String(order.currency).toUpperCase() !== p.currency || cents(order.final_amount) !== p.amount) throw new Error("CML payment total mismatch");
         const customerEmail = order.customer?.email ?? order.customer_email ?? order.email;
         if (customerEmail && String(customerEmail).toLowerCase() !== session.email) throw new Error("CML customer mismatch");
+        if ((await sql`SELECT 1 FROM aw_tribute_subscription_cancellations WHERE account=${c.account} AND purchase_id=${p.purchaseId}`).length) {
+            throw new Error("Subscription cancellation needs reconciliation");
+        }
         await recordCmlPayment({ orderCode: session.order_code, provider: "tribute",
             providerTransactionId: p.transactionId, amount: p.amount / 100,
             paymentMethod: "tribute", externalReference: `tribute:${c.account}:${p.purchaseId}` });
         const paidOrder = extractOrder(await getCmlOrder(session.order_code));
         if (Number(paidOrder?.status) !== 3) throw new Error("CML did not confirm Paid status");
-        await sql.transaction([
-            sql`UPDATE aw_tribute_sessions SET state='paid', updated_at=now() WHERE id=${session.id}`,
-            sql`UPDATE aw_tribute_purchases SET state='paid' WHERE account=${c.account} AND purchase_id=${p.purchaseId}`,
-        ]);
+        const finalState = await complete("paid");
+        if (finalState !== "paid") return { state: finalState };
         try {
             const customer = order.customer ?? order.customer_data ?? {};
             const lines = order.items ?? order.order_items ?? order.lines ?? [];
@@ -187,7 +216,7 @@ export async function handlePurchase(body: any) {
     } catch (error) {
         await sql.transaction([
             sql`UPDATE aw_tribute_sessions SET state='manual_review', updated_at=now() WHERE id=${session.id}`,
-            sql`UPDATE aw_tribute_purchases SET state='manual_review', note='CML result requires reconciliation'
+            sql`UPDATE aw_tribute_subscription_payments SET state='manual_review', note='CML result requires reconciliation'
                 WHERE account=${c.account} AND purchase_id=${p.purchaseId}`,
         ]);
         console.error("TRIBUTE CML RECONCILIATION REQUIRED", { orderCode: session.order_code, purchaseId: p.purchaseId });

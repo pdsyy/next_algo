@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import {
-    useCallback,
+    useCallback, useEffect,
     useLayoutEffect,
     useRef,
     useState,
@@ -17,6 +17,8 @@ type MainHeroProps = {
     linesTopSrc: string;
     avatarsSrc: any;
     scrollToSection: (id: string) => void;
+    onStage?: (s: "chunk" | "image" | "video") => void;
+    onReady?: () => void;
 };
 
 type AvatarPosition = {
@@ -32,12 +34,16 @@ const MainHero = ({
                       linesTopSrc,
                       avatarsSrc,
                       scrollToSection,
+                      onStage,
+                      onReady
                   }: MainHeroProps) => {
     const { t } = useLanguage()!;
 
     const heroRef = useRef<HTMLDivElement>(null);
     const avatarsSlotRef = useRef<HTMLSpanElement>(null);
     const buttonRef = useRef<HTMLButtonElement>(null);
+
+
 
     /*
      * Начальное значение true важно:
@@ -141,13 +147,29 @@ const MainHero = ({
         };
     }, [isMobile, updateAvatarPosition]);
 
+
+    const mobileImgRef = useRef<HTMLImageElement>(null);
+
+    const reportMobileReady = useCallback(() => {
+        if (window.matchMedia(MOBILE_MEDIA_QUERY).matches) onReady?.();
+    }, [onReady]);
+
+    useEffect(() => {
+        if (isMobile && mobileImgRef.current?.complete) reportMobileReady();
+    }, [isMobile, reportMobileReady]);
+
+
+
+
+
+
     return (
         <div
             ref={heroRef}
             className="main_block_new"
         >
             {/* Анимация загружается только на планшете/компьютере */}
-            {!isMobile && <AlgoRevealDynamic />}
+            {!isMobile && <AlgoRevealDynamic onStage={onStage} onReady={onReady} />}
 
             <div className="hero_blend_layer">
                 <Image
@@ -213,6 +235,8 @@ const MainHero = ({
                 >
                     <Image
                         src={mobileHeroImage}
+                        ref={mobileImgRef}
+                        onLoad={reportMobileReady}
                         alt=""
                         draggable={false}
                         priority

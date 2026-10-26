@@ -44,7 +44,21 @@ export default async function RootLayout({children}:Readonly<{children:React.Rea
     const cookieStore=await cookies();
     const savedLanguage=cookieStore.get("algo_lang")?.value;
     const initialLanguage:Language=isLanguage(savedLanguage)?savedLanguage:"EN";
-    return <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${geologica.variable} ${inter.variable} ${manrope.variable} ${benzinBold.variable}`}>
+    return <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${geologica.variable} ${inter.variable} ${manrope.variable} ${benzinBold.variable}`} suppressHydrationWarning>
+
+    <head>
+        <script
+            dangerouslySetInnerHTML={{
+                __html: `
+                try{if(sessionStorage.getItem("algo_loader_seen")==="1"){document.documentElement.classList.add("loader-seen")}}catch(e){}
+                if (!sessionStorage.getItem("algo_loader_seen")) {
+                    document.documentElement.style.overflow = "hidden";
+                }
+                `,
+            }}
+        />
+
+    </head>
     <body>
     <Providers initialLanguage={initialLanguage}>
         {children}

@@ -4,6 +4,10 @@
     box-sizing: border-box;
 }
 
+html {
+    scrollbar-gutter: stable;
+}
+
 .App {
     display: flex;
     flex-direction: column;
@@ -1053,3 +1057,4 @@
         gap: 26px;
     }
 }
+

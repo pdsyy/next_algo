@@ -987,7 +987,13 @@ type DoubleFBO = {
    COMPONENT
 ========================================================= */
 
-const AlgoReveal = () => {
+const AlgoReveal = ({onStage, onReady}: { onStage?: (s: "chunk" | "image" | "video") => void; onReady?: () => void; }) => {
+
+    const onStageRef = useRef(onStage);
+    const onReadyRef = useRef(onReady);
+    onStageRef.current = onStage;
+    onReadyRef.current = onReady;
+
 
     const containerRef =
         useRef<HTMLDivElement>(null);
@@ -1017,13 +1023,32 @@ const AlgoReveal = () => {
         if (video) {
             video.playbackRate = 1.5
         }
-        if (
-            !container ||
-            !canvas ||
-            !video
-        ) {
+        if (!container || !canvas || !video) {
             return;
         }
+
+        onStageRef.current?.("chunk");
+
+        let imageReady = false;
+        let videoReady = false;
+        let fired = false;
+
+        const tryReady = () => {
+            if (fired || !imageReady || !videoReady) return;
+            fired = true;
+            // два кадра, чтобы первый WebGL-рендер уже был на экране
+            requestAnimationFrame(() =>
+                requestAnimationFrame(() => onReadyRef.current?.())
+            );
+        };
+
+        const onVideoData = () => {
+            videoReady = true;
+            onStageRef.current?.("video");
+            tryReady();
+        };
+        if (video.readyState >= 2) onVideoData();
+        else video.addEventListener("loadeddata", onVideoData, { once: true });
 
 
 
@@ -1170,12 +1195,19 @@ const AlgoReveal = () => {
            TEXTURES
         ===================================================== */
 
-        const baseTexture =
+        const markImage = () => {
+            imageReady = true;
+            onStageRef.current?.("image");
+            tryReady();
+        };
 
-            new THREE.TextureLoader()
-                .load(
-                    algoImage.src
-                );
+
+        const baseTexture = new THREE.TextureLoader().load(
+            algoImage.src,
+            markImage,
+            undefined,
+            markImage
+        );
 
 
         baseTexture.minFilter =
@@ -2920,6 +2952,7 @@ const AlgoReveal = () => {
         ===================================================== */
 
         return () => {
+            video.removeEventListener("loadeddata", onVideoData);
 
             cancelAnimationFrame(
                 raf

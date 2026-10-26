@@ -1,5 +1,5 @@
 "use client"
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import lines from "./images/bottom_lines.svg"
 import Image from "next/image";
 import track_record_main from "./images/track_record_main.png"
@@ -17,11 +17,11 @@ import market_image8 from "./images/market_image8.png"
 import market_image9 from "./images/market_image9.png"
 import market_image10 from "./images/market_image10.png"
 import market_image11 from "./images/market_image11.png"
-import mql_pl from "./images/mql_pl.svg"
-import mql5_2x from "./images/mql_f.png"
-import metaTrader_icon from "./images/metaTrader_icon_light.svg"
-import mql5_light from "./images/mql5_light.svg"
-import users_profit from "./images/users_profit_img.png"
+import approach1 from "./images/approach1.png"
+import approach2 from "./images/approach2.png"
+import approach3 from "./images/approach3.png"
+import approach4 from "./images/approach4.png"
+
 import t_record_image1 from "./images/t_record_image1.svg"
 import t_record_image2 from "./images/t_record_image2.svg"
 import t_record_image3 from "./images/t_record_image3.svg"
@@ -75,11 +75,39 @@ import ImageMagnifier from "@/components/lensImage/ImageMagnifier";
 import Footer from "@/components/Footer";
 import CartExample from "@/components/cartPopup/CartExample";
 
+import PageLoader, {LoaderStage} from "./Pageloader";
+
 const MotionImage = motion.create(Image);
 
 const FIRST_DEAL_STEP_TIMES = [0.55, 1.83, 3.54, 4.96] as const;
 
 const MainPage = ({activePopup, setActivePopup}: any) => {
+
+    const [heroReady, setHeroReady] = useState(false);
+    const [stages, setStages] = useState<Partial<Record<LoaderStage, boolean>>>({});
+    const handleStage = useCallback(
+        (s: LoaderStage) => setStages(prev => (prev[s] ? prev : {...prev, [s]: true})),
+        []
+    );
+    const handleReady = useCallback(() => setHeroReady(true), []);
+
+    const handleLoaderDone = useCallback(() => {
+        const id = window.location.hash.replace("#", "");
+        if (!id) return;
+
+        const element = document.getElementById(id);
+        if (!element) return;
+
+        const headerOffset = 80;
+
+        if (element.offsetHeight > window.innerHeight * 0.8) {
+            const top = element.getBoundingClientRect().top + window.pageYOffset;
+            window.scrollTo({top: top - headerOffset, behavior: "smooth"});
+        } else {
+            element.scrollIntoView({behavior: "smooth", block: "center"});
+        }
+    }, []);
+
 
     const [zoom, setZoom] = useState(0)
 
@@ -121,35 +149,6 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
         };
     }, [isTrackRecordPaused]);
 
-
-
-    useEffect(() => {
-        if (window.location.hash) {
-            const id = window.location.hash.replace('#', '');
-
-            window.addEventListener("DOMContentLoaded", () => {
-                const element = document.getElementById(id);
-                if (element) {
-                    const elementHeight = element.offsetHeight;
-                    const windowHeight = window.innerHeight;
-                    const headerOffset = 80;
-
-                    if (elementHeight > windowHeight * 0.8) {
-                        const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
-                        window.scrollTo({
-                            top: elementPosition - headerOffset,
-                            behavior: 'smooth'
-                        });
-                    } else {
-                        element.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'center'
-                        });
-                    }
-                }
-            })
-        }
-    }, []);
 
     const {scrollToSection} = useScroll()!;
 
@@ -426,6 +425,14 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
     };
 
 
+    const approachList = [
+        {image: approach1, description: "Если вам важно видеть всю историю торговли - с прибылью и просадками."},
+        {image: approach2, description: "Если вам важно видеть всю историю торговли - с прибылью и просадками."},
+        {image: approach3, description: "Если вам важно видеть всю историю торговли - с прибылью и просадками."},
+        {image: approach4, description: "Если вам важно видеть всю историю торговли - с прибылью и просадками."},
+    ]
+
+
     return (
 
         <div className="main_page">
@@ -447,8 +454,10 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                 isDark={true}
             />
 
+            <PageLoader stages={stages} ready={heroReady} onDone={handleLoaderDone}/>
 
-            <HeroBlock linesTopSrc={lines_top} avatarsSrc={avatars_icon} scrollToSection={scrollToSection}/>
+            <HeroBlock linesTopSrc={lines_top} avatarsSrc={avatars_icon} scrollToSection={scrollToSection}
+                       onStage={handleStage} onReady={handleReady}/>
 
             <div className="main_page_content">
 
@@ -489,6 +498,31 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                 />*/}
 
                 <MainVideoComponent/>
+
+
+                {/* <div className="our_approach_fs">
+                    <h2>
+                        Наш подход может быть вам близок
+                    </h2>
+
+                    <div className="our_approach_list">
+                        {approachList.map((el, idx) =>
+                            <div className={`approach_item_gradient ${idx % 2 === 0 ? "downward_shift" : ""}`}>
+                                <div className="approach_item">
+                                    <Image src={el.image} alt=""/>
+                                    <div className="approach_number">
+                                        0{idx}
+                                    </div>
+                                    <div className="approach_item_description">
+                                        {el.description}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                    </div>
+                </div>
+*/}
                 {/*<TestPaymentButton/>*/}
 
 
@@ -662,7 +696,7 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                     </div>
                 </motion.div>*/}
                 <div className="track_record_container_gradient">
-                    <div className="track_record_container"  onMouseEnter={() =>
+                    <div className="track_record_container" onMouseEnter={() =>
                         setIsTrackRecordPaused(true)
                     }
                          onMouseLeave={() =>
@@ -775,12 +809,12 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                 <div className="first_deal_block" id="how-it-works">
                     <motion.h2 {...fadeUp} dangerouslySetInnerHTML={{__html: t.home.steps.title}}/>
                     <video
-                        ref = {videoBgRef}
+                        ref={videoBgRef}
                         src="/videos/hf_2.mp4"
-                        poster = "/journey_video_poster.jpg"
+                        poster="/journey_video_poster.jpg"
                         muted
                         playsInline
-                        preload = "auto"
+                        preload="auto"
                         className="first_step_bg mob_none"
                     />
 
@@ -870,7 +904,9 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                     <div className="bots_list">
                         {botsList.map((el: any, idx: number) => {
                                 return !isMobile ?
-                                    <motion.div className={`bot_gradient_border ${el.name !== "Aero EA" ? "coming_soon" : ""}`} key={idx} {...fadeNumeric} custom={idx}>
+                                    <motion.div
+                                        className={`bot_gradient_border ${el.name !== "Aero EA" ? "coming_soon" : ""}`}
+                                        key={idx} {...fadeNumeric} custom={idx}>
                                         <div className="bot_item">
                                             {/*el.name === "Aero EA" ? <img src={mql_pl.src} alt="" className="mql_pl"/> : ""*/}
                                             <div className="bot_image">
@@ -905,12 +941,12 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                                                 </div>
                                             </div>
                                             {el.name === "Aero EA" ?
-                                            <div className="bot_marquee">
-                                                <div className="bot_marquee_group">
-                                                    <span>One-time payment · Lifetime access · All updates included · One-time payment · Lifetime access · </span>
-                                                </div>
+                                                <div className="bot_marquee">
+                                                    <div className="bot_marquee_group">
+                                                        <span>One-time payment · Lifetime access · All updates included · One-time payment · Lifetime access · </span>
+                                                    </div>
 
-                                            </div> : ""}
+                                                </div> : ""}
 
                                             <a href={el.name === "Aero EA" ? el.href : ""}>
                                                 <div className="bot_more_details">
@@ -918,12 +954,18 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                                                 </div>
                                             </a>
                                             {el.name !== "Aero EA" ?
-                                                <div className = "coming_soon_label liquidGlass-wrapper">
+                                                <div className="coming_soon_label liquidGlass-wrapper">
                                                     <div className="liquidGlass-effect"></div>
                                                     <div className="liquidGlass-tint"></div>
-                                                    <div className="liquidGlass-text">{t.home.catalog.comingSoon} <img src = {clock_icon.src} alt = ""/></div>
+                                                    <div className="liquidGlass-text">{t.home.catalog.comingSoon} <img
+                                                        src={clock_icon.src} alt=""/></div>
 
-                                                    <svg style={{position: 'absolute', width: 0, height: 0, pointerEvents: 'none'}} aria-hidden="true">
+                                                    <svg style={{
+                                                        position: 'absolute',
+                                                        width: 0,
+                                                        height: 0,
+                                                        pointerEvents: 'none'
+                                                    }} aria-hidden="true">
                                                         <filter
                                                             id="glass-distortion"
                                                             x="-20%"
@@ -932,24 +974,32 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                                                             height="140%"
                                                             filterUnits="objectBoundingBox"
                                                         >
-                                                            <feTurbulence type="fractalNoise" baseFrequency="0.01 0.01" numOctaves="2" seed="5"
+                                                            <feTurbulence type="fractalNoise" baseFrequency="0.01 0.01"
+                                                                          numOctaves="2" seed="5"
                                                                           result="turbulence"/>
                                                             <feComponentTransfer in="turbulence" result="mapped">
-                                                                <feFuncR type="gamma" amplitude="1" exponent="10" offset="0.5"/>
-                                                                <feFuncG type="gamma" amplitude="0" exponent="1" offset="0"/>
-                                                                <feFuncB type="gamma" amplitude="0" exponent="1" offset="0.5"/>
+                                                                <feFuncR type="gamma" amplitude="1" exponent="10"
+                                                                         offset="0.5"/>
+                                                                <feFuncG type="gamma" amplitude="0" exponent="1"
+                                                                         offset="0"/>
+                                                                <feFuncB type="gamma" amplitude="0" exponent="1"
+                                                                         offset="0.5"/>
                                                             </feComponentTransfer>
-                                                            <feGaussianBlur in="turbulence" stdDeviation="3" result="softMap"/>
-                                                            <feSpecularLighting in="softMap" surfaceScale="5" specularConstant="1" specularExponent="100"
+                                                            <feGaussianBlur in="turbulence" stdDeviation="3"
+                                                                            result="softMap"/>
+                                                            <feSpecularLighting in="softMap" surfaceScale="5"
+                                                                                specularConstant="1" specularExponent="100"
                                                                                 lightingColor="white" result="specLight">
                                                                 <fePointLight x="-200" y="-200" z="300"/>
                                                             </feSpecularLighting>
-                                                            <feComposite in="specLight" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" result="litImage"/>
-                                                            <feDisplacementMap in="SourceGraphic" in2="softMap" scale="50" xChannelSelector="R"
+                                                            <feComposite in="specLight" operator="arithmetic" k1="0" k2="1"
+                                                                         k3="1" k4="0" result="litImage"/>
+                                                            <feDisplacementMap in="SourceGraphic" in2="softMap" scale="50"
+                                                                               xChannelSelector="R"
                                                                                yChannelSelector="G"/>
                                                         </filter>
                                                     </svg>
-                                                     </div>
+                                                </div>
                                                 : ""}
 
 
@@ -957,7 +1007,8 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                                     </motion.div>
                                     :
 
-                                    <div className={`bot_gradient_border ${el.name !== "Aero EA" ? "coming_soon" : ""}`} key={idx}>
+                                    <div className={`bot_gradient_border ${el.name !== "Aero EA" ? "coming_soon" : ""}`}
+                                         key={idx}>
                                         <div className="bot_item">
                                             {/*el.name === "Aero EA" ? <img src={mql_pl.src} alt="" className="mql_pl"/> : ""*/}
                                             <div className="bot_image">
@@ -1007,12 +1058,18 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                                                 </div>
                                             </a>
                                             {el.name !== "Aero EA" ?
-                                                <div className = "coming_soon_label liquidGlass-wrapper">
+                                                <div className="coming_soon_label liquidGlass-wrapper">
                                                     <div className="liquidGlass-effect"></div>
                                                     <div className="liquidGlass-tint"></div>
-                                                    <div className="liquidGlass-text">{t.home.catalog.comingSoon} <img src = {clock_icon.src} alt = ""/></div>
+                                                    <div className="liquidGlass-text">{t.home.catalog.comingSoon} <img
+                                                        src={clock_icon.src} alt=""/></div>
 
-                                                    <svg style={{position: 'absolute', width: 0, height: 0, pointerEvents: 'none'}} aria-hidden="true">
+                                                    <svg style={{
+                                                        position: 'absolute',
+                                                        width: 0,
+                                                        height: 0,
+                                                        pointerEvents: 'none'
+                                                    }} aria-hidden="true">
                                                         <filter
                                                             id="glass-distortion"
                                                             x="-20%"
@@ -1021,20 +1078,28 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                                                             height="140%"
                                                             filterUnits="objectBoundingBox"
                                                         >
-                                                            <feTurbulence type="fractalNoise" baseFrequency="0.01 0.01" numOctaves="2" seed="5"
+                                                            <feTurbulence type="fractalNoise" baseFrequency="0.01 0.01"
+                                                                          numOctaves="2" seed="5"
                                                                           result="turbulence"/>
                                                             <feComponentTransfer in="turbulence" result="mapped">
-                                                                <feFuncR type="gamma" amplitude="1" exponent="10" offset="0.5"/>
-                                                                <feFuncG type="gamma" amplitude="0" exponent="1" offset="0"/>
-                                                                <feFuncB type="gamma" amplitude="0" exponent="1" offset="0.5"/>
+                                                                <feFuncR type="gamma" amplitude="1" exponent="10"
+                                                                         offset="0.5"/>
+                                                                <feFuncG type="gamma" amplitude="0" exponent="1"
+                                                                         offset="0"/>
+                                                                <feFuncB type="gamma" amplitude="0" exponent="1"
+                                                                         offset="0.5"/>
                                                             </feComponentTransfer>
-                                                            <feGaussianBlur in="turbulence" stdDeviation="3" result="softMap"/>
-                                                            <feSpecularLighting in="softMap" surfaceScale="5" specularConstant="1" specularExponent="100"
+                                                            <feGaussianBlur in="turbulence" stdDeviation="3"
+                                                                            result="softMap"/>
+                                                            <feSpecularLighting in="softMap" surfaceScale="5"
+                                                                                specularConstant="1" specularExponent="100"
                                                                                 lightingColor="white" result="specLight">
                                                                 <fePointLight x="-200" y="-200" z="300"/>
                                                             </feSpecularLighting>
-                                                            <feComposite in="specLight" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" result="litImage"/>
-                                                            <feDisplacementMap in="SourceGraphic" in2="softMap" scale="50" xChannelSelector="R"
+                                                            <feComposite in="specLight" operator="arithmetic" k1="0" k2="1"
+                                                                         k3="1" k4="0" result="litImage"/>
+                                                            <feDisplacementMap in="SourceGraphic" in2="softMap" scale="50"
+                                                                               xChannelSelector="R"
                                                                                yChannelSelector="G"/>
                                                         </filter>
                                                     </svg>

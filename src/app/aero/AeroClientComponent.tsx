@@ -454,20 +454,6 @@ const AeroClientComponent = () => {
                                     label: (
                                         <div className="handler_explore_item">
                                             <div className="handler_title">
-                                                {t.aero.statistics.accounts.legacy.title}
-                                            </div>
-
-                                            <div className="handler_desc">
-                                                {t.aero.statistics.accounts.legacy.description}
-                                            </div>
-                                        </div>
-                                    ),
-                                },
-                                {
-                                    value: 2,
-                                    label: (
-                                        <div className="handler_explore_item">
-                                            <div className="handler_title">
                                                 {t.aero.statistics.accounts.current.title}
                                             </div>
 
@@ -478,7 +464,7 @@ const AeroClientComponent = () => {
                                     ),
                                 },
                                 {
-                                    value: 3,
+                                    value: 2,
                                     label: (
                                         <div className="handler_explore_item">
                                             <div className="handler_title">
@@ -491,12 +477,26 @@ const AeroClientComponent = () => {
                                         </div>
                                     ),
                                 },
+                                {
+                                    value: 3,
+                                    label: (
+                                        <div className="handler_explore_item">
+                                            <div className="handler_title">
+                                                {t.aero.statistics.accounts.legacy.title}
+                                            </div>
+
+                                            <div className="handler_desc">
+                                                {t.aero.statistics.accounts.legacy.description}
+                                            </div>
+                                        </div>
+                                    ),
+                                },
                             ]}
                             handleValue={selectedValue}
                             setHandleValue={setSelectedValue}
                         />
 
-                        <div className="archived_mt4">
+                        <div className={`archived_mt4 ${selectedValue !== 3 ? "dis_none" : ""}`}>
                             <div className="top_mobile_archived">
                                 <img src={info_icon_mt4.src} alt=""/>
 

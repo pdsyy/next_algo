@@ -65,9 +65,11 @@ const AeroClientComponent = () => {
     useEffect(() => {
         const handleResize = () => {
             const mobile = window.innerWidth < 768;
+            const smallTablet = window.innerWidth > 550;
+            console.log(2, mobile, smallTablet)
 
             setWidgetSize({
-                width: mobile ? 450 : 800,
+                width: mobile && smallTablet ? 750 : mobile ? 450 : 800,
                 height: mobile ? 600 : 270,
             });
         };

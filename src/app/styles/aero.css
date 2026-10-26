@@ -1720,12 +1720,17 @@
     }
 
     .aero_hero_h1 {
-        font-size: 32px;
+        font-size: 30px;
     }
 
     .aero_hero_desc{
-        font-size: 16px;
+        font-size: 15px;
         margin-top: 16px;
+    }
+
+    .test_result h2{
+        padding-left: 16px;
+        padding-right: 16px;
     }
 
     .aero_hero_buttons{
@@ -1734,7 +1739,7 @@
 
     .view_live_performance, .explore_the_strategy{
         height: 36px;
-        font-size: 14px;
+        font-size: 12px;
     }
 
     .hero_block_aero {

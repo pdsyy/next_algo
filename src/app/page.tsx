@@ -322,6 +322,9 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
             }
         };
 
+
+
+
         const startStepSync = () => {
             if (animationFrameId === null) {
                 animationFrameId = window.requestAnimationFrame(
@@ -385,6 +388,27 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
             video.pause();
         };
     }, []);
+
+
+    useEffect(() => {
+        const video = videoBgRef.current;
+        if (!video) return;
+
+        const warm = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    video.preload = "auto";
+                    video.load();
+                    warm.disconnect();
+                }
+            },
+            { rootMargin: "800px 0px" }
+        );
+
+        warm.observe(video);
+        return () => warm.disconnect();
+    }, []);
+
 
     const firstDealStepAnimation = (
         index: number,
@@ -810,11 +834,11 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                     <motion.h2 {...fadeUp} dangerouslySetInnerHTML={{__html: t.home.steps.title}}/>
                     <video
                         ref={videoBgRef}
-                        src="/videos/hf_2.mp4"
+                        src="/videos/hf_2_opt.mp4"
                         poster="/journey_video_poster.jpg"
                         muted
                         playsInline
-                        preload="auto"
+                        preload="none"
                         className="first_step_bg mob_none"
                     />
 

@@ -30,13 +30,7 @@ type AvatarPosition = {
 
 const MOBILE_MEDIA_QUERY = "(max-width: 768px)";
 
-const MainHero = ({
-                      linesTopSrc,
-                      avatarsSrc,
-                      scrollToSection,
-                      onStage,
-                      onReady
-                  }: MainHeroProps) => {
+const MainHero = ({linesTopSrc, avatarsSrc, scrollToSection, onStage, onReady}: MainHeroProps) => {
     const { t } = useLanguage()!;
 
     const heroRef = useRef<HTMLDivElement>(null);
@@ -44,12 +38,6 @@ const MainHero = ({
     const buttonRef = useRef<HTMLButtonElement>(null);
 
 
-
-    /*
-     * Начальное значение true важно:
-     * сервер сначала отдаёт статичную картинку.
-     * Поэтому на мобильном анимация и видео не успеют загрузиться.
-     */
     const [isMobile, setIsMobile] = useState(true);
 
     const [avatarPosition, setAvatarPosition] =

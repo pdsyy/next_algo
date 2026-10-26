@@ -512,22 +512,22 @@ const AeroClientComponent = () => {
 
                         <div className="mt4_vidget_container" id = "view-live-performance">
                             <div className="mt4_vidget_block">
-                                <a href={selectedValue === 1 ?
+                                <a href={selectedValue === 3 ?
                                     "https://www.myfxbook.com/members/alg0_o/aero-mt4--archive-1/12232265" :
-                                    selectedValue === 2 ? "https://www.myfxbook.com/members/alg0_o/aero-mt5--current-account/12205723" :
+                                    selectedValue === 1 ? "https://www.myfxbook.com/members/alg0_o/aero-mt5--current-account/12205723" :
                                         "https://www.myfxbook.com/members/alg0_o/aero-darwinex-zero--oenc/12209314"}
                                    className="open_mt4_myfxbook" target="_blank">
                                     {t.aero.statistics.openMyfxbook}
                                 </a>
 
                                 <div className="mt4_vidget_block_content">
-                                    {widgetSize && (selectedValue === 1 ?
+                                    {widgetSize && (selectedValue === 3 ?
                                         (
                                             <a href="https://www.myfxbook.com/members/alg0_o/aero-mt4--archive-1/12232265" target="_blank">
                                                 <img className="widget_image_myfxbook" alt="widget"
                                                      src={`https://widgets.mfbcdn.net/custom-widget?id=12232265&width=${widgetSize.width}&height=${widgetSize.height}&bart=0&linet=2&symbol=GOLD&magic=-1&title=AeroMT4(Archive%2B1year)&titles=12&bgColor=ffffff&gridColor=bdbdbd&lineColor=ff0505&barColor=ffadad&bar1Color=ffadad&fontColor=525252&chartbgc=ffffff&equityColor=eff45a`}/></a>
                                         )
-                                        : selectedValue === 2 ?
+                                        : selectedValue === 1 ?
                                             (
                                                 <a href="https://www.myfxbook.com/members/alg0_o/aero-mt5--current-account/12205723" target="_blank">
                                                     <img className="widget_image_myfxbook" alt="widget"

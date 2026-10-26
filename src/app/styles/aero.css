@@ -1246,6 +1246,13 @@
     margin-top: 80px;
     padding: 0 48px;
     display: flex;
+    background: url("../aero/images/explore_trades_bg.png") center bottom 32px / 100% auto no-repeat;
+    padding-bottom: 180px;
+
+}
+
+.product_page.aero .algo_feedback_block{
+    margin-top: 0;
 }
 
 .explore_aeros_record{
@@ -1486,6 +1493,7 @@
 }
 
 .myfxbook_deposit_button{
+    white-space: nowrap;
     margin-left: 55px;
     height: 40px;
     background: linear-gradient(0deg, #232323, #232323),
@@ -1784,6 +1792,9 @@
 }
 
 @media screen and (width < 768px){
+    .explore_aeros_record_container{
+        background: none;
+    }
 
     #purchase-bot{
         scroll-margin-top: 10vh;
@@ -2151,7 +2162,7 @@
 
     }
 
-    .algo_feedback_block{
+    .product_page.aero .algo_feedback_block{
         margin-top: 24px;
     }
 

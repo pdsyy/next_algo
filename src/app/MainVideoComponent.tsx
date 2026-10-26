@@ -66,6 +66,25 @@ const MainVideoComponent = () => {
         setIsMuted(video.muted);
     };
 
+    useEffect(() => {
+        const video = videoRef.current;
+        if (!video) return;
+
+        const warm = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    video.preload = "metadata";
+                    video.load();
+                    warm.disconnect();
+                }
+            },
+            { rootMargin: "600px 0px" }
+        );
+
+        warm.observe(video);
+        return () => warm.disconnect();
+    }, []);
+
     const fastEase = [0.25, 0.1, 0.25, 1.0];
 
 
@@ -96,11 +115,11 @@ const MainVideoComponent = () => {
 
                 <video
                     ref={videoRef}
-                    src="/Algo%20World%20—%20Official%20Teaser%20Trailer.mp4"
+                    src="/videos/algo-trailer_fast.mp4"
                     poster = "/algo-video-about-company-poster.webp"
                     muted
                     playsInline
-                    preload="auto"
+                    preload="none"
                     className="main_video"
                     onPlay={() => setIsPlaying(true)}
                     onPause={() => setIsPlaying(false)}

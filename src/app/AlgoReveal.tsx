@@ -3102,7 +3102,7 @@ const AlgoReveal = ({onStage, onReady}: { onStage?: (s: "chunk" | "image" | "vid
 
             <video
                 ref={videoRef}
-                src="/videos/hero-block-bg-video2.mp4"
+                src="/videos/hero-block-bg-video2_opt.mp4"
                 poster = "/hero-video-poster.webp"
                 autoPlay
                 muted

@@ -154,7 +154,7 @@
     }
 
     .algo_world_label_bottom{
-        width: calc(100% - 8px);
+        width: 100%;
     }
 
     .earth_container{

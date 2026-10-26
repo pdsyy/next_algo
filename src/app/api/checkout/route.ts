@@ -1,4 +1,4 @@
-import { createTributeSession, getTributeProduct } from "@/lib/tribute";
+import { createShopSession, checkTributeShop } from "@/lib/tribute-shop";
 import crypto from "crypto";
 import {
     NextRequest,
@@ -525,12 +525,11 @@ async function handleCreateOrder(
 
 
     const isTribute = body.paymentProvider === "tribute";
-    let tributeProduct: any = null;
     if (isTribute) {
         if (productCodes.length !== 1 || productCodes[0] !== "aero-ea") {
             return jsonError("Tribute currently supports one Aero license only");
         }
-        tributeProduct = await getTributeProduct();
+        await checkTributeShop();
     }
 
     const products =
@@ -735,7 +734,7 @@ async function handleCreateOrder(
 
 
     const tribute = isTribute
-        ? await createTributeSession({ code: orderCode, amount, currency }, checkoutReference, email, tributeProduct.amount)
+        ? await createShopSession({ code: orderCode, amount, currency }, checkoutReference, email)
         : undefined;
 
     return NextResponse.json({

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db, config, handlePurchase, required } from "@/lib/tribute";
 import { positiveId, signatureValid, subscriptionKey } from "@/lib/tribute-core";
+import { handleShopEvent } from "@/lib/tribute-shop";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -13,6 +14,10 @@ export async function POST(req: NextRequest) {
         }
         let body: any;
         try { body = JSON.parse(raw); } catch { return new NextResponse(null, { status: 400 }); }
+        if (typeof body?.name === 'string' && body.name.startsWith('shop_')) {
+            return NextResponse.json({success:true,...await handleShopEvent(body,raw)});
+        }
+        // Preserve handling for payments already started through the old subscription flow.
         if (!["new_subscription", "cancelled_subscription"].includes(body?.name)) {
             return NextResponse.json({ success: true, ignored: true });
         }
@@ -24,8 +29,6 @@ export async function POST(req: NextRequest) {
         if (body.name === "cancelled_subscription") {
             const key = subscriptionKey(p);
             const sql = db();
-            // Cancellation is not proof of a refund. Keep an audit/fulfillment block;
-            // never automatically revoke a lifetime CML license from this notification.
             await sql.transaction([
                 sql`INSERT INTO aw_tribute_subscription_cancellations(account,purchase_id)
                     VALUES(${c.account},${key}) ON CONFLICT DO NOTHING`,
@@ -39,7 +42,6 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ success: true, state: "manual_review" });
         }
         if (p.period !== "onetime" || p.type !== "regular") {
-            // Includes trial, gift, and undocumented/omitted type: no automatic license.
             const sql = db();
             await sql`UPDATE aw_tribute_sessions SET state='manual_review', updated_at=now()
                 WHERE account=${c.account} AND product_id=${c.productId} AND period_id=${c.periodId}
@@ -47,8 +49,7 @@ export async function POST(req: NextRequest) {
             console.error("TRIBUTE SUBSCRIPTION NOT FULFILLED: UNSUPPORTED PERIOD OR TYPE");
             return NextResponse.json({ success: true, state: "manual_review" });
         }
-        const result = await handlePurchase(body);
-        return NextResponse.json({ success: true, ...result });
+        return NextResponse.json({ success: true, ...await handlePurchase(body) });
     } catch {
         console.error("TRIBUTE WEBHOOK FAILED");
         return NextResponse.json({ success: false }, { status: 500 });

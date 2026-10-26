@@ -12,63 +12,80 @@ type Customer = {
     verificationRef?: string; checkoutReference: string;
 };
 type SuccessProduct = { id: string; name: string; imageSrc?: string };
-type Session = { products?: SuccessProduct[]; token: string; botUrl: string; orderCode: string; testMode: boolean };
+type Session = { products?: SuccessProduct[]; token: string; paymentUrl: string | null; state?: string; orderCode: string; testMode: boolean };
+function validPaymentUrl(value: unknown): value is string {
+    if (typeof value !== "string") return false;
+    try {
+        const u = new URL(value);
+        return u.protocol === "https:" && !u.username && !u.password && !u.port &&
+            (u.hostname === "tribute.tg" || u.hostname.endsWith(".tribute.tg"));
+    } catch { return false; }
+}
 const copy = {
     EN: {
+        legacy: "This order was created through the previous Telegram flow. Use its original bot link or contact support. Do not create a second payment.",
+        creating: "Preparing your payment. Please wait.",
+        pending: "Your order is ready. Proceed to payment through Tribute.",
         title: "Pay with Tribute",
         start: "Prepare order",
-        bot: "Open Telegram",
+        bot: "Proceed to payment",
         close: "Close",
         busy: "Preparing…",
-        created: "Open Telegram and press Start to link this order.",
-        bound: "Telegram linked. Complete payment using the button in the bot, then return here.",
+        created: "Prepare your order to pay securely through Tribute.",
+        bound: "Complete payment on the Tribute page and return here.",
         processing: "Payment is being verified.",
         paid: "Payment confirmed. Your license will be delivered through the usual order process.",
         test_paid: "Test event processed. No payment was recorded in CML and no license was activated.",
         manual_review: "This payment needs support review. Do not pay again.",
-        test: "TEST MODE: payment and license activation are disabled.",
+        test: "Checkout is disabled in test mode. No payment will be created.",
         unsupported: "Tribute currently supports a single Aero license. Use crypto for other products or a mixed cart.",
         error: "Unable to prepare the payment. Please try again.",
         statusError: "Unable to check status. Retrying…",
-        restoreError: "Unable to restore this order. Open Return to order in the Telegram bot again.",
+        restoreError: "Unable to restore this order. Contact support with your order number.",
         order: "Order"
     },
     RU: {
+        legacy: "Заказ создан через прежнюю схему с Telegram. Используйте исходную ссылку в боте или обратитесь в поддержку. Не создавайте вторую оплату.",
+        creating: "Подготавливаем оплату. Подождите.",
+        pending: "Заказ готов. Перейдите к оплате через Tribute.",
         title: "Оплата через Tribute",
         start: "Подготовить заказ",
-        bot: "Открыть Telegram",
+        bot: "Перейти к оплате",
         close: "Закрыть",
         busy: "Подготовка…",
-        created: "Откройте Telegram и нажмите «Начать», чтобы привязать заказ.",
-        bound: "Telegram привязан. Оплатите кнопкой в боте с этого же аккаунта и вернитесь сюда.",
+        created: "Подготовьте заказ для оплаты через Tribute.",
+        bound: "Завершите оплату на странице Tribute и вернитесь сюда.",
         processing: "Проверяем платёж.",
         paid: "Оплата подтверждена. Лицензия будет выдана обычным способом обработки заказов.",
         test_paid: "Тестовое событие обработано. Оплата в CML не записана, лицензия не активирована.",
         manual_review: "Нужна проверка платежа поддержкой. Не оплачивайте повторно.",
-        test: "ТЕСТОВЫЙ РЕЖИМ: оплата и активация лицензии отключены.",
+        test: "В тестовом режиме создание оплаты отключено.",
         unsupported: "Через Tribute пока доступна одна лицензия Aero. Для других товаров и смешанной корзины используйте криптооплату.",
         error: "Не удалось подготовить оплату. Попробуйте ещё раз.",
         statusError: "Не удалось проверить статус. Повторяем…",
-        restoreError: "Не удалось восстановить заказ. Снова нажмите «Вернуться к заказу» в Telegram-боте.",
+        restoreError: "Не удалось восстановить заказ. Обратитесь в поддержку с номером заказа.",
         order: "Заказ"
     },
     UA: {
+        legacy: "Замовлення створене через попередню схему з Telegram. Скористайтеся початковим посиланням у боті або зверніться до підтримки. Не створюйте другу оплату.",
+        creating: "Готуємо оплату. Зачекайте.",
+        pending: "Замовлення готове. Перейдіть до оплати через Tribute.",
         title: "Оплата через Tribute",
         start: "Підготувати замовлення",
-        bot: "Відкрити Telegram",
+        bot: "Перейти до оплати",
         close: "Закрити",
         busy: "Підготовка…",
-        created: "Відкрийте Telegram і натисніть «Почати», щоб прив’язати замовлення.",
-        bound: "Telegram прив’язано. Оплатіть кнопкою в боті з цього ж акаунта та поверніться сюди.",
+        created: "Підготуйте замовлення для оплати через Tribute.",
+        bound: "Завершіть оплату на сторінці Tribute та поверніться сюди.",
         processing: "Перевіряємо платіж.",
         paid: "Оплату підтверджено. Ліцензію буде надано звичайним способом обробки замовлень.",
         test_paid: "Тестову подію оброблено. Оплату в CML не записано, ліцензію не активовано.",
         manual_review: "Платіж потребує перевірки підтримкою. Не оплачуйте повторно.",
-        test: "ТЕСТОВИЙ РЕЖИМ: оплату й активацію ліцензії вимкнено.",
+        test: "У тестовому режимі створення оплати вимкнено.",
         unsupported: "Через Tribute поки доступна одна ліцензія Aero. Для інших товарів і змішаного кошика використовуйте криптооплату.",
         error: "Не вдалося підготувати оплату. Спробуйте ще раз.",
         statusError: "Не вдалося перевірити статус. Повторюємо…",
-        restoreError: "Не вдалося відновити замовлення. Знову натисніть «Повернутися до замовлення» в Telegram-боті.",
+        restoreError: "Не вдалося відновити замовлення. Зверніться до підтримки з номером замовлення.",
         order: "Замовлення"
     },
 };
@@ -88,8 +105,8 @@ export default function TributePaymentFlow({isOpen, onClose, customer, items, re
     const [error, setError] = useState("");
     const inFlight = useRef(false);
     const supported = items.length === 1 && items[0].id === "aero-ea" && items[0].quantity === 1;
-    const key = recoveryToken ? `aw_tribute_recovery_v1:${recoveryToken.slice(0, 32)}` :
-        `aw_tribute_session_v1:${customer.checkoutReference}:${customer.deliveryLanguage}`;
+    const key = recoveryToken ? `aw_tribute_shop_recovery_v1:${recoveryToken.slice(0, 32)}` :
+        `aw_tribute_shop_session_v1:${customer.checkoutReference}:${customer.deliveryLanguage}`;
     useEffect(() => {
         setSession(null);
         setState("created");
@@ -109,9 +126,10 @@ export default function TributePaymentFlow({isOpen, onClose, customer, items, re
         if (recoveryToken) return;
         try {
             const value = JSON.parse(sessionStorage.getItem(key) ?? "null");
-            if (value && typeof value.token === "string" && typeof value.botUrl === "string" && typeof value.orderCode === "string" &&
-                typeof value.testMode === "boolean" && /^https:\/\/t\.me\/algoworldordersbot\?start=/.test(value.botUrl)) {
+            if (value && typeof value.token === "string" && (value.paymentUrl === null || validPaymentUrl(value.paymentUrl)) && typeof value.orderCode === "string" &&
+                value.testMode === false) {
                 setSession(value);
+                setState(value.state ?? "pending");
                 if (Array.isArray(value.products) && value.products.length === items.length &&
                     value.products.every((p: any, i: number) => p?.id === items[i].id && typeof p.name === "string")) {
                     successProducts.current = value.products;
@@ -129,7 +147,7 @@ export default function TributePaymentFlow({isOpen, onClose, customer, items, re
         setError("");
         async function restore() {
             try {
-                const response = await fetch("/api/payments/tribute/restore", {
+                const response = await fetch("/api/payments/tribute-shop/restore", {
                     headers: { Authorization: `Bearer ${recoveryToken}` }, cache: "no-store", signal: controller.signal,
                 });
                 if (response.status === 404) {
@@ -138,7 +156,7 @@ export default function TributePaymentFlow({isOpen, onClose, customer, items, re
                 }
                 const result = await response.json();
                 if (!response.ok || result.success !== true || result.session?.token !== recoveryToken ||
-                    typeof result.session.orderCode !== "string" || typeof result.session.botUrl !== "string" ||
+                    typeof result.session.orderCode !== "string" || (result.session.paymentUrl !== null && !validPaymentUrl(result.session.paymentUrl)) ||
                     typeof result.session.testMode !== "boolean") throw new Error("Restore failed");
                 if (cancelled) return;
                 setSession({ ...result.session, products: [{ id: "aero-ea", name: "Aero", imageSrc: cartItems.find(p => p.id === "aero-ea")?.imageSrc }] });
@@ -163,7 +181,7 @@ export default function TributePaymentFlow({isOpen, onClose, customer, items, re
         const controller = new AbortController();
         const poll = async () => {
             try {
-                const response = await fetch("/api/payments/tribute/status", {
+                const response = await fetch("/api/payments/tribute-shop/status", {
                     headers: {Authorization: `Bearer ${session.token}`}, cache: "no-store", signal: controller.signal,
                 });
                 if (response.status === 404) {
@@ -237,10 +255,10 @@ export default function TributePaymentFlow({isOpen, onClose, customer, items, re
                 }),
             });
             const result = await response.json();
-            if (!response.ok || !result.success || !result.tribute?.token) throw new Error(result.error || t.error);
+            if (!response.ok || !result.success || !result.tribute?.token || (result.tribute.paymentUrl !== null && !validPaymentUrl(result.tribute.paymentUrl))) throw new Error(result.error || t.error);
             const prepared: Session = {...result.tribute, products: successProducts.current};
             setSession(prepared);
-            setState("created");
+            setState(prepared.state ?? "pending");
             try {
                 sessionStorage.setItem(key, JSON.stringify(prepared));
             } catch { /* optional */
@@ -271,7 +289,7 @@ export default function TributePaymentFlow({isOpen, onClose, customer, items, re
                         <p aria-live="polite">{busy ? t.busy : t.restoreError}</p>
                         <button type="button" className="tribute-payment-close" onClick={onClose}>{t.close}</button>
                     </div>
-                ) : !supported ? (
+                ) : !supported && !recoveryToken ? (
                     <div className="tribute-payment-unsupported">
                         <p>{t.unsupported}</p>
                     </div>
@@ -292,9 +310,9 @@ export default function TributePaymentFlow({isOpen, onClose, customer, items, re
                             {message}
                         </p>
 
-                        {["created", "bound"].includes(state) && (
+                        {["pending"].includes(state) && session.paymentUrl !== null && (
                             <div className="tribute-payment-prepare">
-                                <a href={session.botUrl} target="_blank" rel="noopener noreferrer" className="open_telegram_link">
+                                <a href={session.paymentUrl ?? undefined} target="_blank" rel="noopener noreferrer" className="open_telegram_link">
                                     {t.bot}
                                 </a>
 
@@ -304,7 +322,7 @@ export default function TributePaymentFlow({isOpen, onClose, customer, items, re
                             </div>
 
                         )}
-                        {!["created", "bound"].includes(state) && (
+                        {!(state === "pending" && session.paymentUrl !== null) && (
                             <div className="tribute-payment-prepare">
                                 <button type="button" className="tribute-payment-close" onClick={onClose}>{t.close}</button>
                             </div>

@@ -76,6 +76,7 @@ import Footer from "@/components/Footer";
 import CartExample from "@/components/cartPopup/CartExample";
 
 import PageLoader, {LoaderStage} from "./Pageloader";
+import EarthFooter from "@/app/aero/components/EarthFooter";
 
 const MotionImage = motion.create(Image);
 
@@ -1188,6 +1189,32 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                     </div>
                 </div>
 
+
+                <motion.div className="select_bot_fs" {...fadeUp}>
+                    <div className="select_bot_block">
+                        <div className="select_bot_info">
+                            <div className="select_bot_theme">
+                                {t.home.consult.title}
+                            </div>
+                            <div className="select_bot_desc">
+                                {t.home.consult.desc}
+                            </div>
+                            <a href="https://telegram.me/vladimirbabak_mql" target="_blank" rel="noreferrer">
+                                <div className="consult_button">
+                                    {t.home.consult.button}
+                                </div>
+                            </a>
+                        </div>
+                        {/*<picture>
+                            <source media="(max-width: 767px)" srcSet={select_bot_img_mob.src}/>
+                            <source media="(min-width: 768px)" srcSet={select_bot_img.src}/>
+                            <img src={select_bot_img.src} alt="Consultation" className="main_img"/>
+                        </picture>*/}
+                        <img src={select_bot_img.src} alt="Consultation" className="main_img"/>
+                    </div>
+                </motion.div>
+
+
                 <div className="faq_container" id="faq">
                     <motion.h2 {...fadeUp}>
                         {t.home.faqTitle}
@@ -1232,32 +1259,28 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                     </div>
                 </div>
 
-                <motion.div className="select_bot_fs" {...fadeUp}>
-                    <div className="select_bot_block">
-                        <div className="select_bot_info">
-                            <div className="select_bot_theme">
-                                {t.home.consult.title}
-                            </div>
-                            <div className="select_bot_desc">
-                                {t.home.consult.desc}
-                            </div>
-                            <a href="https://telegram.me/vladimirbabak_mql" target="_blank" rel="noreferrer">
-                                <div className="consult_button">
-                                    {t.home.consult.button}
-                                </div>
-                            </a>
-                        </div>
-                        {/*<picture>
-                            <source media="(max-width: 767px)" srcSet={select_bot_img_mob.src}/>
-                            <source media="(min-width: 768px)" srcSet={select_bot_img.src}/>
-                            <img src={select_bot_img.src} alt="Consultation" className="main_img"/>
-                        </picture>*/}
-                        <img src={select_bot_img.src} alt="Consultation" className="main_img"/>
-                    </div>
-                </motion.div>
 
+                {/*
                 <Footer/>
                 <Image src={lines} alt="" className="bottom_lines"/>
+*/}
+
+                <EarthFooter/>
+
+                <div className="tech_page_footer_list desk_none">
+                    <a href="/terms-and-conditions" className="footer_menu_item">
+                        {t.legalFooter.termsAndConditions}
+                    </a>
+                    <a href="/software-use-trading-risk-disclosure" className="footer_menu_item">
+                        {t.legalFooter.softwareUseTradingRiskDisclosure}
+                    </a>
+                    <a href="/privacy-policy" className="footer_menu_item">
+                        {t.legalFooter.privacyPolicy}
+                    </a>
+                    <div className="copyrights_algo desk_none_none">
+                        @algo 2026
+                    </div>
+                </div>
 
 
             </div>

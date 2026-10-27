@@ -498,6 +498,36 @@ html {
 
 @media screen and (max-width: 768px) {
 
+
+    .product_page .tech_page_footer_list, .main_page_content .tech_page_footer_list{
+        text-align: center;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: auto;
+        display: flex;
+        position: relative;
+        bottom: 0;
+        right: 0;
+        gap: 12px;
+        padding-bottom: 14px;
+    }
+
+    .product_page .tech_page_footer_list a, .copyrights_algo, .main_page_content  .tech_page_footer_list a{
+
+        max-width: 175px;
+        color: #232323;
+        text-decoration: none;
+        font-family: Inter;
+        font-weight: 500;
+        font-size: 10px;
+        line-height: 100%;
+        letter-spacing: -1%;
+        text-align: center;
+        text-transform: uppercase;
+
+    }
+
     .top_lines_wrapper, .bottom_lines_wrapper{
         display: none;
     }
@@ -1033,7 +1063,7 @@ html {
     color: #727272;
     font-family: Inter, sans-serif;
     font-weight: 500;
-    font-size: 14px;
+    font-size: 14px !important;
     line-height: 120%;
     letter-spacing: -0.02em;
 }

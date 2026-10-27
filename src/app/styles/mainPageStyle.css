@@ -302,7 +302,9 @@
 }
 
 
-
+.main_page .earth_footer_container{
+    margin-top: 80px !important;
+}
 
 @media (max-width: 1024px) {
     :root {
@@ -922,7 +924,6 @@
 
 .main_page_content {
     margin-top: -80px;
-    padding-bottom: 46px;
     position: relative;
     z-index: 2;
     border-radius: 80px 80px 0 0;
@@ -2634,7 +2635,7 @@ height: 52px !important;
     }
 
     .faq_item.open_faq .faq_item_answer {
-        max-height: 150px;
+        max-height: 217px;
     }
 
 
@@ -2713,9 +2714,7 @@ height: 52px !important;
 
     }
 
-    .main_page_content {
-        padding-bottom: 30px;
-    }
+
 
     .burger_menu {
         width: 40px;

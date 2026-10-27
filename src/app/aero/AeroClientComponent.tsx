@@ -229,12 +229,8 @@ const AeroClientComponent = () => {
                         {...fadeNumeric}
                         custom={5}
                         className="ready_to_start"
-
-                    >
-
-                        {t.aero.hero.getAero}<span>→</span>
-
-                    </motion.a>
+                        dangerouslySetInnerHTML={{__html: t.aero.hero.getAero}}
+                    />
                 </div>
             </div>
 
@@ -602,7 +598,7 @@ const AeroClientComponent = () => {
                             </div>
                         </div>
 
-                        <a className="myfxbook_deposit_button" href = "https://www.myfxbook.com/members/alg0_o" target = "_blank">
+                        <a className="myfxbook_deposit_button" href = "https://www.myfxbook.com/members/alg0_o/portfolio-trading-elements/12203984" target = "_blank">
                             {t.aero.portfolio.myfxbook}
                         </a>
                     </div>

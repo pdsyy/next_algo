@@ -1248,6 +1248,27 @@
     display: flex;
     background: url("../aero/images/explore_trades_bg.png") center bottom 32px / 100% auto no-repeat;
     padding-bottom: 180px;
+    height: 999px;
+
+}
+
+
+.get_aero_span, .ready_to_start_aero{
+    transform: none !important;
+}
+
+.ready_to_start_aero{
+    color: #000000CC;
+    font-weight: 500 !important;
+}
+
+.get_aero_span{
+    color: #000000;
+    font-family: Inter;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 20px;
+    letter-spacing: -0.6%;
 
 }
 
@@ -1830,7 +1851,7 @@
         background-size: auto 475px;
         justify-content: center;
         align-items: flex-end;
-        padding-bottom: 14px;
+        padding-bottom: 50px;
         padding-right: 0;
 
     }
@@ -1956,6 +1977,7 @@
     .what_trading_looks_like{
         margin-top: 24px;
         grid-template-columns: 1fr;
+        grid-gap: 32px;
     }
 
 
@@ -1977,6 +1999,7 @@
         font-size: 18px;
         line-height: 100%;
         letter-spacing: -1%;
+        margin-top: 0;
 
     }
 
@@ -2234,35 +2257,6 @@
         font-size: 16px;
         line-height: 120%;
         letter-spacing: -2%;
-
-    }
-
-    .product_page.aero .tech_page_footer_list {
-        text-align: center;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        width: auto;
-        display: flex;
-        position: relative;
-        bottom: 0;
-        right: 0;
-        gap: 12px;
-        padding-bottom: 14px;
-    }
-
-    .product_page.aero .tech_page_footer_list a, .copyrights_algo{
-
-        max-width: 175px;
-        color: #232323;
-        text-decoration: none;
-        font-family: Inter;
-        font-weight: 500;
-        font-size: 10px;
-        line-height: 100%;
-        letter-spacing: -1%;
-        text-align: center;
-        text-transform: uppercase;
 
     }
 

@@ -1307,7 +1307,7 @@ export const translations = {
                 description: "Aero відбирає можливості для торгівлі на пробоях за допомогою машинного навчання, автоматично виконує угоди та дозволяє налаштовувати ризик.",
                 viewPerformance: "Переглянути результати торгівлі",
                 exploreStrategy: "Дослідити стратегію",
-                getAero: "Готові почати? Отримати Aero",
+                getAero: "<span class = 'ready_to_start_aero'>Готові почати?</span> <span class = 'get_aero_span'>Отримати Aero</span> <span>→</span>",
                 botName: "Aero EA",
                 theme: "Торговий бот з найнижчими просадками",
                 desc: "Має понад 11 місяців підтвердженої статистики і 10 років тестів зі стабільними результатами.",
@@ -3257,7 +3257,7 @@ export const translations = {
                 description: "Aero отбирает возможности для торговли на пробоях с помощью машинного обучения, автоматически исполняет сделки и позволяет настраивать риск.",
                 viewPerformance: "Смотреть результаты торговли",
                 exploreStrategy: "Изучить стратегию",
-                getAero: "Готовы начать? Получить Aero",
+                getAero: "<span class = 'ready_to_start_aero'>Готовы начать?</span> <span class = 'get_aero_span'>Получить Aero</span> <span>→</span>",
                 botName: "Aero EA",
                 theme: "Торговый бот с самыми низкими просадками",
                 desc: "Более 11 месяцев подтвержденной статистики и 10 лет тестов со стабильными результатами.",
@@ -5068,7 +5068,7 @@ export const translations = {
                 description: "Aero filters breakout opportunities using machine learning, with automated execution and adjustable risk settings.",
                 viewPerformance: "View live performance",
                 exploreStrategy: "Explore the strategy",
-                getAero: "Ready to start? Get Aero",
+                getAero: "<span class = 'ready_to_start_aero'>Ready to start? </span> <span class = 'get_aero_span'>Get Aero</span> <span>→</span>",
                 botName: "Aero EA",
                 theme: "Trading bot with the lowest drawdowns",
                 desc: "Over 11 months of verified statistics and 10 years of tests with stable results.",
@@ -5366,7 +5366,7 @@ export const translations = {
                 title: "Why choose <br/><span>algorithmic trading?</span>",
                 items: [
                     {
-                        title: "Trading without the 'human factor'",
+                        title: "Trading without the «human factor»",
                         desc: "The bot won't close a trade too early due to fear or stay in a loss due to hope. Only mathematical expectation."
                     },
                     {

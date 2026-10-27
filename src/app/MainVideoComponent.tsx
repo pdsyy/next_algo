@@ -1,18 +1,43 @@
 "use client";
 
 import React, {useEffect, useRef, useState} from "react";
-import Image from "next/image";
 import top_lines from "./images/video_block_top_lines.svg";
 import bottom_lines from "./images/bottom_lines_video_block.svg";
 import {HTMLMotionProps, motion} from "framer-motion";
+import {useLanguage} from "@/context/LanguageProvider";
+
+const VIDEO_POSTER = "/algo-video-about-company-poster.webp";
+
+
+const VIDEOS: Record<string, string> = {
+    EN: "/videos/home_en_fast.mp4",
+    RU: "/videos/home_ru_fast.mp4",
+    UA: "/videos/home_ru_fast.mp4",
+};
+
+const DEFAULT_LANGUAGE = "EN";
 
 const MainVideoComponent = () => {
+    const {language} = useLanguage()!;
+
+    const videoSrc = VIDEOS[language] ?? VIDEOS[DEFAULT_LANGUAGE];
+
     const containerRef = useRef<HTMLDivElement | null>(null);
     const videoRef = useRef<HTMLVideoElement | null>(null);
 
     const [isPlaying, setIsPlaying] = useState(false);
     const [isMuted, setIsMuted] = useState(true);
 
+    /*
+     * При смене языка <video> пересоздаётся (key ниже),
+     * поэтому состояние кнопок сбрасываем в исходное.
+     */
+    useEffect(() => {
+        setIsPlaying(false);
+        setIsMuted(true);
+    }, [language]);
+
+    /* Автовоспроизведение, когда блок в зоне видимости */
     useEffect(() => {
         const container = containerRef.current;
         const video = videoRef.current;
@@ -39,7 +64,35 @@ const MainVideoComponent = () => {
         observer.observe(container);
 
         return () => observer.disconnect();
-    }, []);
+    }, [language]);
+
+    /* Прогрев: начинаем подгружать видео заранее, когда блок близко */
+    useEffect(() => {
+        const video = videoRef.current;
+        if (!video) return;
+
+        const warm = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    /*
+                     * Если play() уже вызван (блок на экране, например после
+                     * смены языка), load() прервал бы воспроизведение.
+                     * Поэтому прогреваем только пока видео на паузе
+                     * и ещё ничего не загружено.
+                     */
+                    if (video.paused && video.readyState === 0) {
+                        video.preload = "metadata";
+                        video.load();
+                    }
+                    warm.disconnect();
+                }
+            },
+            {rootMargin: "600px 0px"}
+        );
+
+        warm.observe(video);
+        return () => warm.disconnect();
+    }, [language]);
 
     const togglePlay = () => {
         const video = videoRef.current;
@@ -66,27 +119,7 @@ const MainVideoComponent = () => {
         setIsMuted(video.muted);
     };
 
-    useEffect(() => {
-        const video = videoRef.current;
-        if (!video) return;
-
-        const warm = new IntersectionObserver(
-            ([entry]) => {
-                if (entry.isIntersecting) {
-                    video.preload = "metadata";
-                    video.load();
-                    warm.disconnect();
-                }
-            },
-            { rootMargin: "600px 0px" }
-        );
-
-        warm.observe(video);
-        return () => warm.disconnect();
-    }, []);
-
     const fastEase = [0.25, 0.1, 0.25, 1.0];
-
 
     const baseTransition: any = {duration: 0.7, ease: fastEase};
     const baseViewport = {once: true, amount: 0.1};
@@ -114,9 +147,10 @@ const MainVideoComponent = () => {
             <motion.div className="main_container_video_block" {...fadeUp}>
 
                 <video
+                    key={language}
                     ref={videoRef}
-                    src="/videos/algo-trailer_fast.mp4"
-                    poster = "/algo-video-about-company-poster.webp"
+                    src={videoSrc}
+                    poster={VIDEO_POSTER}
                     muted
                     playsInline
                     preload="none"

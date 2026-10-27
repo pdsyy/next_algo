@@ -9,10 +9,17 @@ type Props = {
     onReady?: () => void;
 };
 
-const AlgoReveal = dynamic<Props>(() => import("./AlgoReveal"), {
+const loadAlgoReveal = () => import("./AlgoReveal");
+
+const AlgoReveal = dynamic<Props>(loadAlgoReveal, {
     ssr: false,
     loading: () => null,
 });
+
+
+if (typeof window !== "undefined" && window.innerWidth > 768) {
+    loadAlgoReveal();
+}
 
 export default function AlgoRevealDynamic({ onStage, onReady }: Props) {
     return <AlgoReveal onStage={onStage} onReady={onReady} />;

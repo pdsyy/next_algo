@@ -5,6 +5,11 @@
 
 
 html.loader-seen .page_loader {
+    transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+}
+
+html.loader-seen .page_loader_bar,
+html.loader-seen .page_loader_percent {
     display: none;
 }
 

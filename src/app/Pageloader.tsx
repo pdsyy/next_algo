@@ -18,14 +18,30 @@ type PageLoaderProps = {
 const MAX_WAIT = 5000; // страховка: через 5 c убираем лоадер в любом случае
 const MIN_SHOW = 600; // чтобы лоадер не мелькал на быстрой сети
 const EXIT_MS = 600; // должно совпадать с transition в css
+
+// быстрый режим (повторный визит в сессии): только логотип, без полосы и процентов
+const QUICK_MIN_SHOW = 500; // чтобы логотип не мелькал
+const QUICK_MAX_WAIT = 1500;
+const QUICK_EXIT_MS = 300; // должно совпадать с transition в css для .loader-seen
+
 const STORAGE_KEY = "algo_loader_seen";
 const TOTAL_STAGES = 4; // fonts + chunk + image + video
+const STEP_SIZE = 100 / TOTAL_STAGES;
 const CAP_BEFORE_READY = 92; // пока не ready, прогресс не уходит выше
 
+/*
+ * Класс "loader-seen" на <html> ставит inline-скрипт в layout.tsx
+ * ещё до гидрации, если в sessionStorage уже есть ключ.
+ * Вызывать только внутри эффектов (на клиенте).
+ */
+const isQuick = () =>
+    typeof document !== "undefined" &&
+    document.documentElement.classList.contains("loader-seen");
+
 export default function PageLoader({ stages, ready, onDone }: PageLoaderProps) {
-    const [skip, setSkip] = useState(false);
     const [removed, setRemoved] = useState(false);
     const [leaving, setLeaving] = useState(false);
+    const [finished, setFinished] = useState(false);
 
     const [fontsReady, setFontsReady] = useState(false);
     const [minPassed, setMinPassed] = useState(false);
@@ -34,42 +50,31 @@ export default function PageLoader({ stages, ready, onDone }: PageLoaderProps) {
     const rootRef = useRef<HTMLDivElement>(null);
     const fillRef = useRef<HTMLDivElement>(null);
     const percentRef = useRef<HTMLDivElement>(null);
-    const [finished, setFinished] = useState(false);
 
     const onDoneRef = useRef(onDone);
     onDoneRef.current = onDone;
 
-    /* ---------- повторный визит в этой сессии: лоадер не показываем ---------- */
-    useEffect(() => {
-        let seen = false;
-        try {
-            seen = sessionStorage.getItem(STORAGE_KEY) === "1";
-        } catch {}
-
-       /* if (seen) {
-            setSkip(true);
-            setRemoved(true);
-            onDoneRef.current?.();
-        }*/
-    }, []);
-
     /* ---------- таймеры ---------- */
     useEffect(() => {
-        if (skip) return;
+        const quick = isQuick();
 
-        const t1 = window.setTimeout(() => setTimedOut(true), MAX_WAIT);
-        const t2 = window.setTimeout(() => setMinPassed(true), MIN_SHOW);
+        const t1 = window.setTimeout(
+            () => setTimedOut(true),
+            quick ? QUICK_MAX_WAIT : MAX_WAIT
+        );
+        const t2 = window.setTimeout(
+            () => setMinPassed(true),
+            quick ? QUICK_MIN_SHOW : MIN_SHOW
+        );
 
         return () => {
             window.clearTimeout(t1);
             window.clearTimeout(t2);
         };
-    }, [skip]);
+    }, []);
 
     /* ---------- шрифты ---------- */
     useEffect(() => {
-        if (skip) return;
-
         if (!document.fonts?.ready) {
             setFontsReady(true);
             return;
@@ -78,14 +83,13 @@ export default function PageLoader({ stages, ready, onDone }: PageLoaderProps) {
         document.fonts.ready
             .then(() => setFontsReady(true))
             .catch(() => setFontsReady(true));
-    }, [skip]);
+    }, []);
 
     /* ---------- блокировка скролла ---------- */
     const locked = !removed && !leaving;
 
     useEffect(() => {
-        if (!locked) return;
-        if (document.documentElement.classList.contains("loader-seen")) return;
+        if (!locked || isQuick()) return;
 
         const html = document.documentElement;
         html.style.overflow = "hidden";
@@ -104,15 +108,14 @@ export default function PageLoader({ stages, ready, onDone }: PageLoaderProps) {
         Number(!!stages.image) +
         Number(!!stages.video);
 
-    const stepSize = 100 / TOTAL_STAGES;
-
     const stateRef = useRef({ stagesDone: 0, done: false });
     stateRef.current.stagesDone = stagesDone;
     stateRef.current.done = done;
 
     /* ---------- плавное движение: по времени, без ре-рендеров ---------- */
     useEffect(() => {
-        if (skip) return;
+        // в быстром режиме полосы и процентов нет, анимировать нечего
+        if (isQuick()) return;
 
         let raf = 0;
         let current = 0;
@@ -127,7 +130,7 @@ export default function PageLoader({ stages, ready, onDone }: PageLoaderProps) {
 
             const goal = done
                 ? 100
-                : Math.min(stagesDone * stepSize + stepSize * 0.8, CAP_BEFORE_READY);
+                : Math.min(stagesDone * STEP_SIZE + STEP_SIZE * 0.8, CAP_BEFORE_READY);
 
             const dist = goal - current;
 
@@ -163,11 +166,16 @@ export default function PageLoader({ stages, ready, onDone }: PageLoaderProps) {
         raf = requestAnimationFrame(tick);
 
         return () => cancelAnimationFrame(raf);
-    }, [skip, stepSize]);
+    }, []);
 
-    /* ---------- уход: только когда полоса дошла до 100 ---------- */
+    /* ---------- быстрый режим: уходим, как только hero готов ---------- */
     useEffect(() => {
-        if (skip || leaving || !finished) return;
+        if (isQuick() && done) setFinished(true);
+    }, [done]);
+
+    /* ---------- уход ---------- */
+    useEffect(() => {
+        if (leaving || !finished) return;
 
         setLeaving(true);
 
@@ -175,16 +183,19 @@ export default function PageLoader({ stages, ready, onDone }: PageLoaderProps) {
             sessionStorage.setItem(STORAGE_KEY, "1");
         } catch {}
 
+        const exitMs = isQuick() ? QUICK_EXIT_MS : EXIT_MS;
+
+        // не полагаемся на transitionend: он не срабатывает,
+        // если вкладка в фоне или включён reduced-motion
         const t = window.setTimeout(() => {
             setRemoved(true);
             onDoneRef.current?.();
-        }, EXIT_MS + 50);
+        }, exitMs + 50);
 
         return () => window.clearTimeout(t);
-    }, [finished, leaving, skip]);
+    }, [finished, leaving]);
 
     if (removed) return null;
-
 
     return (
         <div
@@ -197,13 +208,17 @@ export default function PageLoader({ stages, ready, onDone }: PageLoaderProps) {
             aria-valuenow={0}
         >
             <div className="page_loader_inner">
-                <div className="page_loader_logo"><img src={logo.src} alt="Logo" className="logo_img"/></div>
+                <div className="page_loader_logo">
+                    <img src={logo.src} alt="Logo" className="logo_img" />
+                </div>
 
                 <div className="page_loader_bar">
                     <div ref={fillRef} className="page_loader_bar_fill" />
                 </div>
 
-                <div ref={percentRef} className="page_loader_percent">0%</div>
+                <div ref={percentRef} className="page_loader_percent">
+                    0%
+                </div>
             </div>
 
             <noscript>

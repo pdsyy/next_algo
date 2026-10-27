@@ -1,5 +1,5 @@
 "use client"
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 
 import bento_row from "./images/Bento Row 2 (1).png"
 import info_icon_mt4 from "./images/info-icon-mt4.svg"
@@ -51,6 +51,7 @@ import AddToCartButton from "@/components/cartPopup/AddToCartButton";
 import TripleHandler from "@/app/aero/components/TripleHandler";
 import EarthFooter from "@/app/aero/components/EarthFooter";
 import {useScroll} from "@/context/ScrollContext";
+import PageLoader, {LoaderStage} from "@/app/Pageloader";
 
 const AeroClientComponent = () => {
     const {t, language} = useLanguage();
@@ -141,6 +142,33 @@ const AeroClientComponent = () => {
     const botsList = [...t.home.botsList]
 
     console.log(selectedValue)
+
+
+    const [heroReady, setHeroReady] = useState(false);
+    const [stages, setStages] = useState<Partial<Record<LoaderStage, boolean>>>({});
+    const handleStage = useCallback(
+        (s: LoaderStage) => setStages(prev => (prev[s] ? prev : {...prev, [s]: true})),
+        []
+    );
+    const handleReady = useCallback(() => setHeroReady(true), []);
+
+    const handleLoaderDone = useCallback(() => {
+        const id = window.location.hash.replace("#", "");
+        if (!id) return;
+
+        const element = document.getElementById(id);
+        if (!element) return;
+
+        const headerOffset = 80;
+
+        if (element.offsetHeight > window.innerHeight * 0.8) {
+            const top = element.getBoundingClientRect().top + window.pageYOffset;
+            window.scrollTo({top: top - headerOffset, behavior: "smooth"});
+        } else {
+            element.scrollIntoView({behavior: "smooth", block: "center"});
+        }
+    }, []);
+
     return (
         <div className="product_page aero">
 
@@ -153,6 +181,9 @@ const AeroClientComponent = () => {
                 activeThx={activePopup}
                 setActiveThx={setActivePopup}
             />
+
+            <PageLoader stages={stages} ready={heroReady} onDone={handleLoaderDone}/>
+
 
 
             <div className="hero_block_aero">

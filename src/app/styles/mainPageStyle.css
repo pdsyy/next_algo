@@ -30,7 +30,10 @@
        top картинки + высота картинки + нижний отступ.
        570px используется только до первого JS-расчёта.
     */
-    height: var(--hero-calculated-height, 570px);
+    height: var(
+            --hero-calculated-height,
+            calc(402px + min(1057px, 70vw) * 273 / 1057 + 102px)
+    );
     min-height: 0;
     margin: 0;
     overflow: hidden;

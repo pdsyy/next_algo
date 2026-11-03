@@ -1,7 +1,7 @@
 "use client"
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 
-import bento_row from "./images/Bento Row 2 (1).png"
+import TradeWorkflowVisual from "./components/Tradeworkflowvisual/TradeWorkflowVisual"
 import info_icon_mt4 from "./images/info-icon-mt4.svg"
 import test_results_aero from "./images/aero_test_results.png"
 import feature_shield_mobile from "./images/feature_shield_mobile.webp"
@@ -35,6 +35,7 @@ import bottom_product_image from "./images/bottom_product_image.webp";
 import logo from "../images/logo.svg";
 import PopupBot from "@/components/PopupBot";
 import {Pagination} from "swiper/modules";
+import AeroTrackRecord from "./components/AeroTrackRecord/AeroTrackRecord"
 import {AnimatePresence, HTMLMotionProps, motion} from "framer-motion";
 import aeroPreview from "./images/aero_preview_t.png";
 //import aeroVideo from "./images/aeroMainVideo.mp4";
@@ -44,7 +45,6 @@ import CalculatorSectionAero from "@/components/CalculatorSectionAero";
 import tg_icon from "../images/tg_icon.svg";
 import youtube_icon from "../images/youtube_icon.svg";
 import {useThxContext} from "@/context/ThxContext";
-import Image from "next/image";
 import lines from "@/app/images/bottom_lines.svg";
 import Footer from "@/components/Footer";
 import AddToCartButton from "@/components/cartPopup/AddToCartButton";
@@ -442,168 +442,18 @@ const AeroClientComponent = () => {
                         </motion.div>
                     </div>
 
-                    <Image
-                        src={bento_row}
-                        alt=""
-                        className="bento_row_image"
+                    <TradeWorkflowVisual
+                        hedge={t.aero.workflow.hedge}
+                        hedgeIcon={refresh_line.src}
+                        chartAriaLabel={t.aero.workflow.title}
                     />
-
-                    <motion.div className="optional_hedge_block" {...fadeUp}>
-                        <div className="optional_hedge_main">
-                            <img src={refresh_line.src} alt=""/>
-                            {t.aero.workflow.hedge.title}
-                        </div>
-
-                        <div className="optional_hedge_info">
-                            {t.aero.workflow.hedge.description}
-                        </div>
-                    </motion.div>
                 </div>
             </div>
 
-            <div className="explore_aeros_record_container">
-                <div className="explore_aeros_record">
-                    <motion.div className="positive_features">
-                        {t.aero.statistics.label}
-                    </motion.div>
 
-                    <motion.h2 {...fadeUp}>
-                        {t.aero.statistics.title}
-                    </motion.h2>
-
-                    <div className="container_main_description">
-                        {t.aero.statistics.description}
-                    </div>
-
-                    <div className="explore_aeros_record_video_container">
-                        <TripleHandler
-                            items={[
-                                {
-                                    value: 1,
-                                    label: (
-                                        <div className="handler_explore_item">
-                                            <div className="handler_title">
-                                                {t.aero.statistics.accounts.current.title}
-                                            </div>
-
-                                            <div className="handler_desc">
-                                                {t.aero.statistics.accounts.current.description}
-                                            </div>
-                                        </div>
-                                    ),
-                                },
-                                {
-                                    value: 2,
-                                    label: (
-                                        <div className="handler_explore_item">
-                                            <div className="handler_title">
-                                                {t.aero.statistics.accounts.darwinex.title}
-                                            </div>
-
-                                            <div className="handler_desc">
-                                                {t.aero.statistics.accounts.darwinex.description}
-                                            </div>
-                                        </div>
-                                    ),
-                                },
-                                {
-                                    value: 3,
-                                    label: (
-                                        <div className="handler_explore_item">
-                                            <div className="handler_title">
-                                                {t.aero.statistics.accounts.legacy.title}
-                                            </div>
-
-                                            <div className="handler_desc">
-                                                {t.aero.statistics.accounts.legacy.description}
-                                            </div>
-                                        </div>
-                                    ),
-                                },
-                            ]}
-                            handleValue={selectedValue}
-                            setHandleValue={setSelectedValue}
-                        />
-
-                        <div className={`archived_mt4 ${selectedValue !== 3 ? "dis_none" : ""}`}>
-                            <div className="top_mobile_archived">
-                                <img src={info_icon_mt4.src} alt=""/>
-
-                                <div className="mt4_archived_text">
-                                    {t.aero.statistics.archivedTitle}
-                                </div>
-                            </div>
-
-                            <div className="mt4_archived_info">
-                                {t.aero.statistics.archivedDescription}
-                            </div>
-                        </div>
-
-                        <div className="mt4_vidget_container" id = "view-live-performance">
-                            <div className="mt4_vidget_block">
-                                <a href={selectedValue === 3 ?
-                                    "https://www.myfxbook.com/members/alg0_o/aero-mt4--archive-1/12232265" :
-                                    selectedValue === 1 ? "https://www.myfxbook.com/members/alg0_o/aero-mt5--current-account/12205723" :
-                                        "https://www.myfxbook.com/members/alg0_o/aero-darwinex-zero--oenc/12209314"}
-                                   className="open_mt4_myfxbook" target="_blank">
-                                    {t.aero.statistics.openMyfxbook}
-                                </a>
-
-                                <div className="mt4_vidget_block_content">
-                                    {widgetSize && (selectedValue === 3 ?
-                                        (
-                                            <a href="https://www.myfxbook.com/members/alg0_o/aero-mt4--archive-1/12232265" target="_blank">
-                                                <img className="widget_image_myfxbook" alt="widget"
-                                                     src={`https://widgets.mfbcdn.net/custom-widget?id=12232265&width=${widgetSize.width}&height=${widgetSize.height}&bart=0&linet=2&symbol=GOLD&magic=-1&title=AeroMT4(Archive%2B1year)&titles=12&bgColor=ffffff&gridColor=bdbdbd&lineColor=ff0505&barColor=ffadad&bar1Color=ffadad&fontColor=525252&chartbgc=ffffff&equityColor=eff45a`}/></a>
-                                        )
-                                        : selectedValue === 1 ?
-                                            (
-                                                <a href="https://www.myfxbook.com/members/alg0_o/aero-mt5--current-account/12205723" target="_blank">
-                                                    <img className="widget_image_myfxbook" alt="widget"
-                                                         src={`https://widgets.mfbcdn.net/custom-widget?id=12205723&width=${widgetSize.width}&height=${widgetSize.height}&bart=0&linet=2&symbol=GOLD&magic=-1&title=AeroMT5(CurrentAccount)&titles=12&bgColor=ffffff&gridColor=bdbdbd&lineColor=ff0505&barColor=ffadad&bar1Color=ffadad&fontColor=525252&chartbgc=ffffff&equityColor=eff45a`}/></a>
-                                            )
-                                            :
-                                            (
-                                                <a href="https://www.myfxbook.com/members/alg0_o/aero-darwinex-zero--oenc/12209314" target="_blank">
-                                                    <img className="widget_image_myfxbook" alt="widget"
-                                                         src={`https://widgets.mfbcdn.net/custom-widget?id=12209314&width=${widgetSize.width}&height=${widgetSize.height}&bart=0&linet=2&symbol=GOLD&magic=-1&title=AeroDarwinexZero(OENC)&titles=12&bgColor=ffffff&gridColor=bdbdbd&lineColor=ff0505&barColor=ffadad&bar1Color=ffadad&fontColor=525252&chartbgc=ffffff&equityColor=eff45a`}/>
-                                                </a>
-                                            )
-                                    )}
+            <AeroTrackRecord t={t} language={language} />
 
 
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="all_element_container">
-                        <div className="elements_block">
-                            <div className="elements_list_text">
-                                {t.aero.portfolio.elements}
-                            </div>
-
-                            <div className="one_portfolio_text">
-                                {t.aero.portfolio.title}
-                            </div>
-                        </div>
-
-                        <div className="deposit_elements">
-                            <div className="deposit_label">
-                                {t.aero.portfolio.deposit}
-                            </div>
-
-                            <div className="deposit_money">
-                                $160,000
-                            </div>
-                        </div>
-
-                        <a className="myfxbook_deposit_button" href = "https://www.myfxbook.com/members/alg0_o/portfolio-trading-elements/12203984" target = "_blank">
-                            {t.aero.portfolio.myfxbook}
-                        </a>
-                    </div>
-                </div>
-            </div>
 
             <div className="algo_feedback_block">
                 <div className="feedback_h2">

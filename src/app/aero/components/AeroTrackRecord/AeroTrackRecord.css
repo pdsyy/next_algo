@@ -1,0 +1,641 @@
+/* Aero — "Explore Aero's track record"
+   Размеры, шрифты и отступы взяты из прежнего компонента (aero.css).
+   Всё скоупится под .atr, чтобы не конфликтовать со стилями сайта.
+   h2 намеренно не стилизуется по размеру — берётся глобальный h2 сайта, как раньше. */
+.atr {
+    --coin: url("/images/aero/coin.webp");
+    --ink: #171717;
+    --soft: #727272;
+    --line: #E6E6E6;
+    --tab: #868686;
+    --blue: #2f66f0;
+    --atr-pb: 80px; /* нижний отступ секции (раньше был 180px под фоновую картинку) */
+    font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: clip;
+    color: var(--ink);
+    color-scheme: light;
+}
+
+.atr, .atr * {
+    box-sizing: border-box
+}
+
+/* ── контейнер (.explore_aeros_record_container / .explore_aeros_record) ── */
+.atr .sec {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 80px;
+    padding: 0 48px var(--atr-pb)
+}
+
+.atr .fit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 1344px
+}
+
+/* ── заголовок ── */
+.atr .top {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center
+}
+
+.atr .eyebrow {
+    width: 100%;
+    color: #0088FF4D;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 16px;
+    text-transform: uppercase
+}
+
+.atr h2 {
+    margin: 24px 0 0
+}
+
+.atr .sub {
+    margin: 24px 0 0;
+    width: 100%;
+    color: var(--soft);
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 120%
+}
+
+/* ── стек: карточка + нижний блок, монеты по бокам ── */
+.atr .stack {
+    position: relative;
+    width: 100%;
+    max-width: 896px;
+    margin: 48px auto 0
+}
+
+.atr .coin {
+    position: absolute;
+    z-index: 0;
+    width: clamp(240px, 26vw, 400px);
+    aspect-ratio: 1;
+    pointer-events: none;
+    filter: drop-shadow(0 30px 40px rgba(0, 0, 0, .18));
+    perspective: 900px
+}
+
+.atr .coin.l {
+    left: calc(-1 * clamp(170px, 19vw, 290px));
+    top: 18%;
+    transform: rotate(-14deg)
+}
+
+.atr .coin.r {
+    right: calc(-1 * clamp(180px, 20vw, 300px));
+    top: -8%;
+    transform: rotate(16deg)
+}
+
+.atr .tilt {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+    will-change: transform;
+    transition: transform .18s ease-out
+}
+
+.atr .face, .atr .glare {
+    position: absolute;
+    inset: 0
+}
+
+.atr .face {
+    background: var(--coin) center/contain no-repeat
+}
+
+.atr .glare {
+    -webkit-mask: var(--coin) center/contain no-repeat;
+    mask: var(--coin) center/contain no-repeat;
+    background: linear-gradient(var(--ga, 0deg), rgba(255, 255, 255, .75) 0%, rgba(255, 255, 255, 0) 60%);
+    opacity: var(--go, 0);
+    mix-blend-mode: soft-light;
+    --go: .25;
+    --ga: 30deg
+}
+
+/* ── главная карточка (.explore_aeros_record_video_container) ── */
+.atr .card {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    padding: 24px;
+    background: #fff;
+    border-radius: 24px;
+    box-shadow: 0 2px 24px 0 #B5B5B540
+}
+
+/* ── переключатель (.triple_handler.explore_records) ── */
+.atr .tabs {
+    position: relative;
+    display: grid;
+    grid-template-columns:repeat(3, minmax(0, 1fr));
+    height: 62px;
+    padding: 4px;
+    background: #F4F4F5;
+    border-radius: 12px
+}
+
+.atr .tabs .pill {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    height: calc(100% - 8px);
+    width: calc((100% - 8px) / 3);
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 6px 10px 0 #0e121b0f;
+    transition: transform .3s
+}
+
+.atr .tab {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    padding: 12px 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    font-family: inherit;
+    text-align: center;
+    color: var(--tab);
+    transition: color .3s
+}
+
+.atr .tab b {
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 100%;
+    letter-spacing: -.01em;
+    color: inherit
+}
+
+.atr .tab span {
+    margin-top: 8px;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 100%;
+    letter-spacing: -.01em;
+    color: inherit
+}
+
+.atr .tab[aria-selected="true"] {
+    color: #000
+}
+
+.atr .tab:focus-visible {
+    outline: 2px solid var(--blue);
+    outline-offset: 2px
+}
+
+/* ── плашка архивного счёта (.archived_mt4) ── */
+.atr .note {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 46px;
+    padding: 14px 24px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: rgba(241, 243, 245, .38)
+}
+
+/* плавное раскрытие: высота через grid 0fr→1fr, -12px компенсирует gap карточки */
+.atr .note-wrap {
+    display: grid;
+    grid-template-rows:0fr;
+    margin-top: -12px;
+    opacity: 0;
+    visibility: hidden;
+    transition: grid-template-rows .45s cubic-bezier(.3, .8, .2, 1), margin-top .45s cubic-bezier(.3, .8, .2, 1), opacity .35s, visibility 0s .45s
+}
+
+.atr .note-wrap[data-open="true"] {
+    grid-template-rows:1fr;
+    margin-top: 0;
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s
+}
+
+.atr .note-clip {
+    min-height: 0;
+    overflow: hidden
+}
+
+.atr .note-head {
+    display: flex;
+    align-items: center
+}
+
+.atr .note .ic {
+    font-size: 18px;
+    line-height: 1;
+    flex: none
+}
+
+.atr .note b {
+    margin: 0 16px;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 100%;
+    color: var(--ink)
+}
+
+.atr .note p {
+    margin: 0;
+    padding-left: 16px;
+    border-left: 1px solid var(--line);
+    color: var(--soft);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 100%
+}
+
+/* ── блок с графиком (.mt4_vidget_container) ── */
+.atr .frame {
+    width: 100%;
+    padding: 24px;
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    background: #fff
+}
+
+.atr .well {
+    position: relative;
+    width: 100%;
+    height: 270px;
+    overflow: hidden;
+    background: #f1f1f1;
+    border-radius: 12px
+}
+
+.atr .well .open {
+    position: absolute;
+    right: 12px;
+    top: 10px;
+    z-index: 2;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 100%;
+    color: var(--ink);
+    text-decoration: underline;
+    text-underline-offset: 3px
+}
+
+.atr .well .stat {
+    position: absolute;
+    left: 14px;
+    top: 10px;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 2px
+}
+
+.atr .well .stat small {
+    font-size: 12px;
+    color: var(--soft);
+    letter-spacing: .06em;
+    text-transform: uppercase
+}
+
+.atr .well .stat strong {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -.02em;
+    font-variant-numeric: tabular-nums
+}
+
+.atr .atr-chart {
+    position: absolute;
+    outline: none;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    outline-offset: -3px
+}
+
+.atr .atr-state {
+    position: absolute;
+    inset: 80px 16px 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    text-align: center;
+    color: var(--soft)
+}
+
+.atr .atr-state button {
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    background: #fff;
+    padding: 9px 18px;
+    cursor: pointer;
+    font: inherit;
+    color: var(--ink)
+}
+
+.atr .atr-tooltip {
+    position: absolute;
+    top: 44px;
+    z-index: 3;
+    transform: translateX(-50%);
+    height: 26px;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    background: #171717;
+    color: #fff;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 12px;
+    white-space: nowrap;
+    pointer-events: none
+}
+
+/* ── нижний блок (.all_element_container) ── */
+.atr .bottom {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 98px;
+    margin-top: 24px;
+    padding: 24px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    box-shadow: 0 2px 24px #b5b5b540
+}
+
+.atr .bottom > div:first-child {
+    display: flex;
+    flex-direction: column;
+    margin-right: 32px
+}
+
+.atr .bottom .k {
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 100%;
+    text-transform: uppercase;
+    color: var(--soft)
+}
+
+.atr .bottom .t {
+    margin-top: auto;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 120%;
+    letter-spacing: -.02em;
+    color: var(--ink)
+}
+
+.atr .dep {
+    margin-left: auto;
+    padding-left: 32px;
+    border-left: 1px solid #0000001F
+}
+
+.atr .dep .k {
+    margin-bottom: 2px
+}
+
+.atr .dep .v {
+    font-weight: 500;
+    font-size: 32px;
+    line-height: 120%;
+    letter-spacing: -.02em;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums
+}
+
+.atr .btn {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    margin-left: 55px;
+    padding: 0 14px;
+    white-space: nowrap;
+    background: linear-gradient(0deg, #232323, #232323), linear-gradient(180deg, rgba(255, 255, 255, .16) 0%, rgba(255, 255, 255, 0) 100%);
+    box-shadow: 0 1px 3px 0 #0E121B1F;
+    border-radius: 200px;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px
+}
+
+.atr .btn:focus-visible, .atr .open:focus-visible {
+    outline: 2px solid var(--blue);
+    outline-offset: 3px
+}
+
+/* ── < 1199px ── */
+@media (max-width: 1198px) {
+    .atr .well {
+        background: #fff
+    }
+
+    .atr .dep {
+        display: flex;
+        flex-direction: column;
+        justify-content: center
+    }
+
+    .atr .dep .v {
+        margin-top: 4px
+    }
+
+    .atr .btn {
+        margin-left: 32px;
+        font-size: 15px
+    }
+}
+
+/* ── < 768px ── */
+@media (max-width: 767px) {
+    .atr .sec {
+        margin-top: 72px;
+        padding: 0 20px var(--atr-pb)
+    }
+
+    .atr .eyebrow {
+        font-size: 12px;
+        line-height: 12px
+    }
+
+    .atr h2 {
+        margin-top: 16px
+    }
+
+    .atr .sub {
+        margin-top: 16px
+    }
+
+    .atr .stack {
+        margin-top: 24px
+    }
+
+    .atr .coin {
+        width: 200px
+    }
+
+    .atr .coin.l {
+        left: -120px;
+        top: auto;
+        bottom: -60px
+    }
+
+    .atr .coin.r {
+        right: -110px;
+        top: -36px;
+        width: 170px
+    }
+
+    .atr .card {
+        padding: 16px
+    }
+
+    .atr .tabs {
+        height: auto;
+        min-height: 56px
+    }
+
+    .atr .tab {
+        padding: 8px 4px
+    }
+
+    .atr .tab b {
+        font-size: 12px;
+        line-height: 14px
+    }
+
+    .atr .tab span {
+        margin-top: 3px;
+        font-size: 10px;
+        line-height: 12px
+    }
+
+    .atr .note {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 16px
+    }
+
+    .atr .note-head {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px
+    }
+
+    .atr .note .ic {
+        font-size: 24px
+    }
+
+    .atr .note b {
+        margin: 0;
+        font-size: 15px;
+        line-height: 18px
+    }
+
+    .atr .note p {
+        padding-left: 0;
+        border-left: 0;
+        line-height: 20px
+    }
+
+    .atr .frame {
+        padding: 12px
+    }
+
+    .atr .well {
+        height: 240px
+    }
+
+    .atr .well .open {
+        font-size: 12px;
+        max-width: 48%;
+        text-align: right
+    }
+
+    .atr .well .stat small {
+        font-size: 10px
+    }
+
+    .atr .well .stat strong {
+        font-size: 22px
+    }
+
+    .atr .bottom {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 16px
+    }
+
+    .atr .bottom > div:first-child {
+        margin-right: 0
+    }
+
+    .atr .bottom .k {
+        font-size: 10px
+    }
+
+    .atr .bottom .t {
+        margin-top: 12px;
+        font-size: 16px
+    }
+
+    .atr .dep {
+        width: 100%;
+        margin: 12px 0 0;
+        padding: 12px 0 0;
+        border-left: 0;
+        border-top: 1px solid #EBEBEB
+    }
+
+    .atr .dep .k {
+        margin-bottom: 4px
+    }
+
+    .atr .btn {
+        width: 100%;
+        justify-content: center;
+        flex-shrink: 0;
+        margin: 12px 0 0
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .atr .tabs .pill, .atr .tilt, .atr .note-wrap {
+        transition: none
+    }
+}

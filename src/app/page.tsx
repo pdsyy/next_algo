@@ -77,6 +77,7 @@ import CartExample from "@/components/cartPopup/CartExample";
 
 import PageLoader, {LoaderStage} from "./Pageloader";
 import EarthFooter from "@/app/aero/components/EarthFooter";
+import OurApproach from "@/components/ourApproach/OurApproach";
 
 const MotionImage = motion.create(Image);
 
@@ -720,6 +721,13 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                         <Image src={mql5_2x} className="mql5_big_image" alt="mql5_logo"/>
                     </div>
                 </motion.div>*/}
+
+
+
+
+                <OurApproach/>
+
+
                 <div className="track_record_container_gradient">
                     <div className="track_record_container" onMouseEnter={() =>
                         setIsTrackRecordPaused(true)
@@ -804,7 +812,7 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                     </div>
                 </div>
 
-                <div className="effective_algorithm" id="advantages">
+                {/*<div className="effective_algorithm" id="advantages">
                     <motion.h2 {...fadeUp} dangerouslySetInnerHTML={{__html: t.home.effective.title}}/>
 
                     <div className="effective_points first">
@@ -828,98 +836,7 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                             </motion.div>
                         ))}
                     </div>
-                </div>
-
-
-                <div className="first_deal_block" id="how-it-works">
-                    <motion.h2 {...fadeUp} dangerouslySetInnerHTML={{__html: t.home.steps.title}}/>
-                    <video
-                        ref={videoBgRef}
-                        src="/videos/hf_2_opt.mp4"
-                        poster="/journey_video_poster.jpg"
-                        muted
-                        playsInline
-                        preload="none"
-                        className="first_step_bg mob_none"
-                    />
-
-                    <Image src={first_step_bg_mobile} alt="" className="first_step_bg desk_none"/>
-                    <motion.div
-                        className="step_container choose_algorithm"
-                        {...firstDealStepAnimation(0)}
-                    >
-                        <div className="step_name">
-                            {t.steps.chooseAlgorithm.title}
-                        </div>
-
-                        <div className="step_desc">
-                            {t.steps.chooseAlgorithm.desc}
-                        </div>
-                    </motion.div>
-
-                    <motion.div
-                        className="step_container connect"
-                        {...firstDealStepAnimation(1)}
-                    >
-                        <div className="step_name">
-                            {t.steps.connect.title}
-                        </div>
-
-                        <div className="step_desc">
-                            {t.steps.connect.desc}
-                        </div>
-                    </motion.div>
-
-                    <motion.div
-                        className="step_container autonomous_trading"
-                        {...firstDealStepAnimation(2)}
-                    >
-                        <div className="step_name">
-                            {t.steps.autonomousTrading.title}
-                        </div>
-
-                        <div className="step_desc">
-                            {t.steps.autonomousTrading.desc}
-                        </div>
-                    </motion.div>
-
-                    <motion.div
-                        className="step_container monitoring"
-                        {...firstDealStepAnimation(3)}
-                    >
-                        <div className="step_name">
-                            {t.steps.monitoring.title}
-                        </div>
-
-                        <div className="step_desc">
-                            {t.steps.monitoring.desc}
-                        </div>
-                    </motion.div>
-                    {/*<div className="first_deal_details">
-                        <motion.div className="first_deal_image" {...fadeLeft}>
-                            <img src={users_profit.src} alt=""/>
-                        </motion.div>
-
-                        <motion.div className="first_deal_block_list" {...fadeRight}>
-                            {t.home.steps.items.map((step: any, index: number) => (
-                                <div className="first_deal_item_gradient" key={index}>
-                                    <div className="first_deal_item">
-                                        <div className="item_name">
-                                            <img
-                                                src={index === 0 ? firstDealItem1.src : index === 1 ? firstDealItem2.src : index === 2 ? firstDealItem3.src : firstDealItem4.src}
-                                                alt=""/>
-                                            {step.title}
-                                            <div className="item_number">0{index + 1}</div>
-                                        </div>
-                                        <div className="item_desc">{step.desc}</div>
-                                    </div>
-                                </div>
-                            ))}
-                        </motion.div>
-                    </div>*/}
-
-
-                </div>
+                </div>*/}
 
                 <div className="bots_catalog" id="catalog">
                     <motion.h2 {...fadeUp}>
@@ -1138,6 +1055,10 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                     </div>
                 </div>
 
+
+
+
+
                 <div className="algo_feedback_block" id="reviews">
                     <div className="feedback_h2">
                         <motion.h2 {...fadeUp}>
@@ -1187,6 +1108,97 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                             </div>
                         </a>
                     </div>
+                </div>
+
+
+                <div className="first_deal_block" id="how-it-works">
+                    <motion.h2 {...fadeUp} dangerouslySetInnerHTML={{__html: t.home.steps.title}}/>
+                    <video
+                        ref={videoBgRef}
+                        src="/videos/hf_2_opt.mp4"
+                        poster="/journey_video_poster.jpg"
+                        muted
+                        playsInline
+                        preload="none"
+                        className="first_step_bg mob_none"
+                    />
+
+                    <Image src={first_step_bg_mobile} alt="" className="first_step_bg desk_none"/>
+                    <motion.div
+                        className="step_container choose_algorithm"
+                        {...firstDealStepAnimation(0)}
+                    >
+                        <div className="step_name">
+                            {t.steps.chooseAlgorithm.title}
+                        </div>
+
+                        <div className="step_desc">
+                            {t.steps.chooseAlgorithm.desc}
+                        </div>
+                    </motion.div>
+
+                    <motion.div
+                        className="step_container connect"
+                        {...firstDealStepAnimation(1)}
+                    >
+                        <div className="step_name">
+                            {t.steps.connect.title}
+                        </div>
+
+                        <div className="step_desc">
+                            {t.steps.connect.desc}
+                        </div>
+                    </motion.div>
+
+                    <motion.div
+                        className="step_container autonomous_trading"
+                        {...firstDealStepAnimation(2)}
+                    >
+                        <div className="step_name">
+                            {t.steps.autonomousTrading.title}
+                        </div>
+
+                        <div className="step_desc">
+                            {t.steps.autonomousTrading.desc}
+                        </div>
+                    </motion.div>
+
+                    <motion.div
+                        className="step_container monitoring"
+                        {...firstDealStepAnimation(3)}
+                    >
+                        <div className="step_name">
+                            {t.steps.monitoring.title}
+                        </div>
+
+                        <div className="step_desc">
+                            {t.steps.monitoring.desc}
+                        </div>
+                    </motion.div>
+                    {/*<div className="first_deal_details">
+                        <motion.div className="first_deal_image" {...fadeLeft}>
+                            <img src={users_profit.src} alt=""/>
+                        </motion.div>
+
+                        <motion.div className="first_deal_block_list" {...fadeRight}>
+                            {t.home.steps.items.map((step: any, index: number) => (
+                                <div className="first_deal_item_gradient" key={index}>
+                                    <div className="first_deal_item">
+                                        <div className="item_name">
+                                            <img
+                                                src={index === 0 ? firstDealItem1.src : index === 1 ? firstDealItem2.src : index === 2 ? firstDealItem3.src : firstDealItem4.src}
+                                                alt=""/>
+                                            {step.title}
+                                            <div className="item_number">0{index + 1}</div>
+                                        </div>
+                                        <div className="item_desc">{step.desc}</div>
+                                    </div>
+                                </div>
+                            ))}
+                        </motion.div>
+                    </div>*/}
+
+
                 </div>
 
 

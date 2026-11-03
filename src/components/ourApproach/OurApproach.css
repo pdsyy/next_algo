@@ -1,0 +1,202 @@
+/* "Our approach" — sticky-блок со скролл-анимацией графика.
+   Всё скоупится под .apr, чтобы не конфликтовать со стилями сайта.
+   Шрифт: Inter (400/500/600/700).
+   ВАЖНО: ни у одного родителя блока не должно быть overflow:hidden/auto/scroll — иначе position:sticky не сработает. */
+.apr {
+    --apr-bg: #ededee;
+    --ink: #1d1e21;
+    --ink-soft: #727272;
+    --blue: #2f66f0;
+    --f: "Inter", "Helvetica Neue", Arial, sans-serif;
+    position: relative;
+    height: 420vh;
+    background: var(--apr-bg);
+    color: var(--ink);
+    font-family: var(--f);
+    font-feature-settings: "tnum" 1;
+    -webkit-font-smoothing: antialiased;
+    color-scheme: light;
+}
+
+.apr, .apr * {
+    box-sizing: border-box
+}
+
+.apr .stage {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    height: 100svh;
+    min-height: 600px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(20px, 5vh, 56px);
+    max-width: 1440px;
+    margin: 0 auto;
+    padding-block: 96px 120px;
+    padding-left: max(48px, env(safe-area-inset-left, 0px));
+    padding-right: max(48px, env(safe-area-inset-right, 0px));
+}
+
+.apr .head {
+    display: grid;
+    grid-template-columns:minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(24px, 4vw, 64px);
+    align-items: start;
+    padding-inline: 0;
+}
+
+.apr h2 {
+    margin: 0;
+    color: #232323;
+    text-wrap: balance;
+
+    font-family: Inter;
+    font-weight: 700;
+    font-size: 48px;
+    line-height: 100%;
+    letter-spacing: -1%;
+    text-align: left;
+
+}
+
+.apr h2 span {
+    display: block
+}
+
+/* ── смена шагов 01 / 02 / 03 ── */
+.apr .swap {
+    display: grid;
+    min-width: 0;
+    padding-top: 6px;
+}
+
+.apr .swap > .it {
+    grid-area: 1/1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    opacity: 0;
+    transform: translateY(20px);
+    filter: blur(6px);
+    transition: opacity .6s ease, transform .7s cubic-bezier(.2, .7, .2, 1), filter .6s ease;
+}
+
+.apr .swap > .it.on {
+    opacity: 1;
+    transform: none;
+    filter: none
+}
+
+.apr .swap > .it.past {
+    opacity: 0;
+    transform: translateY(-20px);
+    filter: blur(6px)
+}
+
+.apr .it .num {
+    color: var(--ink-soft);
+    font-family: Inter;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 120%;
+    letter-spacing: -2%;
+
+}
+
+.apr .it p {
+    margin: 0;
+    max-width: 32ch;
+
+    color: #232323;
+    font-family: Inter;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 120%;
+    letter-spacing: -2%;
+
+}
+
+/* ── график ── */
+.apr .chartwrap {
+    flex: 1;
+    min-height: 220px;
+    width: 100%;
+    position: relative
+}
+
+.apr .chartwrap canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block
+}
+
+@media (max-width: 820px) {
+    .apr .head {
+        grid-template-columns:minmax(0, 1fr);
+        gap: 16px
+    }
+}
+
+@media (max-width: 600px) {
+    .apr .stage {
+        min-height: 0;
+        gap: 22px;
+        padding-block: 76px 48px;
+        padding-left:max(16px,env(safe-area-inset-left,0px));
+        padding-right:0;
+    }
+
+    .apr .head {
+        gap: 18px;
+        padding-inline: 0;
+        padding-right: 16px;
+    }
+
+    .apr h2 {
+        font-size: clamp(28px, 8.6vw, 36px)
+    }
+
+    .apr .swap {
+        padding-top: 0;
+        padding-right: 16px;
+    }
+
+    .apr .it .num {
+        font-size: 13px
+    }
+
+    .apr .it p {
+        font-size: clamp(18px, 5.4vw, 22px);
+        max-width: none;
+        line-height: 1.28
+    }
+
+    .apr .chartwrap {
+        min-height: 200px
+    }
+}
+
+@media (max-width: 600px) and (max-height: 700px) {
+    .apr .stage {
+        gap: 16px
+    }
+
+    .apr h2 {
+        font-size: 28px
+    }
+
+    .apr .it p {
+        font-size: 17px
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .apr .swap > .it {
+        transition: none
+    }
+}

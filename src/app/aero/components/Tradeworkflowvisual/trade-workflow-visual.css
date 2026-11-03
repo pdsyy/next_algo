@@ -1,0 +1,115 @@
+
+.trade_chart_wrap {
+    width: 100%;
+    margin-top: 48px; /* ← spacing that .bento_row_image had; adjust to your layout */
+}
+
+.trade_chart {
+    --tc-ease: cubic-bezier(.2, .8, .2, 1);
+    --tc-back: cubic-bezier(.34, 1.56, .64, 1);
+
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible; /* halo pulse and bubbles may go past the viewBox edge */
+}
+
+/* ----- before the chart enters the viewport: everything is hidden ----- */
+.trade_chart:not(.is_playing) :is(.tc_candle, .tc_level, .tc_stem, .tc_halo, .tc_bubble, .tc_label) {
+    opacity: 0;
+}
+
+/* ----- shared: scale from the centre of the element itself ----- */
+.trade_chart .tc_candle,
+.trade_chart .tc_halo,
+.trade_chart .tc_bubble {
+    transform-box: fill-box;
+    transform-origin: 50% 50%;
+}
+
+/* ----- candles grow from their middle ----- */
+.trade_chart.is_playing .tc_candle {
+    animation: tc-candle 480ms var(--tc-ease) var(--d, 0ms) both;
+}
+
+/* ----- breakout level is drawn left → right along with the candles ----- */
+.trade_chart.is_playing .tc_level {
+    animation: tc-level var(--dur, 600ms) linear var(--d, 0ms) both;
+}
+
+/* ----- checkpoint: halo (3 circles) ----- */
+.trade_chart.is_playing .tc_halo {
+    animation: tc-pop 520ms var(--tc-back) var(--d, 0ms) both;
+}
+
+/* the outer circle additionally pulses forever (starts after the pop-in) */
+.trade_chart.is_playing .tc_halo--main {
+    animation:
+            tc-pop 520ms var(--tc-back) var(--d, 0ms) both,
+            tc-pulse 1600ms ease-out var(--pd, 0ms) infinite;
+}
+
+/* ----- checkpoint: dashed stem grows upward from the point ----- */
+.trade_chart.is_playing .tc_stem {
+    animation: tc-stem 420ms var(--tc-ease) var(--d, 0ms) both;
+}
+
+/* ----- checkpoint: number bubble ----- */
+.trade_chart.is_playing .tc_bubble {
+    animation: tc-bubble 520ms var(--tc-back) var(--d, 0ms) both;
+}
+
+/* ----- checkpoint: label text slides in from the side of the point ----- */
+.trade_chart.is_playing .tc_label {
+    animation: tc-label 520ms var(--tc-ease) var(--d, 0ms) both;
+}
+
+@keyframes tc-candle {
+    from { opacity: 0; transform: scaleY(0); }
+    to   { opacity: 1; transform: scaleY(1); }
+}
+
+@keyframes tc-level {
+    from { clip-path: inset(-4px 100% -4px 0); }
+    to   { clip-path: inset(-4px 0 -4px 0); }
+}
+
+@keyframes tc-pop {
+    from { opacity: 0; transform: scale(0); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes tc-pulse {
+    from { opacity: 1; transform: scale(1); }
+    to   { opacity: 0; transform: scale(1.7); }
+}
+
+@keyframes tc-stem {
+    from { clip-path: inset(100% -4px 0 -4px); }
+    to   { clip-path: inset(0 -4px 0 -4px); }
+}
+
+@keyframes tc-bubble {
+    from { opacity: 0; transform: scale(.4); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes tc-label {
+    from { opacity: 0; transform: translateX(var(--dx, 10px)); }
+    to   { opacity: 1; transform: none; }
+}
+
+/* ----- reduced motion: show the static frame ----- */
+@media (prefers-reduced-motion: reduce) {
+    .trade_chart :is(.tc_candle, .tc_level, .tc_stem, .tc_halo, .tc_bubble, .tc_label) {
+        opacity: 1 !important;
+        animation: none !important;
+    }
+}
+
+/* ----- optional: on phones keep the chart readable by letting it scroll sideways -----
+@media (max-width: 767px) {
+    .trade_chart_wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .trade_chart { min-width: 720px; }
+}
+*/

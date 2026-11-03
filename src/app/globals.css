@@ -872,7 +872,7 @@ html {
 
 @media screen and (max-width: 768px) {
     .App {
-        overflow: hidden;
+        overflow: clip;
     }
     .popup_container_gradient{
         max-height: calc(100vh - 20px);

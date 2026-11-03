@@ -3,6 +3,7 @@
 import {
     useEffect,
     useMemo,
+    useRef,
     useState,
 } from "react";
 
@@ -13,6 +14,7 @@ import { useCart } from "@/components/cartPopup/CartProvider";
 import { readReferralCode } from "@/lib/referral";
 
 import TributePaymentFlow from "./TributePaymentFlow";
+import { prepareTributeCheckout, validTributeUrl, type TributeSession } from "./tributeCheckout";
 
 import editIcon from "./images/edit-line.svg";
 import tether_icon from "./images/tether.svg";
@@ -260,6 +262,44 @@ export default function ReviewPage() {
     ] = useState(false);
 
 
+    const [isPaying, setIsPaying] = useState(false);
+    const [paymentError, setPaymentError] = useState("");
+    const [recoveryToken, setRecoveryToken] = useState<string>();
+    const paymentInFlight = useRef(false);
+    const preparedSession = useRef<TributeSession | null>(null);
+    const paymentText = {
+        EN: {
+            busy: "Preparing payment…",
+            error: "Unable to prepare payment. Please try again.",
+            unsupported: "Tribute currently supports a single Aero license. Use crypto for other products or a mixed cart.",
+            restoreError: "Unable to check the existing order. Please try again or contact support.",
+        },
+        RU: {
+            busy: "Подготавливаем оплату…",
+            error: "Не удалось подготовить оплату. Попробуйте ещё раз.",
+            unsupported: "Через Tribute пока доступна одна лицензия Aero. Для других товаров и смешанной корзины используйте криптооплату.",
+            restoreError: "Не удалось проверить существующий заказ. Повторите попытку или обратитесь в поддержку.",
+        },
+        UA: {
+            busy: "Готуємо оплату…",
+            error: "Не вдалося підготувати оплату. Спробуйте ще раз.",
+            unsupported: "Через Tribute поки доступна одна ліцензія Aero. Для інших товарів і змішаного кошика використовуйте криптооплату.",
+            restoreError: "Не вдалося перевірити наявне замовлення. Спробуйте ще раз або зверніться до підтримки.",
+        },
+    }[language];
+
+    // The back/forward cache can restore a page whose button was still loading.
+    useEffect(() => {
+        const onPageShow = (event: PageTransitionEvent) => {
+            if (event.persisted) {
+                paymentInFlight.current = false;
+                setIsPaying(false);
+            }
+        };
+        window.addEventListener("pageshow", onPageShow);
+        return () => window.removeEventListener("pageshow", onPageShow);
+    }, []);
+
     const deliveryLanguageLabel =
         language === "UA"
             ? "Мова файлів та інструкції"
@@ -426,45 +466,57 @@ export default function ReviewPage() {
     ========================= */
 
     const editCustomer = () => {
+        if (paymentInFlight.current) return;
         router.push(
             "/checkout"
         );
     };
 
 
-    const handleConfirm = () => {
-        if (
-            !customer ||
-            items.length === 0
-        ) {
-            return;
+    const handleConfirm = async () => {
+        if (!customer || items.length === 0 || paymentInFlight.current) return;
+        paymentInFlight.current = true;
+        setIsPaying(true);
+        setPaymentError("");
+        let navigating = false;
+        try {
+            const reviewToSave: StoredReview = { paymentMethod, savedAt: Date.now() };
+            sessionStorage.setItem(REVIEW_STORAGE_KEY, JSON.stringify(reviewToSave));
+
+            if (paymentMethod === "card") {
+                const session = await prepareTributeCheckout(
+                    customer,
+                    items.map(item => ({
+                        id: item.id, quantity: item.quantity,
+                        name: item.name, imageSrc: item.imageSrc,
+                    })),
+                    paymentText,
+                    preparedSession.current,
+                );
+                preparedSession.current = session;
+                if (!session.testMode && session.state === "pending" && validTributeUrl(session.paymentUrl)) {
+                    window.location.assign(session.paymentUrl);
+                    navigating = true;
+                } else {
+                    // Keep the existing status/recovery UI for paid, processing,
+                    // test and manual-review orders; never create a second order.
+                    setRecoveryToken(session.token);
+                    setIsTributeOpen(true);
+                }
+                return;
+            }
+
+            router.push(NEXT_STEP_URL);
+            navigating = true;
+        } catch (error) {
+            setPaymentError(error instanceof Error ? error.message : paymentText.error);
+        } finally {
+            if (!navigating) {
+                paymentInFlight.current = false;
+                setIsPaying(false);
+            }
         }
-
-        const reviewToSave:
-            StoredReview = {
-            paymentMethod,
-            savedAt: Date.now(),
-        };
-
-        sessionStorage.setItem(
-            REVIEW_STORAGE_KEY,
-            JSON.stringify(
-                reviewToSave
-            )
-        );
-
-        if (
-            paymentMethod === "card"
-        ) {
-            setIsTributeOpen(true);
-            return;
-        }
-
-        router.push(
-            NEXT_STEP_URL
-        );
     };
-
 
     /* =========================
        PAGE STATES
@@ -816,6 +868,7 @@ export default function ReviewPage() {
                         >
                             <input
                                 type="radio"
+                                disabled={isPaying}
                                 name="paymentMethod"
                                 value="crypto"
                                 checked={
@@ -865,6 +918,7 @@ export default function ReviewPage() {
                         >
                             <input
                                 type="radio"
+                                disabled={isPaying}
                                 name="paymentMethod"
                                 value="card"
                                 checked={
@@ -912,6 +966,12 @@ export default function ReviewPage() {
                         </label>
                     </fieldset>
 
+                    {paymentError && (
+                        <p role="alert" style={{ padding: "0 24px", color: "#b42318" }}>
+                            {paymentError}
+                        </p>
+                    )}
+
                     <footer
                         className={
                             styles.actions
@@ -922,6 +982,7 @@ export default function ReviewPage() {
                             className={
                                 styles.backButton
                             }
+                            disabled={isPaying}
                             onClick={() =>
                                 router.push(
                                     "/checkout"
@@ -936,12 +997,14 @@ export default function ReviewPage() {
                             className={
                                 styles.confirmButton
                             }
+                            disabled={isPaying || isTributeOpen}
+                            aria-busy={isPaying}
                             onClick={
                                 handleConfirm
                             }
                         >
                             {
-                                text.confirmAndPay
+                                isPaying ? paymentText.busy : text.confirmAndPay
                             }
                         </button>
                     </footer>
@@ -1132,6 +1195,7 @@ export default function ReviewPage() {
 
             <TributePaymentFlow
                 isOpen={isTributeOpen}
+                recoveryToken={recoveryToken}
                 onClose={() => setIsTributeOpen(false)}
                 customer={customer}
                 items={items.map(item => ({ id: item.id, quantity: item.quantity }))}

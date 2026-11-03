@@ -1,5 +1,19 @@
 export const translations = {
     UA: {
+        approach: {
+            title: { line1: 'Наш підхід може', line2: 'бути вам близьким' },
+            items: [
+                'Якщо вам важливо бачити всю історію торгівлі — з прибутком і просадками.',
+                'Ви цінуєте чесну розмову про потенційну дохідність і про те, чого очікувати від системи.',
+                'Ви обираєте розробника, який залишається на зв’язку після покупки.',
+            ],
+            chart: {
+                ariaLabel: 'Графік японських свічок: прибуток після пробиття попереднього максимуму, точки входу, тренд і підсумок',
+                profit: 'прибуток',
+                maxDrawdown: 'макс. просадка',
+            },
+        },
+
         legalFooter: {
             termsAndConditions: "Умови використання",
             softwareUseTradingRiskDisclosure: "Використання програмного забезпечення та розкриття торгових ризиків",
@@ -33,7 +47,7 @@ export const translations = {
             unableToResend:
                 "Не вдалося повторно надіслати код.",
         },
-        deliveryLanguageLabel:"Мова файлів та інструкції",
+        deliveryLanguageLabel: "Мова файлів та інструкції",
         referralLocked: "Партнерський код застосовано",
         cartPopup: {
             title: "Кошик",
@@ -951,9 +965,9 @@ export const translations = {
         },
 
 
-        automaticTrade:"Автоматизована<br />торгівля нового рівня",
-        heroDescription:"Торгові боти, які торгують 24/7<br />Чіткі стратегії. Прогнозована дохідність. Роки живої торгівлі.",
-        qWithUs:"+200 вже з нами",
+        automaticTrade: "Автоматизована<br />торгівля нового рівня",
+        heroDescription: "Торгові боти, які торгують 24/7<br />Чіткі стратегії. Прогнозована дохідність. Роки живої торгівлі.",
+        qWithUs: "+200 вже з нами",
 
         trackRecord: {
             title: "Підтверджена історія результатів",
@@ -1463,12 +1477,12 @@ export const translations = {
                 timeframeValue: "1 день ( D1 )"
             }
         }, home: {
-            bestOfferProp:"Найкращий вибір для проп-компаній",
+            bestOfferProp: "Найкращий вибір для проп-компаній",
             piecePay: "Доступна оплата частинами",
-            trailer:"Трейлер",
-            mainVideoText:"Що ми робимо",
-            mainVideoDesc:"Наш офіційний тизер — філософія, елементи та стандарти, що лежать в основі кожної системи, яку ми випускаємо.",
-            mainVideoButton:"Дізнайтеся більше про Algo",
+            trailer: "Трейлер",
+            mainVideoText: "Що ми робимо",
+            mainVideoDesc: "Наш офіційний тизер — філософія, елементи та стандарти, що лежать в основі кожної системи, яку ми випускаємо.",
+            mainVideoButton: "Дізнайтеся більше про Algo",
             botsList: [
                 {
                     name: "Terra EA",
@@ -1661,7 +1675,7 @@ export const translations = {
 
 
         prop: {
-            calculationWords:{
+            calculationWords: {
                 days: "днів",
                 year: "року",
             },
@@ -1803,6 +1817,20 @@ export const translations = {
     },
 
     RU: {
+        approach: {
+            title: { line1: 'Наш подход может', line2: 'быть вам близок' },
+            items: [
+                'Если вам важно видеть всю историю торговли — с прибылью и просадками.',
+                'Вы цените честный разговор о потенциальной доходности и о том, чего ждать от системы.',
+                'Вы выбираете разработчика, который остаётся на связи после покупки.',
+            ],
+            chart: {
+                ariaLabel: 'График японских свечей: прибыль после пробития прошлого максимума, точки входа, тренд и итог',
+                profit: 'прибыль',
+                maxDrawdown: 'макс. просадка',
+            },
+        },
+
         legalFooter: {
             termsAndConditions: "Условия использования",
             softwareUseTradingRiskDisclosure: "Использование программного обеспечения и раскрытие торговых рисков",
@@ -1836,7 +1864,7 @@ export const translations = {
             unableToResend:
                 "Не удалось повторно отправить код.",
         },
-        deliveryLanguageLabel:"Язык файлов и инструкции",
+        deliveryLanguageLabel: "Язык файлов и инструкции",
         referralLocked: "Партнёрский код применён",
         cartPopup: {
             title: "Корзина",
@@ -2753,8 +2781,8 @@ export const translations = {
         },
 
 
-        automaticTrade:"Автоматизированная<br />торговля нового уровня",
-        heroDescription:"Торговые боты, которые торгуют 24/7<br />Чёткие стратегии. Прогнозируемая доходность. Годы реальной торговли.",
+        automaticTrade: "Автоматизированная<br />торговля нового уровня",
+        heroDescription: "Торговые боты, которые торгуют 24/7<br />Чёткие стратегии. Прогнозируемая доходность. Годы реальной торговли.",
         qWithUs: "+200 уже с нами",
 
         trackRecord: {
@@ -2808,7 +2836,7 @@ export const translations = {
         },
 
         prop: {
-            calculationWords:{
+            calculationWords: {
                 days: "дней",
                 year: "года",
             },
@@ -3413,12 +3441,12 @@ export const translations = {
                 timeframeValue: "1 день ( D1 )"
             }
         }, home: {
-            bestOfferProp:"Лучший выбор для проп-компаний",
+            bestOfferProp: "Лучший выбор для проп-компаний",
             piecePay: "Доступная оплата частями",
-            trailer:"Трейлер",
-            mainVideoText:"Что мы создаем",
-            mainVideoDesc:"Наш официальный тизер — философия, элементы и стандарты, лежащие в основе каждой выпускаемой нами системы.",
-            mainVideoButton:"Изучите Algo",
+            trailer: "Трейлер",
+            mainVideoText: "Что мы создаем",
+            mainVideoDesc: "Наш официальный тизер — философия, элементы и стандарты, лежащие в основе каждой выпускаемой нами системы.",
+            mainVideoButton: "Изучите Algo",
             botsList: [
                 {
                     name: "Terra EA",
@@ -3610,7 +3638,22 @@ export const translations = {
         }
     },
 
-    EN:{
+    EN: {
+
+        approach: {
+            title: {line1: 'Our approach may', line2: 'resonate with you'},
+            items: [
+                'If you want to see the full trading history — profits and drawdowns alike.',
+                'You value an honest conversation about potential returns and what to expect from the system.',
+                'You choose a developer who stays in touch after the purchase.',
+            ],
+            chart: {
+                ariaLabel: 'Candlestick chart: profit after a previous high is broken, entry points, trend and result',
+                profit: 'profit',
+                maxDrawdown: 'max drawdown',
+            },
+        },
+
         legalFooter: {
             termsAndConditions: "Terms & Conditions",
             softwareUseTradingRiskDisclosure: "Software Use & Trading Risk Disclosure",
@@ -3618,7 +3661,7 @@ export const translations = {
         },
         done: "Done",
         needHelp: "Need help?",
-        paymentSuccessful:"Payment Successful!",
+        paymentSuccessful: "Payment Successful!",
         oneLicenseGenerated: "Your license is being generated.",
         moreThanOneLicenseGenerated: "Your licenses are being generated.",
         successMessage: "An email with activation instructions and a setup guide will arrive in your inbox within 20 minutes.",
@@ -3644,7 +3687,7 @@ export const translations = {
             unableToResend:
                 "Unable to send a new verification code.",
         },
-        deliveryLanguageLabel:"Files and instructions language",
+        deliveryLanguageLabel: "Files and instructions language",
         referralLocked: "Partner code applied",
         cartPopup: {
             title: "Cart",
@@ -4561,8 +4604,8 @@ export const translations = {
             }
         },
 
-        automaticTrade:"Next-Level<br />Automated Trading",
-        heroDescription:"Trading bots that trade 24/7<br />Clear strategies. Predictable returns. Years of live trading.",
+        automaticTrade: "Next-Level<br />Automated Trading",
+        heroDescription: "Trading bots that trade 24/7<br />Clear strategies. Predictable returns. Years of live trading.",
         qWithUs: "+200 already with us",
 
         steps: {
@@ -4612,7 +4655,7 @@ export const translations = {
         },
 
         prop: {
-            calculationWords:{
+            calculationWords: {
                 days: "days",
                 year: "year",
             },
@@ -4770,7 +4813,7 @@ export const translations = {
             selectBot: "Select Bot",
             openMql: "Open in MQL5",
         },
-        mql5:{
+        mql5: {
             title: "We are officially on the MQL5 Marketplace",
             description: "Our trading algorithms are now available on the largest independent marketplace for traders.<br/><br/>We stand for absolute transparency of results. Check real-time statistics, trade history, and connect bots in a secure environment.",
         },
@@ -5236,10 +5279,10 @@ export const translations = {
         home: {
             bestOfferProp: "Best For Prop-Companies",
             piecePay: "Available payment in installments",
-            trailer:"Trailer",
-            mainVideoText:"See What We're Building",
-            mainVideoDesc:"Our official teaser — the philosophy, the elements, and the standard behind every system we release.",
-            mainVideoButton:"Explore Algo",
+            trailer: "Trailer",
+            mainVideoText: "See What We're Building",
+            mainVideoDesc: "Our official teaser — the philosophy, the elements, and the standard behind every system we release.",
+            mainVideoButton: "Explore Algo",
             botsList: [
                 {
                     name: "Terra EA",

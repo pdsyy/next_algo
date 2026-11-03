@@ -1,6 +1,6 @@
 "use client";
 
-import React, {useEffect, useRef, useState} from "react";
+import React, {useCallback, useEffect, useRef, useState} from "react";
 import top_lines from "./images/video_block_top_lines.svg";
 import bottom_lines from "./images/bottom_lines_video_block.svg";
 import {HTMLMotionProps, motion} from "framer-motion";
@@ -17,6 +17,9 @@ const VIDEOS: Record<string, string> = {
 
 const DEFAULT_LANGUAGE = "EN";
 
+/** Шаг перемотки с клавиатуры (стрелки влево/вправо), сек. */
+const KEYBOARD_SEEK_STEP = 5;
+
 const MainVideoComponent = () => {
     const {language} = useLanguage()!;
 
@@ -24,18 +27,68 @@ const MainVideoComponent = () => {
 
     const containerRef = useRef<HTMLDivElement | null>(null);
     const videoRef = useRef<HTMLVideoElement | null>(null);
+    /* Полноэкранным делаем весь блок (а не <video>), чтобы наши кнопки и прогресс остались поверх видео */
+    const blockRef = useRef<HTMLDivElement | null>(null);
+
+    /* Прогресс-бар: сам трек (для расчёта позиции клика) и заполнение */
+    const progressBarRef = useRef<HTMLDivElement | null>(null);
+    const progressFillRef = useRef<HTMLDivElement | null>(null);
+    const isScrubbingRef = useRef(false);
 
     const [isPlaying, setIsPlaying] = useState(false);
     const [isMuted, setIsMuted] = useState(true);
+    const [isScrubbing, setIsScrubbing] = useState(false);
+    const [isFullscreen, setIsFullscreen] = useState(false);
+
+    /*
+     * Обновляем заполнение напрямую через style, без setState:
+     * так не будет ререндера компонента на каждый кадр.
+     */
+    const updateProgress = useCallback(() => {
+        const video = videoRef.current;
+        const fill = progressFillRef.current;
+        const bar = progressBarRef.current;
+
+        if (!video || !fill) return;
+
+        const duration = video.duration;
+        const ratio =
+            duration && isFinite(duration)
+                ? Math.min(1, Math.max(0, video.currentTime / duration))
+                : 0;
+
+        fill.style.transform = `scaleX(${ratio})`;
+        bar?.setAttribute("aria-valuenow", String(Math.round(ratio * 100)));
+    }, []);
 
     /*
      * При смене языка <video> пересоздаётся (key ниже),
-     * поэтому состояние кнопок сбрасываем в исходное.
+     * поэтому состояние кнопок и прогресс сбрасываем в исходное.
      */
     useEffect(() => {
         setIsPlaying(false);
         setIsMuted(true);
-    }, [language]);
+        updateProgress();
+    }, [language, updateProgress]);
+
+    /* Плавное обновление прогресса, пока видео играет */
+    useEffect(() => {
+        if (!isPlaying) {
+            updateProgress();
+            return;
+        }
+
+        let raf = 0;
+
+        const tick = () => {
+            updateProgress();
+            raf = requestAnimationFrame(tick);
+        };
+
+        raf = requestAnimationFrame(tick);
+
+        return () => cancelAnimationFrame(raf);
+    }, [isPlaying, updateProgress]);
 
     /* Автовоспроизведение, когда блок в зоне видимости */
     useEffect(() => {
@@ -110,6 +163,46 @@ const MainVideoComponent = () => {
         }
     };
 
+    /* Следим за выходом из полноэкранного режима (в т.ч. по Esc) */
+    useEffect(() => {
+        const onChange = () => {
+            const doc = document as any;
+            setIsFullscreen(Boolean(doc.fullscreenElement || doc.webkitFullscreenElement));
+        };
+
+        document.addEventListener("fullscreenchange", onChange);
+        document.addEventListener("webkitfullscreenchange", onChange);
+
+        return () => {
+            document.removeEventListener("fullscreenchange", onChange);
+            document.removeEventListener("webkitfullscreenchange", onChange);
+        };
+    }, []);
+
+    const toggleFullscreen = () => {
+        const doc = document as any;
+        const block = blockRef.current as any;
+        const video = videoRef.current as any;
+
+        if (!block || !video) return;
+
+        /* выход */
+        if (doc.fullscreenElement || doc.webkitFullscreenElement) {
+            (doc.exitFullscreen || doc.webkitExitFullscreen)?.call(doc);
+            return;
+        }
+
+        /* вход: стандартный API / Safari */
+        if (block.requestFullscreen) {
+            block.requestFullscreen().catch(() => {});
+        } else if (block.webkitRequestFullscreen) {
+            block.webkitRequestFullscreen();
+        } else if (video.webkitEnterFullscreen) {
+            /* iPhone: Fullscreen API для произвольных элементов недоступен, открываем нативный плеер */
+            video.webkitEnterFullscreen();
+        }
+    };
+
     const toggleMute = () => {
         const video = videoRef.current;
 
@@ -117,6 +210,58 @@ const MainVideoComponent = () => {
 
         video.muted = !video.muted;
         setIsMuted(video.muted);
+    };
+
+    /* ---------- перемотка по прогресс-бару ---------- */
+
+    const seekFromPointer = (clientX: number) => {
+        const video = videoRef.current;
+        const bar = progressBarRef.current;
+
+        if (!video || !bar || !isFinite(video.duration)) return;
+
+        /* ширина и отступы задаются у .video_progress, трек занимает 100% — они всегда совпадают */
+        const rect = bar.getBoundingClientRect();
+        const ratio = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width));
+
+        video.currentTime = ratio * video.duration;
+        updateProgress();
+    };
+
+    const handleProgressPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+        e.currentTarget.setPointerCapture(e.pointerId);
+        isScrubbingRef.current = true;
+        setIsScrubbing(true);
+        seekFromPointer(e.clientX);
+    };
+
+    const handleProgressPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+        if (!isScrubbingRef.current) return;
+        seekFromPointer(e.clientX);
+    };
+
+    const handleProgressPointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+        if (e.currentTarget.hasPointerCapture(e.pointerId)) {
+            e.currentTarget.releasePointerCapture(e.pointerId);
+        }
+        isScrubbingRef.current = false;
+        setIsScrubbing(false);
+    };
+
+    const handleProgressKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+        const video = videoRef.current;
+
+        if (!video || !isFinite(video.duration)) return;
+
+        if (e.key === "ArrowRight") {
+            e.preventDefault();
+            video.currentTime = Math.min(video.duration, video.currentTime + KEYBOARD_SEEK_STEP);
+        } else if (e.key === "ArrowLeft") {
+            e.preventDefault();
+            video.currentTime = Math.max(0, video.currentTime - KEYBOARD_SEEK_STEP);
+        }
+
+        updateProgress();
     };
 
     const fastEase = [0.25, 0.1, 0.25, 1.0];
@@ -144,7 +289,7 @@ const MainVideoComponent = () => {
                 />
             </div>
 
-            <motion.div className="main_container_video_block" {...fadeUp}>
+            <motion.div className="main_container_video_block" ref={blockRef} {...fadeUp}>
 
                 <video
                     key={language}
@@ -157,6 +302,10 @@ const MainVideoComponent = () => {
                     className="main_video"
                     onPlay={() => setIsPlaying(true)}
                     onPause={() => setIsPlaying(false)}
+                    onLoadedMetadata={updateProgress}
+                    onTimeUpdate={updateProgress}
+                    onSeeked={updateProgress}
+                    onEnded={updateProgress}
                     onVolumeChange={(e) =>
                         setIsMuted(e.currentTarget.muted)
                     }
@@ -264,6 +413,67 @@ const MainVideoComponent = () => {
                         </svg>
                     )}
                 </button>
+
+                {/* FULLSCREEN */}
+                <button
+                    type="button"
+                    className="video_button video_fullscreen_button"
+                    onClick={toggleFullscreen}
+                    aria-label={isFullscreen ? "Exit full screen" : "Enter full screen"}
+                >
+                    {isFullscreen ? (
+                        // EXIT FULLSCREEN
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            aria-hidden="true"
+                        >
+                            <path
+                                d="M9 4V8C9 8.55 8.55 9 8 9H4M15 4V8C15 8.55 15.45 9 16 9H20M9 20V16C9 15.45 8.55 15 8 15H4M15 20V16C15 15.45 15.45 15 16 15H20"
+                                stroke="currentColor"
+                                strokeWidth="1.8"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            />
+                        </svg>
+                    ) : (
+                        // ENTER FULLSCREEN
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            aria-hidden="true"
+                        >
+                            <path
+                                d="M4 9V5C4 4.45 4.45 4 5 4H9M15 4H19C19.55 4 20 4.45 20 5V9M20 15V19C20 19.55 19.55 20 19 20H15M9 20H5C4.45 20 4 19.55 4 19V15"
+                                stroke="currentColor"
+                                strokeWidth="1.8"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            />
+                        </svg>
+                    )}
+                </button>
+
+                {/* PROGRESS */}
+                <div
+                    ref={progressBarRef}
+                    className={`video_progress${isScrubbing ? " is_scrubbing" : ""}`}
+                    role="slider"
+                    tabIndex={0}
+                    aria-label="Video progress"
+                    aria-valuemin={0}
+                    aria-valuemax={100}
+                    aria-valuenow={0}
+                    onPointerDown={handleProgressPointerDown}
+                    onPointerMove={handleProgressPointerMove}
+                    onPointerUp={handleProgressPointerUp}
+                    onPointerCancel={handleProgressPointerUp}
+                    onKeyDown={handleProgressKeyDown}
+                >
+                    <div className="video_progress_track">
+                        <div ref={progressFillRef} className="video_progress_fill"/>
+                    </div>
+                </div>
 
             </motion.div>
             <div className="bottom_lines_wrapper">

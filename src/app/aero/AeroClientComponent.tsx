@@ -645,6 +645,7 @@ const AeroClientComponent = () => {
                                 <span>USD</span>
                             </div>
                         </div>
+
                         <div className="bot_marquee">
                             <div className="bot_marquee_group">
                                 {botsList.map((el) =>

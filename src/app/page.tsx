@@ -885,7 +885,7 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                                             {el.name === "Aero EA" ?
                                                 <div className="bot_marquee">
                                                     <div className="bot_marquee_group">
-                                                        <span>One-time payment · Lifetime access · All updates included · One-time payment · Lifetime access · </span>
+                                                        <span id = "marquee_span">One-time payment · Lifetime access · All updates included · One-time payment · Lifetime access · </span>
                                                     </div>
 
                                                 </div> : ""}
@@ -988,7 +988,7 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                                             {el.name === "Aero EA" ?
                                                 <div className="bot_marquee">
                                                     <div className="bot_marquee_group">
-                                                        <span>{el.oneTimePayment} · {el.lifetimeAccess} · {el.allUpdatesIncluded} · {el.oneTimePayment} · {el.lifetimeAccess} · {el.allUpdatesIncluded}</span>
+                                                        <span id = "marquee_span">{el.oneTimePayment} · {el.lifetimeAccess} · {el.allUpdatesIncluded} · {el.oneTimePayment} · {el.lifetimeAccess} · {el.allUpdatesIncluded}</span>
                                                     </div>
 
                                                 </div> : ""}

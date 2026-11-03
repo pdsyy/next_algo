@@ -56,8 +56,6 @@ export async function prepareTributeCheckout(
 
     let prepared: TributeSession;
     if (cached) {
-        // An existing order must be checked on the server before reusing its link.
-        // In particular, never redirect a paid/manual-review order to checkout.
         if (!isSession(cached)) throw new Error(messages.restoreError);
         const response = await fetch("/api/payments/tribute-shop/restore", {
             headers: { Authorization: `Bearer ${cached.token}` }, cache: "no-store",

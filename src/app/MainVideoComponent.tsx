@@ -35,6 +35,10 @@ const MainVideoComponent = () => {
     const progressFillRef = useRef<HTMLDivElement | null>(null);
     const isScrubbingRef = useRef(false);
 
+    /* Автоплей: виден ли блок сейчас и заблокировал ли браузер (Low Power Mode, Data Saver и т.п.) */
+    const inViewRef = useRef(false);
+    const autoplayBlockedRef = useRef(false);
+
     const [isPlaying, setIsPlaying] = useState(false);
     const [isMuted, setIsMuted] = useState(true);
     const [isScrubbing, setIsScrubbing] = useState(false);
@@ -97,13 +101,32 @@ const MainVideoComponent = () => {
 
         if (!container || !video) return;
 
+        /* состояние кнопок при смене языка сбрасывается в muted, поэтому гарантируем это и на самом элементе */
+        video.muted = true;
+
+        const tryAutoplay = () => {
+            video
+                .play()
+                .then(() => {
+                    autoplayBlockedRef.current = false;
+                    setIsPlaying(true);
+                })
+                .catch((error) => {
+                    setIsPlaying(false);
+
+                    /* браузер запретил автоплей: повторим при первом жесте пользователя */
+                    if (error?.name === "NotAllowedError") {
+                        autoplayBlockedRef.current = true;
+                    }
+                });
+        };
+
         const observer = new IntersectionObserver(
             ([entry]) => {
+                inViewRef.current = entry.isIntersecting;
+
                 if (entry.isIntersecting) {
-                    video
-                        .play()
-                        .then(() => setIsPlaying(true))
-                        .catch(() => setIsPlaying(false));
+                    tryAutoplay();
                 } else {
                     video.pause();
                     setIsPlaying(false);
@@ -116,7 +139,29 @@ const MainVideoComponent = () => {
 
         observer.observe(container);
 
-        return () => observer.disconnect();
+        /*
+         * Если автоплей заблокирован, любое касание страницы (жест пользователя)
+         * разрешает воспроизведение — пробуем ещё раз, пока блок на экране.
+         * Касания внутри самого блока (кнопки, прогресс) не трогаем:
+         * там пользователь управляет видео сам.
+         */
+        const onGesture = (e: Event) => {
+            if (!autoplayBlockedRef.current || !inViewRef.current || !video.paused) return;
+            if (container.contains(e.target as Node)) return;
+
+            tryAutoplay();
+        };
+
+        window.addEventListener("touchend", onGesture, {passive: true});
+        window.addEventListener("pointerup", onGesture, {passive: true});
+
+        return () => {
+            observer.disconnect();
+            window.removeEventListener("touchend", onGesture);
+            window.removeEventListener("pointerup", onGesture);
+            inViewRef.current = false;
+            autoplayBlockedRef.current = false;
+        };
     }, [language]);
 
     /* Прогрев: начинаем подгружать видео заранее, когда блок близко */
@@ -127,12 +172,6 @@ const MainVideoComponent = () => {
         const warm = new IntersectionObserver(
             ([entry]) => {
                 if (entry.isIntersecting) {
-                    /*
-                     * Если play() уже вызван (блок на экране, например после
-                     * смены языка), load() прервал бы воспроизведение.
-                     * Поэтому прогреваем только пока видео на паузе
-                     * и ещё ничего не загружено.
-                     */
                     if (video.paused && video.readyState === 0) {
                         video.preload = "metadata";
                         video.load();
@@ -151,6 +190,8 @@ const MainVideoComponent = () => {
         const video = videoRef.current;
 
         if (!video) return;
+
+        autoplayBlockedRef.current = false;
 
         if (video.paused) {
             video

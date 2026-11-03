@@ -1060,6 +1060,10 @@ html {
     animation: advantagesMove 30s ease-in-out infinite;
     will-change: transform;
 
+
+}
+
+.bot_marquee_group span{
     color: #727272;
     font-family: Inter, sans-serif;
     font-weight: 500;

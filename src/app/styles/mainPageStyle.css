@@ -3960,6 +3960,10 @@ h2 span {
         height: 20px;
     }
 
+    .bot_gradient_border.coming_soon{
+        display: none !important;
+    }
+
 
     .video_progress {
         position: absolute;

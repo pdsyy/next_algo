@@ -4,8 +4,11 @@
     box-sizing: border-box;
 }
 
+
 html {
     scrollbar-gutter: stable;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
 }
 
 .App {
@@ -1063,7 +1066,7 @@ html {
 
 }
 
-.bot_marquee_group span{
+.bot_marquee_group #marquee_span{
     color: #727272;
     font-family: Inter, sans-serif;
     font-weight: 500;

@@ -114,7 +114,6 @@ const MainVideoComponent = () => {
                 .catch((error) => {
                     setIsPlaying(false);
 
-                    /* браузер запретил автоплей: повторим при первом жесте пользователя */
                     if (error?.name === "NotAllowedError") {
                         autoplayBlockedRef.current = true;
                     }

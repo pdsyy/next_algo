@@ -1110,13 +1110,12 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                     </div>
                 </div>
 
-
                 <div className="first_deal_block" id="how-it-works">
                     <motion.h2 {...fadeUp} dangerouslySetInnerHTML={{__html: t.home.steps.title}}/>
                     <video
                         ref={videoBgRef}
                         src="/videos/hf_2_opt.mp4"
-                        poster="/journey_video_poster.jpg"
+                        poster="/journey_video_poster.png"
                         muted
                         playsInline
                         preload="none"

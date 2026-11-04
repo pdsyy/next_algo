@@ -9,7 +9,6 @@ interface Candle { o: number; c: number; h: number; l: number }
 interface Leg { a: number; b: number; g: number }
 interface Gain { a: number; b: number; base: number; peak: number }
 
-const BLUE = '#2f66f0';
 const MONO = '600 12px "Inter","Helvetica Neue",Arial,sans-serif';
 const STEPS = 3;
 const COLORS = { bull: '#1d1e21', bear: '#c6c8cd', bearEdge: '#9a9ca2', wick: '#55575d', grid: '#dcdde0' };
@@ -178,12 +177,6 @@ export default function OurApproach() {
             gains.forEach((z, k) => {
                 const a = at(za, k);
                 if (a < .02) return;
-                // прошлый максимум — пунктиром от пика до пробоя
-                if (z.peak >= 0 && z.peak <= st.full) {
-                    const y = Math.round(Y(z.base)) + .5, xa = X(z.peak), xb = X(Math.min(z.a, st.full));
-                    c.globalAlpha = a; c.strokeStyle = 'rgba(47,102,240,.55)'; c.lineWidth = 1.5; c.setLineDash([5, 5]);
-                    c.beginPath(); c.moveTo(xa, y); c.lineTo(xb, y); c.stroke(); c.setLineDash([]); c.globalAlpha = 1;
-                }
                 if (Math.min(z.b, st.full) - z.a < 1) return; // зона начинается со свечи пробоя
                 const b = Math.min(z.b, st.full), x0 = X(z.a) - st.cw / 2, x1 = X(b) + st.cw / 2;
                 const g = c.createLinearGradient(0, st.pad.t, 0, st.H - st.pad.b);
@@ -228,8 +221,7 @@ export default function OurApproach() {
                     c.beginPath();
                     for (let i = 0; i <= upto; i++) { const x = X(i), y = Y(at(ma, i)); if (i) c.lineTo(x, y); else c.moveTo(x, y); }
                 };
-                c.strokeStyle = 'rgba(47,102,240,.16)'; c.lineWidth = 10; path(); c.stroke();
-                c.strokeStyle = BLUE; c.lineWidth = 2.4; path(); c.stroke();
+                c.strokeStyle = COLORS.bull; c.lineWidth = 2.2; path(); c.stroke();
                 c.globalAlpha = 1;
             }
             // сводка — когда график вырос полностью

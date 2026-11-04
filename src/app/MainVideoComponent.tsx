@@ -10,9 +10,9 @@ const VIDEO_POSTER = "/algo-video-about-company-poster.webp";
 
 
 const VIDEOS: Record<string, string> = {
-    EN: "/videos/home_en_fast.mp4",
-    RU: "/videos/home_ru_fast.mp4",
-    UA: "/videos/home_ru_fast.mp4",
+    EN: "/videos/home_en_2160p_v13_opt.mp4",
+    RU: "/videos/home_ru_2160p_opt.mp4",
+    UA: "/videos/home_ru_2160p_opt.mp4",
 };
 
 const DEFAULT_LANGUAGE = "EN";

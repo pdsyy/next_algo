@@ -1208,6 +1208,13 @@ export const translations = {
 
         },
         aero: {
+
+            about: {
+                label: "ПРО AERO",
+                title: "Розберіться в Aero за дві хвилини",
+                description: "Стратегія, фільтри та правила управління ризиками, що стоять за кожною угодою",
+            },
+
             features: {
                 label: "КЛЮЧОВІ МОЖЛИВОСТІ",
                 title: "Що всередині Aero?",
@@ -3172,6 +3179,11 @@ export const translations = {
 
 
         }, aero: {
+            about: {
+                label: "ОБ AERO",
+                title: "Разберитесь в Aero за две минуты",
+                description: "Стратегия, фильтры и правила управления рисками, стоящие за каждой сделкой",
+            },
             features: {
                 label: "КЛЮЧЕВЫЕ ВОЗМОЖНОСТИ",
                 title: "Что внутри Aero?",
@@ -4997,6 +5009,11 @@ export const translations = {
         },
 
         aero: {
+            about: {
+                label: "ABOUT AERO",
+                title: "Understand Aero in two minutes",
+                description: "The strategy, filters and risk rules behind every trade",
+            },
             features: {
                 label: "KEY FEATURES",
                 title: "What’s inside Aero?",

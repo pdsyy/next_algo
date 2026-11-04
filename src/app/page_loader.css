@@ -1,8 +1,7 @@
 
-
 .page_loader {
-    --page-loader-bg: 246, 246, 247;   /* цвет панели, формат r,g,b */
-    --page-loader-text: #7a7c82;       /* цвет счётчика */
+    --page-loader-bg: 246, 246, 247;
+    --page-loader-text: #7a7c82;
 
     position: fixed;
     inset: 0;
@@ -29,51 +28,6 @@
     font-variant-numeric: tabular-nums;
 }
 
-/* статичный логотип: показывается только в простом режиме */
-.page_loader_static {
-    display: none;
-    position: absolute;
-    left: 50%;
-    top: calc(50% - 20px);
-    transform: translate(-50%, -50%);
-    width: min(560px, 66vw);
-    height: auto;
-}
-
-/* пока идёт уход, клики проходят сквозь лоадер */
 .page_loader--out {
     pointer-events: none;
-}
-
-/* ----- простой режим: повторный визит в сессии ----- */
-html.loader-seen .page_loader_canvas,
-html.loader-seen .page_loader_pct {
-    display: none;
-}
-
-html.loader-seen .page_loader_static {
-    display: block;
-}
-
-/* длительность должна совпадать с QUICK_EXIT_MS в PageLoader.tsx */
-html.loader-seen .page_loader--out {
-    opacity: 0;
-    transition: opacity .3s ease;
-}
-
-/* ----- простой режим: пользователь просит уменьшить движение ----- */
-@media (prefers-reduced-motion: reduce) {
-    .page_loader_canvas,
-    .page_loader_pct {
-        display: none;
-    }
-
-    .page_loader_static {
-        display: block;
-    }
-
-    .page_loader--out {
-        opacity: 0;
-        transition: opacity .3s ease;
-    }
 }

@@ -52,6 +52,7 @@ import TripleHandler from "@/app/aero/components/TripleHandler";
 import EarthFooter from "@/app/aero/components/EarthFooter";
 import {useScroll} from "@/context/ScrollContext";
 import PageLoader, {LoaderStage} from "@/app/Pageloader";
+import AeroVideoComponent from "@/app/AeroVideoComponent";
 
 const AeroClientComponent = () => {
     const {t, language} = useLanguage();
@@ -233,6 +234,8 @@ const AeroClientComponent = () => {
                     />
                 </div>
             </div>
+
+            <AeroVideoComponent/>
 
             <motion.div className="positive_features" {...fadeUp}>
                 {t.aero.features.label}

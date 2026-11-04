@@ -214,7 +214,7 @@ function GrowthChart({ points, text, locale }: GrowthChartProps) {
 }
 
 export default function AeroTrackRecord({ t, language = 'en', deposit = '$160,000' }: AeroTrackRecordProps) {
-    const [selected, setSelected] = useState(1);
+    const [selected, setSelected] = useState(0);
     const [result, setResult] = useState<AccountData | null>(null);
     const [loading, setLoading] = useState(true);
     const [failed, setFailed] = useState(false);

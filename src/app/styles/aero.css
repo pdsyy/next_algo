@@ -1734,6 +1734,20 @@
     transform: translateX(3px);
 }
 
+.main_video_container.aero_video{
+    margin-top: 0;
+    padding-top: 0;
+    padding-bottom: 80px;
+    flex-direction: column;
+    align-items: center;
+}
+
+.main_video_container.aero_video h2{
+    margin-top: 24px;
+}
+.main_video_container.aero_video .main_container_video_block{
+    margin-top: 48px;
+}
 
 @media screen and (width < 1199px) {
     .aero_hero_information {
@@ -1818,6 +1832,23 @@
 }
 
 @media screen and (width < 768px){
+
+
+    .main_video_container.aero_video{
+        margin-top: 0;
+        padding-top: 0;
+        padding-bottom: 80px;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .main_video_container.aero_video h2{
+        margin-top: 16px;
+    }
+    .main_video_container.aero_video .main_container_video_block{
+        margin-top: 24px;
+    }
+
     .explore_aeros_record_container{
         background: none;
         height: auto !important;

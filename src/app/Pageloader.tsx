@@ -2,7 +2,6 @@
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import "./page_loader.css";
-import logo from "@/app/images/logo.svg";
 
 export type LoaderStage = "chunk" | "image" | "video";
 
@@ -18,19 +17,12 @@ type PageLoaderProps = {
 const MAX_WAIT = 5000; // страховка: через 5 c убираем лоадер в любом случае
 const MIN_SHOW = 1500; // минимальное время показа: чтобы логотип успел собраться из точек
 
-// простой режим (повторный визит в сессии или prefers-reduced-motion):
-// только статичный логотип, без частиц и процентов
-const QUICK_MIN_SHOW = 500; // чтобы логотип не мелькал
-const QUICK_MAX_WAIT = 1500;
-const QUICK_EXIT_MS = 300; // должно совпадать с transition в css для .loader-seen
-
 // таймлайн ухода (мс): пауза на 100% → разлёт точек → полный уход
 const EXIT_HOLD = 300; // пауза на 100% перед разлётом
 const EXIT_UNLOCK = 150; // через сколько после начала разлёта разблокируем скролл
 const EXIT_TOTAL = 1000; // разлёт закончен, лоадер убираем
 const SAFETY_AFTER_DONE = 5000; // если rAF стоит (вкладка в фоне) — убираем принудительно
 
-const STORAGE_KEY = "algo_loader_seen";
 const TOTAL_STAGES = 4; // fonts + chunk + image + video
 const STEP_SIZE = 100 / TOTAL_STAGES;
 const CAP_BEFORE_READY = 92; // пока не ready, прогресс не уходит выше
@@ -71,21 +63,9 @@ const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v));
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
 
-/*
- * Класс "loader-seen" на <html> ставит inline-скрипт в layout.tsx
- * ещё до гидрации, если в sessionStorage уже есть ключ.
- * Вызывать только внутри эффектов (на клиенте).
- */
-const isSimple = () =>
-    typeof document !== "undefined" &&
-    (document.documentElement.classList.contains("loader-seen") ||
-        (typeof window.matchMedia === "function" &&
-            window.matchMedia("(prefers-reduced-motion: reduce)").matches));
-
 export default function PageLoader({ stages, ready, onDone }: PageLoaderProps) {
     const [removed, setRemoved] = useState(false);
     const [leaving, setLeaving] = useState(false);
-    const [finished, setFinished] = useState(false);
 
     const [fontsReady, setFontsReady] = useState(false);
     const [minPassed, setMinPassed] = useState(false);
@@ -109,16 +89,8 @@ export default function PageLoader({ stages, ready, onDone }: PageLoaderProps) {
 
     /* ---------- таймеры ---------- */
     useEffect(() => {
-        const simple = isSimple();
-
-        const t1 = window.setTimeout(
-            () => setTimedOut(true),
-            simple ? QUICK_MAX_WAIT : MAX_WAIT
-        );
-        const t2 = window.setTimeout(
-            () => setMinPassed(true),
-            simple ? QUICK_MIN_SHOW : MIN_SHOW
-        );
+        const t1 = window.setTimeout(() => setTimedOut(true), MAX_WAIT);
+        const t2 = window.setTimeout(() => setMinPassed(true), MIN_SHOW);
 
         return () => {
             window.clearTimeout(t1);
@@ -142,7 +114,7 @@ export default function PageLoader({ stages, ready, onDone }: PageLoaderProps) {
     const locked = !removed && !leaving;
 
     useEffect(() => {
-        if (!locked || isSimple()) return;
+        if (!locked) return;
 
         const html = document.documentElement;
         html.style.overflow = "hidden";
@@ -165,14 +137,6 @@ export default function PageLoader({ stages, ready, onDone }: PageLoaderProps) {
     stateRef.current.stagesDone = stagesDone;
     stateRef.current.done = done;
 
-    /* ---------- запомнить, что лоадер уже показывали ---------- */
-    useEffect(() => {
-        if (!leaving) return;
-        try {
-            sessionStorage.setItem(STORAGE_KEY, "1");
-        } catch {}
-    }, [leaving]);
-
     /* ---------- страховка: если анимация не дошла до конца (вкладка в фоне и т.п.) ---------- */
     useEffect(() => {
         if (!done) return;
@@ -180,26 +144,8 @@ export default function PageLoader({ stages, ready, onDone }: PageLoaderProps) {
         return () => window.clearTimeout(t);
     }, [done, finish]);
 
-    /* ---------- простой режим: только логотип, уходим как только hero готов ---------- */
+    /* ---------- частицы + прогресс (один rAF, без ре-рендеров) ---------- */
     useEffect(() => {
-        if (isSimple() && done) setFinished(true);
-    }, [done]);
-
-    useEffect(() => {
-        if (!finished) return;
-
-        setLeaving(true);
-
-        // не полагаемся на transitionend: он не срабатывает,
-        // если вкладка в фоне или включён reduced-motion
-        const t = window.setTimeout(finish, QUICK_EXIT_MS + 50);
-        return () => window.clearTimeout(t);
-    }, [finished, finish]);
-
-    /* ---------- основной режим: частицы + прогресс (один rAF, без ре-рендеров) ---------- */
-    useEffect(() => {
-        if (isSimple()) return;
-
         const root = rootRef.current;
         const cv = canvasRef.current;
         if (!root || !cv) return;
@@ -442,9 +388,6 @@ export default function PageLoader({ stages, ready, onDone }: PageLoaderProps) {
             aria-valuenow={0}
         >
             <canvas ref={canvasRef} className="page_loader_canvas" aria-hidden="true" />
-
-            {/* простой режим (повторный визит / reduced motion): статичный логотип */}
-            <img src={logo.src} alt="" className="page_loader_static" aria-hidden="true" />
 
             <div className="page_loader_pct" aria-hidden="true">
                 <span ref={percentRef}>000</span>%

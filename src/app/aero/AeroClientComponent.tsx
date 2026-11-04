@@ -648,9 +648,9 @@ const AeroClientComponent = () => {
 
                         <div className="bot_marquee">
                             <div className="bot_marquee_group">
-                                {botsList.map((el) =>
+                                {botsList.map((el, idx) =>
                                     el.name === "Aero EA" ?
-                                        <span id = "marquee_span">{el.oneTimePayment} · {el.lifetimeAccess} · {el.allUpdatesIncluded} · {el.oneTimePayment} · {el.lifetimeAccess} · {el.allUpdatesIncluded}</span> : ""
+                                        <span className="marquee_text" key={el.name+idx}>{el.oneTimePayment} · {el.lifetimeAccess} · {el.allUpdatesIncluded} · {el.oneTimePayment} · {el.lifetimeAccess} · {el.allUpdatesIncluded}</span> : ""
                                 )}
 
                             </div>

@@ -1057,21 +1057,24 @@ html {
     display: flex;
     align-items: center;
     width: max-content;
+    height: 16px;
 
     white-space: nowrap;
-
     animation: advantagesMove 30s ease-in-out infinite;
-    will-change: transform;
-
-
 }
 
-.bot_marquee_group #marquee_span{
+.bot_marquee_group,
+.bot_marquee_group .marquee_text {
+    -webkit-text-size-adjust: 100% !important;
+    text-size-adjust: 100% !important;
+}
+
+.bot_marquee_group .marquee_text {
     color: #727272;
     font-family: Inter, sans-serif;
     font-weight: 500;
     font-size: 14px !important;
-    line-height: 120%;
+    line-height: 16px;
     letter-spacing: -0.02em;
 }
 

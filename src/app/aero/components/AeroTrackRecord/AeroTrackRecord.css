@@ -1,7 +1,3 @@
-/* Aero — "Explore Aero's track record"
-   Размеры, шрифты и отступы взяты из прежнего компонента (aero.css).
-   Всё скоупится под .atr, чтобы не конфликтовать со стилями сайта.
-   h2 намеренно не стилизуется по размеру — берётся глобальный h2 сайта, как раньше. */
 .atr {
     --coin: url("/images/aero/coin.webp");
     --ink: #171717;
@@ -9,7 +5,7 @@
     --line: #E6E6E6;
     --tab: #868686;
     --blue: #2f66f0;
-    --atr-pb: 80px; /* нижний отступ секции (раньше был 180px под фоновую картинку) */
+    --atr-pb: 80px;
     font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     overflow-x: clip;
@@ -128,7 +124,6 @@
     --ga: 30deg
 }
 
-/* ── главная карточка (.explore_aeros_record_video_container) ── */
 .atr .card {
     position: relative;
     z-index: 1;
@@ -484,7 +479,7 @@
 @media (max-width: 767px) {
     .atr .sec {
         margin-top: 72px;
-        padding: 0 20px var(--atr-pb)
+        padding: 0 20px 48px;
     }
 
     .atr .eyebrow {
@@ -632,6 +627,10 @@
         flex-shrink: 0;
         margin: 12px 0 0
     }
+
+    .coin{
+        display: none;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -639,3 +638,5 @@
         transition: none
     }
 }
+
+

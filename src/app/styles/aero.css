@@ -1847,7 +1847,7 @@
     .hero_block_aero{
         aspect-ratio: auto;
         width: 100%;
-        height: 680px;
+        height: 735px;
         background-position: 8% 0;
         background-size: auto 475px;
         justify-content: center;
@@ -1922,6 +1922,41 @@
             "news";
     }
 
+
+    .trading_look_item{
+        display: grid;
+        width: 100%;
+        grid-template-areas:
+                "number title"
+                "number desc";
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+    .trade_chart_wrap {
+        width: 185vw !important;
+        position: relative;
+        left: -25vw;
+    }
+
+    .trading_look_item .number_item{
+        width: 65px;
+        grid-area: number;
+        padding-right: 8px;
+        margin-right: 8px;
+        border-right: 1px solid #0000001F;
+        height: 100%;
+        display: flex;
+        align-items: center;
+    }
+    .trading_look_item .title_item{
+        grid-area: title;
+    }
+    .trading_look_item .description_item{
+        grid-area: desc;
+        margin-top: 8px;
+    }
+
     .inside_aero_features_list > div{
         flex-direction: column !important;
     }
@@ -1983,9 +2018,6 @@
 
 
     .trading_look_item .number_item{
-        position: absolute;
-        top: 0;
-        right: 15px;
         font-family: Inter;
         font-weight: 800;
         font-size: 42.91px;
@@ -2007,7 +2039,7 @@
     .trading_look_item .description_item{
         font-family: Inter;
         font-weight: 500;
-        font-size: 16px;
+        font-size: 14px;
         line-height: 120%;
         letter-spacing: -2%;
     }

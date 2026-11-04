@@ -341,7 +341,7 @@ export default function OurApproach() {
         };
     }, []);
 
-    return <section className="apr" ref={rootRef}>
+    return <section className="apr" ref={rootRef} id="advantages">
         <div className="stage">
             <div className="head">
                 <h2><span>{title.line1}</span><span>{title.line2}</span></h2>

@@ -50,14 +50,14 @@ export default async function RootLayout({children}:Readonly<{children:React.Rea
         <script
             dangerouslySetInnerHTML={{
                 __html: `
-                try{if(sessionStorage.getItem("algo_loader_seen")==="1"){document.documentElement.classList.add("loader-seen")}}catch(e){}
-                if (!sessionStorage.getItem("algo_loader_seen")) {
-                    document.documentElement.style.overflow = "hidden";
-                }
-                `,
+                try {
+                    if (sessionStorage.getItem("algo_loader_seen") === "1") {
+                        document.documentElement.classList.add("loader-seen");
+                    }
+                } catch (e) {}
+            `,
             }}
         />
-
     </head>
     <body>
     <Providers initialLanguage={initialLanguage}>

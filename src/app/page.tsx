@@ -116,6 +116,8 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
 
     const [isMobile, setIsMobile] = useState(false);
     const [activeTrackRecord, setActiveTrackRecord] = useState(0);
+    const trackRecordRef = useRef<HTMLDivElement>(null);
+    const [hasTrackRecordAppeared, setHasTrackRecordAppeared] = useState(false);
     const [visibleFirstDealSteps, setVisibleFirstDealSteps] = useState(0);
     const [isTrackRecordPaused, setIsTrackRecordPaused] =
         useState(false);
@@ -137,19 +139,43 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
     const {t, language, setLanguage} = useLanguage();
 
 
+    // Ждём первого появления минимум 10% блока на экране.
     useEffect(() => {
-        if (isTrackRecordPaused) return;
+        const element = trackRecordRef.current;
+
+        if (!element) return;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                const entry = entries[0];
+
+                if (
+                    !entry?.isIntersecting ||
+                    entry.intersectionRatio < 0.1
+                ) {
+                    return;
+                }
+
+                setHasTrackRecordAppeared(true);
+                observer.disconnect();
+            },
+            { threshold: 0.1 },
+        );
+
+        observer.observe(element);
+
+        return () => observer.disconnect();
+    }, []);
+
+    useEffect(() => {
+        if (!hasTrackRecordAppeared || isTrackRecordPaused) return;
 
         const timer = window.setInterval(() => {
-            setActiveTrackRecord(current =>
-                (current + 1) % 3
-            );
+            setActiveTrackRecord(current => (current + 1) % 3);
         }, 3000);
 
-        return () => {
-            window.clearInterval(timer);
-        };
-    }, [isTrackRecordPaused]);
+        return () => window.clearInterval(timer);
+    }, [hasTrackRecordAppeared, isTrackRecordPaused]);
 
 
     const {scrollToSection} = useScroll()!;
@@ -728,7 +754,10 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                 <OurApproach/>
 
 
-                <div className="track_record_container_gradient">
+                <div
+                    ref={trackRecordRef}
+                    className="track_record_container_gradient"
+                >
                     <div className="track_record_container" onMouseEnter={() =>
                         setIsTrackRecordPaused(true)
                     }

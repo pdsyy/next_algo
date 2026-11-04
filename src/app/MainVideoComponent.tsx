@@ -6,7 +6,7 @@ import bottom_lines from "./images/bottom_lines_video_block.svg";
 import {HTMLMotionProps, motion} from "framer-motion";
 import {useLanguage} from "@/context/LanguageProvider";
 
-const VIDEO_POSTER = "/algo-video-about-company-poster.webp";
+const VIDEO_POSTER = "/algo-video-about-company-poster.jpg";
 
 
 const VIDEOS: Record<string, string> = {

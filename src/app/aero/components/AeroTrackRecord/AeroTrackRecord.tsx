@@ -178,8 +178,52 @@ function GrowthChart({ points, text, locale }: GrowthChartProps) {
     const active = hover === null || !done ? null : points[hover];
     const labelCount = compact ? 4 : 5;
     const monthLabel = (date: string) => new Date(time(date)).toLocaleDateString(locale, { month: 'short', year: '2-digit', timeZone: 'UTC' });
-    const indexes = [...new Set(Array.from({ length: labelCount }, (_, i) => Math.round(i * (points.length - 1) / (labelCount - 1))))]
-        .filter((i, k, arr) => { const pt = points[i], prev = points[arr[k - 1] ?? -1]; return !!pt && (!prev || monthLabel(pt.date) !== monthLabel(prev.date)); });
+
+    /* Границы подписи в пикселях (учитываем выравнивание: первая — start, последняя — end) */
+    const labelBox = (i: number): [number, number, string] | null => {
+        const point = points[i];
+        if (!point) return null;
+        const label = monthLabel(point.date);
+        const w = label.length * fontSize * .62;
+        const cx = x(point.date);
+        return i === 0 ? [cx, cx + w, label]
+            : i === points.length - 1 ? [cx - w, cx, label]
+                : [cx - w / 2, cx + w / 2, label];
+    };
+
+    /* Подписи оси X: равномерно по времени, без наложений */
+    const indexes = (() => {
+        const lastIdx = points.length - 1;
+        const result: number[] = [0];
+        const accepted: Array<[number, number, string]> = [];
+        const firstBox = labelBox(0);
+        if (firstBox) accepted.push(firstBox);
+
+        /* Последняя подпись показывается всегда */
+        const lastBox = lastIdx > 0 ? labelBox(lastIdx) : null;
+        if (lastBox) { accepted.push(lastBox); result.push(lastIdx); }
+
+        /* Средние подписи: только если не пересекаются с уже выбранными */
+        for (let k = 1; k < labelCount - 1; k++) {
+            const target = first + (last - first) * k / (labelCount - 1);
+            let nearest = 0, best = Infinity;
+            for (let i = 0; i < points.length; i++) {
+                const p = points[i];
+                if (!p) continue;
+                const d = Math.abs(time(p.date) - target);
+                if (d < best) { best = d; nearest = i; }
+            }
+            if (result.includes(nearest)) continue;
+            const box = labelBox(nearest);
+            if (!box) continue;
+            const clash = accepted.some(a => (box[0] < a[1] + 10 && box[1] > a[0] - 10) || a[2] === box[2]);
+            if (clash) continue;
+            accepted.push(box);
+            result.push(nearest);
+        }
+        return result.sort((a, b) => a - b);
+    })();
+
     function pointer(event: ReactPointerEvent<SVGSVGElement>) {
         if (!done) return;
         const rect = event.currentTarget.getBoundingClientRect();

@@ -11,6 +11,7 @@ interface Gain { a: number; b: number; base: number; peak: number }
 
 const MONO = '600 12px "Inter","Helvetica Neue",Arial,sans-serif';
 const STEPS = 3;
+const FILL_END = .82; // доля шага, к которой текст заполняется полностью; остаток — короткая пауза
 const COLORS = { bull: '#1d1e21', bear: '#c6c8cd', bearEdge: '#9a9ca2', wick: '#55575d', grid: '#dcdde0' };
 
 const LEGS: ReadonlyArray<readonly [number, number, number]> = [[0, .12, .09], [.2, .56, .15], [.64, 1, .21]];
@@ -85,6 +86,10 @@ export default function OurApproach() {
     // подписи читаются внутри rAF-цикла; ref позволяет менять язык без перезапуска canvas
     const labels = useRef(chart);
     labels.current = chart;
+    // состояние пословного проявления; сбрасывается при каждом рендере (смена языка/шага),
+    // чтобы новые span-ы сразу получили правильную прозрачность
+    const fillState = useRef({ u: -1, s: -1 });
+    fillState.current = { u: -1, s: -1 };
 
     useEffect(() => {
         const scroller = rootRef.current;
@@ -167,6 +172,14 @@ export default function OurApproach() {
             }
             return N;
         }
+
+        // каждое утверждение проявляется слово за словом по мере прокрутки своего шага
+        const fill = (k: number, u: number) => {
+            const ws = scroller.querySelectorAll<HTMLElement>(`.it:nth-child(${k + 1}) p .w`);
+            const n = ws.length;
+            const f = clamp(u / FILL_END, 0, 1) * n;
+            ws.forEach((w, i) => { w.style.opacity = (.22 + .78 * clamp(f - i, 0, 1)).toFixed(3); });
+        };
 
         let idx = -1;
         const al = [0, 0, 0]; // прозрачность слоёв: 01 зоны / 02 входы-выходы / 03 тренд
@@ -309,6 +322,8 @@ export default function OurApproach() {
             const p = clamp(-rect.top / Math.max(1, rect.height - innerHeight), 0, 1);
             const s = Math.min(STEPS - 1, Math.floor(p * STEPS * .999));
             if (s !== idx) { idx = s; setStep(s); }
+            const u = clamp(p * STEPS - s, 0, 1), fs = fillState.current;
+            if (Math.abs(u - fs.u) > .002 || s !== fs.s) { fill(s, u); fs.u = u; fs.s = s; }
             for (let k = 0; k < STEPS; k++) al[k] = at(al, k) + ((k === idx ? 1 : k < idx ? .4 : 0) - at(al, k)) * smooth;
             for (let k = 0; k < 3; k++) za[k] = at(za, k) + ((k < idx ? .7 : k === idx ? 1 : 0) - at(za, k)) * smooth; // зона k появляется со слайда k
             sum += ((st.shown > .985 ? 1 : 0) - sum) * smooth;
@@ -340,7 +355,7 @@ export default function OurApproach() {
                 <div className="swap">
                     {items.map((text, i) => <div key={i} className={`it${i === step ? ' on' : i < step ? ' past' : ''}`}>
                         <div className="num">{`0${i + 1}`}</div>
-                        <p>{text}</p>
+                        <p>{text.trim().split(/\s+/).map((w, j, arr) => <span key={j}><span className="w">{w}</span>{j < arr.length - 1 ? ' ' : ''}</span>)}</p>
                     </div>)}
                 </div>
             </div>

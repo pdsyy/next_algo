@@ -3180,8 +3180,8 @@ export const translations = {
 
         }, aero: {
             about: {
-                label: "ОБ AERO",
-                title: "Разберитесь в Aero за две минуты",
+                label: "ПРО AERO",
+                title: "Знакомство с Aero за две минуты",
                 description: "Стратегия, фильтры и правила управления рисками, стоящие за каждой сделкой",
             },
             features: {

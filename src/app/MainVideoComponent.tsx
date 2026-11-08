@@ -34,14 +34,9 @@ const MainVideoComponent = () => {
     const progressFillRef = useRef<HTMLDivElement | null>(null);
     const isScrubbingRef = useRef(false);
 
-    /* Автоплей: виден ли блок и заблокировал ли браузер воспроизведение */
+    /* Автоплей: виден ли блок и заблокировал ли браузер воспроизведение (Low Power Mode, Data Saver и т.п.) */
     const inViewRef = useRef(false);
     const autoplayBlockedRef = useRef(false);
-
-    /* Хотим звук, но браузер не дал: включим при первом жесте пользователя */
-    const wantSoundRef = useRef(false);
-    /* Пользователь сам выключил звук кнопкой: больше не включаем */
-    const userMutedRef = useRef(false);
 
     const [isPlaying, setIsPlaying] = useState(false);
     const [isMuted, setIsMuted] = useState(true);
@@ -69,9 +64,10 @@ const MainVideoComponent = () => {
         bar?.setAttribute("aria-valuenow", String(Math.round(ratio * 100)));
     }, []);
 
-    /* При смене языка <video> пересоздаётся (key), сбрасываем состояние. Звук синхронизирует onVolumeChange */
+    /* При смене языка <video> пересоздаётся (key), поэтому сбрасываем состояние */
     useEffect(() => {
         setIsPlaying(false);
+        setIsMuted(true);
         updateProgress();
     }, [language, updateProgress]);
 
@@ -94,50 +90,44 @@ const MainVideoComponent = () => {
         return () => cancelAnimationFrame(raf);
     }, [isPlaying, updateProgress]);
 
-    /* Автовоспроизведение со звуком, когда блок в зоне видимости */
+    /* Автовоспроизведение без звука, когда блок в зоне видимости */
     useEffect(() => {
         const container = containerRef.current;
         const video = videoRef.current;
 
         if (!container || !video) return;
 
-        wantSoundRef.current = false;
-        userMutedRef.current = false;
+        /*
+         * Стартуем всегда без звука: это единственный вариант автоплея,
+         * который разрешают все браузеры (в т.ч. iOS Safari и Chrome на Android).
+         */
+        video.muted = true;
 
-        const tryAutoplay = async () => {
-            /* 1. Пробуем сразу со звуком (сработает, если пользователь уже взаимодействовал со страницей) */
-            if (!userMutedRef.current) {
-                video.muted = false;
+        const tryAutoplay = () => {
+            /* уже играет или запуск уже идёт — второй раз не дёргаем */
+            if (!video.paused) return;
 
-                try {
-                    await video.play();
+            video
+                .play()
+                .then(() => {
                     autoplayBlockedRef.current = false;
-                    setIsMuted(false);
                     setIsPlaying(true);
-                    return;
-                } catch (error: any) {
-                    if (error?.name !== "NotAllowedError") {
-                        setIsPlaying(false);
-                        return;
+                })
+                .catch((error: any) => {
+                    setIsPlaying(false);
+
+                    if (error?.name === "NotAllowedError") {
+                        /* браузер запретил автоплей: повторим при первом жесте пользователя */
+                        autoplayBlockedRef.current = true;
+                    } else if (error?.name === "AbortError") {
+                        /* запуск прервала перезагрузка источника: повторим, как только данные будут готовы */
+                        video.addEventListener("canplay", onCanPlay, {once: true});
                     }
-                }
-            }
+                });
+        };
 
-            /* 2. Запасной вариант: без звука, звук включим по первому жесту */
-            video.muted = true;
-            setIsMuted(true);
-            wantSoundRef.current = !userMutedRef.current;
-
-            try {
-                await video.play();
-                autoplayBlockedRef.current = false;
-                setIsPlaying(true);
-            } catch (error: any) {
-                setIsPlaying(false);
-                if (error?.name === "NotAllowedError") {
-                    autoplayBlockedRef.current = true;
-                }
-            }
+        const onCanPlay = () => {
+            if (inViewRef.current) tryAutoplay();
         };
 
         const observer = new IntersectionObserver(
@@ -157,23 +147,15 @@ const MainVideoComponent = () => {
         observer.observe(container);
 
         /*
-         * Первый жест пользователя (клик/тап/клавиша) вне плеера:
-         * включаем звук и при необходимости запускаем видео.
+         * Если автоплей заблокирован, любое касание/клик/клавиша вне плеера
+         * считается жестом пользователя — пробуем запустить ещё раз.
          * Клики по самим кнопкам плеера обрабатывают сами кнопки.
          */
         const onGesture = (e: Event) => {
             if (container.contains(e.target as Node)) return;
-            if (!inViewRef.current || userMutedRef.current) return;
+            if (!autoplayBlockedRef.current || !inViewRef.current || !video.paused) return;
 
-            if (wantSoundRef.current) {
-                video.muted = false;
-                setIsMuted(false);
-                wantSoundRef.current = false;
-            }
-
-            if (video.paused && autoplayBlockedRef.current) {
-                tryAutoplay();
-            }
+            tryAutoplay();
         };
 
         window.addEventListener("click", onGesture, {passive: true});
@@ -182,6 +164,7 @@ const MainVideoComponent = () => {
 
         return () => {
             observer.disconnect();
+            video.removeEventListener("canplay", onCanPlay);
             window.removeEventListener("click", onGesture);
             window.removeEventListener("touchend", onGesture);
             window.removeEventListener("keydown", onGesture);
@@ -190,7 +173,7 @@ const MainVideoComponent = () => {
         };
     }, [language]);
 
-    /* Прогрев: подгружаем реальные данные заранее, когда блок ещё далеко, чтобы старт не «мылился» */
+    /* Прогрев: подгружаем данные заранее, когда блок ещё далеко, чтобы старт не «мылился» */
     useEffect(() => {
         const video = videoRef.current;
         if (!video) return;
@@ -199,9 +182,16 @@ const MainVideoComponent = () => {
             ([entry]) => {
                 if (entry.isIntersecting) {
                     video.preload = "auto";
-                    if (video.readyState === 0) {
+
+                    /*
+                     * load() сбрасывает источник и ПРЕРЫВАЕТ уже вызванный play().
+                     * Поэтому трогаем только если видео на паузе и ничего не загружено:
+                     * если автоплей уже стартовал, браузер и так грузит видео сам.
+                     */
+                    if (video.paused && video.readyState === 0) {
                         video.load();
                     }
+
                     warm.disconnect();
                 }
             },
@@ -217,14 +207,8 @@ const MainVideoComponent = () => {
 
         if (!video) return;
 
+        /* пользователь управляет видео сам — автоповтор больше не нужен */
         autoplayBlockedRef.current = false;
-
-        /* Клик по кнопке — это жест, поэтому можно включить звук */
-        if (wantSoundRef.current && !userMutedRef.current) {
-            video.muted = false;
-            setIsMuted(false);
-            wantSoundRef.current = false;
-        }
 
         if (video.paused) {
             video
@@ -284,10 +268,6 @@ const MainVideoComponent = () => {
 
         video.muted = !video.muted;
         setIsMuted(video.muted);
-
-        /* Запоминаем выбор пользователя */
-        userMutedRef.current = video.muted;
-        wantSoundRef.current = false;
     };
 
     /* ---------- перемотка по прогресс-бару ---------- */
@@ -361,7 +341,7 @@ const MainVideoComponent = () => {
 
             <motion.div className="main_container_video_block" ref={blockRef} {...fadeUp}>
 
-                {/* muted оставляем: это гарантирует работу запасного варианта без звука */}
+                {/* muted + playsInline: обязательные условия автоплея на мобильных */}
                 <video
                     key={language}
                     ref={videoRef}

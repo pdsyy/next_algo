@@ -1251,7 +1251,7 @@ function CheckoutContent() {
                             }
                         </p>
 
-                        <QuoteNotice pricing={pricing} language={language} code={form.referralCode} />
+
                     {submitError && (
                             <p
                                 className={

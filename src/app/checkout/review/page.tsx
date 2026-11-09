@@ -950,7 +950,7 @@ export default function ReviewPage() {
                         </label>
                     </fieldset>
 
-                    <QuoteNotice pricing={pricing} language={language} code={customer?.referralCode ?? ""} />
+
                     {paymentError && (
                         <p role="alert" style={{ padding: "0 24px", color: "#b42318" }}>
                             {paymentError}

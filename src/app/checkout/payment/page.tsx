@@ -1014,7 +1014,7 @@ export default function CheckoutPaymentPage() {
                             )
                         )}
 
-                        <QuoteNotice pricing={pricing} language={language} code={customer?.referralCode ?? ""} />
+
                         {error && (
                             <p
                                 className={

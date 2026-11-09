@@ -38,6 +38,19 @@ const Header = ({dark, visibleHeader, setVisibleHeader}: HeaderProps) => {
 
     const router = useRouter();
 
+    const [promoCode, setPromoCode] = useState("");
+
+    useEffect(() => {
+        if (!isOpen) return;
+        try {
+            const raw = sessionStorage.getItem("checkoutCustomer");
+            const code = raw ? JSON.parse(raw)?.referralCode : "";
+            setPromoCode(typeof code === "string" ? code.trim() : "");
+        } catch {
+            setPromoCode("");
+        }
+    }, [isOpen]);
+
     const handleCheckout = (cart: CartCheckout) => {
         localStorage.setItem(
             CHECKOUT_STORAGE_KEY,
@@ -256,6 +269,7 @@ const Header = ({dark, visibleHeader, setVisibleHeader}: HeaderProps) => {
                 onCheckout={handleCheckout}
                 language={language}
                 currency="USD"
+                referralCode={promoCode}
             />
         </div>
     );

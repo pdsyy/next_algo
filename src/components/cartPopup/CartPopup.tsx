@@ -4,6 +4,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import styles from "./CartPopup.module.css";
 import { useLanguage } from "@/context/LanguageProvider";
+import { QuoteNotice, useCheckoutQuote } from "@/lib/use-checkout-quote";
 
 export type CartLanguage = "UA" | "RU" | "EN";
 
@@ -35,7 +36,11 @@ export type CartPopupProps = {
     currency?: string;
     /** Fixed discount in the selected currency, not a percentage. */
     discount?: number;
-    /** Optional real order number and ISO date. Omit for an unplaced order. */
+    /**
+     * Promo / referral code. When set (and currency is USD), the discount is
+     * calculated by the server via /api/checkout/preview and overrides `discount`.
+     */
+    referralCode?: string;
     orderNumber?: string;
     orderDate?: string;
 };
@@ -66,7 +71,7 @@ function TrashIcon() {
 
 function CartDialog({
                         onClose, items, onItemsChange, onCheckout,
-                        language = "EN", currency = "USD", discount = 0, orderNumber, orderDate,
+                        language = "EN", currency = "USD", discount = 0, referralCode, orderNumber, orderDate,
                     }: Omit<CartPopupProps, "isOpen">) {
     const { t } = useLanguage();
     const text = t.cartPopup;
@@ -101,10 +106,19 @@ function CartDialog({
     }).resolvedOptions().maximumFractionDigits ?? 2;
     const scale = 10 ** fractionDigits;
     const money = (minor: number) => formatter.format(minor / scale);
-    const subtotalMinor = items.reduce((sum, item) =>
+    const promoCode = referralCode?.trim() ?? "";
+    // Server-side quote (same source of truth as checkout). No request without a promo code.
+    const pricing = useCheckoutQuote(promoCode ? items : [], promoCode, language === "RU" ? "ru" : "en");
+    const quote = promoCode && currency === "USD" ? pricing.quote : undefined;
+    const pricingLoading = Boolean(promoCode) && items.length > 0 && !pricing.quote && !pricing.error;
+
+    const localSubtotalMinor = items.reduce((sum, item) =>
         sum + Math.round(item.unitPrice * scale), 0);
-    const discountMinor = Math.min(subtotalMinor, Math.max(0,
-        Number.isFinite(discount) ? Math.round(discount * scale) : 0));
+    const subtotalMinor = quote ? Math.round(quote.subtotal * scale) : localSubtotalMinor;
+    const discountMinor = quote
+        ? Math.min(subtotalMinor, Math.round(quote.discount * scale))
+        : Math.min(subtotalMinor, Math.max(0,
+            Number.isFinite(discount) ? Math.round(discount * scale) : 0));
     const totalMinor = subtotalMinor - discountMinor;
     const date = orderDate ? new Date(orderDate) : null;
     const formattedDate = date && !Number.isNaN(date.getTime())
@@ -176,7 +190,7 @@ function CartDialog({
     };
 
     const checkout = async () => {
-        if (busyRef.current || items.length === 0) return;
+        if (busyRef.current || items.length === 0 || pricingLoading) return;
         busyRef.current = true;
         setBusy(true);
         setError(false);
@@ -252,9 +266,12 @@ function CartDialog({
                                     </li>
                                 ))}
                             </ul>
+                            {promoCode && (
+                                <QuoteNotice pricing={pricing} language={language} code={promoCode} />
+                            )}
                             <dl className={styles.totals} aria-live="polite" aria-atomic="true">
                                 <div className={styles.totalRow}><dt>{text.subtotal}</dt><dd>{money(subtotalMinor)}</dd></div>
-                                <div className={styles.totalRow}><dt>{text.discount}</dt><dd>{discountMinor > 0 ? `−${money(discountMinor)}` : money(0)}</dd></div>
+                                <div className={styles.totalRow}><dt>{text.discount}{discountMinor > 0 && promoCode ? ` (${promoCode})` : ""}</dt><dd>{discountMinor > 0 ? `−${money(discountMinor)}` : money(0)}</dd></div>
                                 <div className={`${styles.totalRow} ${styles.grandTotal}`}><dt>{text.total}</dt><dd>{money(totalMinor)}</dd></div>
                             </dl>
                         </>
@@ -265,7 +282,7 @@ function CartDialog({
                     <div className={styles.actions}>
                         <button type="button" className={styles.close} onClick={requestClose}>{text.close}</button>
                         <button type="button" className={styles.buy} onClick={checkout}
-                                disabled={busy || items.length === 0} aria-busy={busy}>
+                                disabled={busy || items.length === 0 || pricingLoading} aria-busy={busy}>
                             {busy ? text.processing : text.buy}
                         </button>
                     </div>

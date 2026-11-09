@@ -436,7 +436,12 @@ function CheckoutContent() {
     const subtotal = pricing.quote?.subtotal ?? 0;
     const discount = pricing.quote?.discount ?? 0;
     const total = pricing.quote?.total ?? 0;
-
+    const locale =
+        language === "UA"
+            ? "uk-UA"
+            : language === "RU"
+                ? "ru-RU"
+                : "en-US";
     const formatter =
         useMemo(
             () =>

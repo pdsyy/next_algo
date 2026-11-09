@@ -266,9 +266,7 @@ function CartDialog({
                                     </li>
                                 ))}
                             </ul>
-                            {promoCode && (
-                                <QuoteNotice pricing={pricing} language={language} code={promoCode} />
-                            )}
+
                             <dl className={styles.totals} aria-live="polite" aria-atomic="true">
                                 <div className={styles.totalRow}><dt>{text.subtotal}</dt><dd>{money(subtotalMinor)}</dd></div>
                                 <div className={styles.totalRow}><dt>{text.discount}</dt><dd>{discountMinor > 0 ? `${money(discountMinor)}` : money(0)}</dd></div>

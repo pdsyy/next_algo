@@ -1,4 +1,5 @@
 "use client";
+import { useCheckoutQuote, QuoteNotice } from "@/lib/use-checkout-quote";
 
 import {
     useEffect,
@@ -402,27 +403,10 @@ export default function ReviewPage() {
        TOTALS
     ========================= */
 
-    const subtotal =
-        useMemo(
-            () =>
-                items.reduce(
-                    (sum, item) =>
-                        sum +
-                        item.unitPrice *
-                        item.quantity,
-                    0
-                ),
-            [items]
-        );
-
-    const discount = 0;
-
-    const total =
-        Math.max(
-            0,
-            subtotal - discount
-        );
-
+    const pricing = useCheckoutQuote(items, customer?.referralCode ?? "", customer?.deliveryLanguage ?? "en");
+    const subtotal = pricing.quote?.subtotal ?? 0;
+    const discount = pricing.quote?.discount ?? 0;
+    const total = pricing.quote?.total ?? 0;
 
     const formatter =
         useMemo(
@@ -474,7 +458,7 @@ export default function ReviewPage() {
 
 
     const handleConfirm = async () => {
-        if (!customer || items.length === 0 || paymentInFlight.current) return;
+        if (!pricing.ready || !customer || items.length === 0 || paymentInFlight.current) return;
         paymentInFlight.current = true;
         setIsPaying(true);
         setPaymentError("");
@@ -485,7 +469,7 @@ export default function ReviewPage() {
 
             if (paymentMethod === "card") {
                 const session = await prepareTributeCheckout(
-                    customer,
+                    { ...customer, expectedTotal: total },
                     items.map(item => ({
                         id: item.id, quantity: item.quantity,
                         name: item.name, imageSrc: item.imageSrc,
@@ -966,6 +950,7 @@ export default function ReviewPage() {
                         </label>
                     </fieldset>
 
+                    <QuoteNotice pricing={pricing} language={language} code={customer?.referralCode ?? ""} />
                     {paymentError && (
                         <p role="alert" style={{ padding: "0 24px", color: "#b42318" }}>
                             {paymentError}
@@ -997,7 +982,7 @@ export default function ReviewPage() {
                             className={
                                 styles.confirmButton
                             }
-                            disabled={isPaying || isTributeOpen}
+                            disabled={!pricing.ready || isPaying || isTributeOpen}
                             aria-busy={isPaying}
                             onClick={
                                 handleConfirm
@@ -1031,9 +1016,7 @@ export default function ReviewPage() {
                             {itemCount}{" "}
                             {itemLabel} ·{" "}
                             {
-                                formatter.format(
-                                    total
-                                )
+                                (pricing.ready ? formatter.format(total) : "—")
                             }
                         </p>
                     </header>
@@ -1139,9 +1122,7 @@ export default function ReviewPage() {
 
                             <dd>
                                 {
-                                    formatter.format(
-                                        subtotal
-                                    )
+                                    (pricing.ready ? formatter.format(subtotal) : "—")
                                 }
                             </dd>
                         </div>
@@ -1153,9 +1134,7 @@ export default function ReviewPage() {
 
                             <dd>
                                 {
-                                    formatter.format(
-                                        discount
-                                    )
+                                    (pricing.ready ? formatter.format(discount) : "—")
                                 }
                             </dd>
                         </div>
@@ -1171,9 +1150,7 @@ export default function ReviewPage() {
 
                             <dd>
                                 {
-                                    formatter.format(
-                                        total
-                                    )
+                                    (pricing.ready ? formatter.format(total) : "—")
                                 }
                             </dd>
                         </div>

@@ -1,3 +1,4 @@
+import { extractPricing, moneyCents } from "@/lib/checkout-pricing";
 import { createShopSession, checkTributeShop } from "@/lib/tribute-shop";
 import crypto from "crypto";
 import {
@@ -9,6 +10,7 @@ import {
     confirmCmlOrder,
     createCmlCustomer,
     createCmlOrder,
+    previewCmlOrder,
     getCmlOrder,
     getCmlProductByCode,
     resolveCmlCustomer,
@@ -631,6 +633,18 @@ async function handleCreateOrder(
     }
 
 
+    const expectedTotal = body.expectedTotal;
+    // Client amount is only a consent check, never the source of the payable amount.
+    if (expectedTotal !== undefined) {
+        const quote = extractPricing(await previewCmlOrder({
+            customerId, referralCode: referralCode || undefined,
+            items: products.map(({ productId }) => ({ productId, quantity: 1 })),
+        }));
+        if (moneyCents(expectedTotal) !== moneyCents(quote.total)) {
+            return jsonError("Price changed. Reload checkout to review the current total before paying.", 422);
+        }
+    }
+
     const orderResponse =
         await createCmlOrder({
             customerId,
@@ -732,6 +746,10 @@ async function handleCreateOrder(
         );
     }
 
+
+    if (expectedTotal !== undefined && moneyCents(expectedTotal) !== moneyCents(amount)) {
+        return jsonError("The confirmed order amount changed. Contact support before paying; no payment was created.", 422);
+    }
 
     const tribute = isTribute
         ? await createShopSession({ code: orderCode, amount, currency }, checkoutReference, email)

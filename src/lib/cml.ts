@@ -455,3 +455,19 @@ export async function recordCmlPayment({
         }
     );
 }
+// Pricing only: CML does not create orders or consume referral usage in preview mode.
+export async function previewCmlOrder(params: {
+    customerId: number;
+    referralCode?: string;
+    items: Array<{ productId: number; quantity: number }>;
+}) {
+    return cmlRequest("/order/submit", {
+        preview: true,
+        order: {
+            customer_id: params.customerId,
+            sales_channel: CML_CHANNEL,
+            ...(params.referralCode ? { referral_code: params.referralCode } : {}),
+            items: params.items.map(item => ({ product_id: item.productId, qty: item.quantity })),
+        },
+    });
+}

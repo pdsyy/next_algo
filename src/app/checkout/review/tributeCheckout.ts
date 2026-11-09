@@ -1,4 +1,5 @@
 export type TributeCustomer = {
+    expectedTotal?: number;
     firstName: string;
     lastName: string;
     email: string;
@@ -56,6 +57,8 @@ export async function prepareTributeCheckout(
 
     let prepared: TributeSession;
     if (cached) {
+        // An existing order must be checked on the server before reusing its link.
+        // In particular, never redirect a paid/manual-review order to checkout.
         if (!isSession(cached)) throw new Error(messages.restoreError);
         const response = await fetch("/api/payments/tribute-shop/restore", {
             headers: { Authorization: `Bearer ${cached.token}` }, cache: "no-store",
@@ -83,6 +86,14 @@ export async function prepareTributeCheckout(
         prepared = result.tribute;
     }
 
+    if (cached && prepared.state === "pending" && customer.expectedTotal !== undefined) {
+        // Restore alone does not tell us the old amount. Verify it server-side before redirect.
+        const response = await fetch("/api/checkout/payment-amount", {
+            method: "POST", headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ token: prepared.token, expectedTotal: customer.expectedTotal }),
+        });
+        if (!response.ok) throw new Error(messages.restoreError);
+    }
     prepared = { ...prepared, products: products.map(({ id, name, imageSrc }) => ({ id, name, imageSrc })) };
     try { sessionStorage.setItem(key, JSON.stringify(prepared)); }
     catch { /* Same-tab return also carries the server-issued recovery token. */ }

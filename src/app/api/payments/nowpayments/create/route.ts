@@ -1,3 +1,4 @@
+import { moneyCents } from "@/lib/checkout-pricing";
 import {
     NextRequest,
     NextResponse,
@@ -10,22 +11,6 @@ import {
 import {
     getCmlOrder,
 } from "@/lib/cml";
-
-
-function normalizeAmount(
-    value: unknown
-) {
-    const normalized =
-        String(value)
-            .replace(
-                /[^\d.-]/g,
-                ""
-            );
-
-    return parseFloat(
-        normalized
-    );
-}
 
 
 export async function POST(
@@ -76,16 +61,6 @@ export async function POST(
             );
 
 
-        console.log(
-            "NOWPAYMENTS CML ORDER:",
-            JSON.stringify(
-                orderResponse,
-                null,
-                2
-            )
-        );
-
-
         const order =
             orderResponse
                 ?.success?.order ??
@@ -122,11 +97,7 @@ export async function POST(
         ========================= */
 
         const amount =
-            normalizeAmount(
-                order.final_amount ??
-                order.total ??
-                order.amount
-            );
+            moneyCents(order.final_amount) / 100;
 
 
         const currency =
@@ -171,6 +142,9 @@ export async function POST(
            4. CREATE NOWPAYMENTS
         ========================= */
 
+        if (body.expectedTotal !== undefined && moneyCents(body.expectedTotal) !== moneyCents(amount)) {
+            return NextResponse.json({ success: false, error: "Price changed. Return to checkout to review the current total." }, { status: 409 });
+        }
         const payment =
             await createNowPayment({
 

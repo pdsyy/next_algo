@@ -1,4 +1,5 @@
 "use client";
+import { useCheckoutQuote, QuoteNotice } from "@/lib/use-checkout-quote";
 
 import {
     type FormEvent,
@@ -431,33 +432,10 @@ function CheckoutContent() {
        TOTALS
     ========================= */
 
-    const subtotal =
-        useMemo(
-            () =>
-                items.reduce(
-                    (sum, item) =>
-                        sum +
-                        item.unitPrice *
-                        item.quantity,
-                    0
-                ),
-            [items]
-        );
-
-    const discount = 0;
-
-    const total =
-        Math.max(
-            0,
-            subtotal - discount
-        );
-
-    const locale =
-        language === "UA"
-            ? "uk-UA"
-            : language === "RU"
-                ? "ru-RU"
-                : "en-US";
+    const pricing = useCheckoutQuote(items, form.referralCode, form.deliveryLanguage);
+    const subtotal = pricing.quote?.subtotal ?? 0;
+    const discount = pricing.quote?.discount ?? 0;
+    const total = pricing.quote?.total ?? 0;
 
     const formatter =
         useMemo(
@@ -668,7 +646,7 @@ function CheckoutContent() {
             event.preventDefault();
 
             if (
-                !canSubmit ||
+                !pricing.ready || !canSubmit ||
                 isSubmitting ||
                 items.length === 0
             ) {
@@ -1268,7 +1246,8 @@ function CheckoutContent() {
                             }
                         </p>
 
-                        {submitError && (
+                        <QuoteNotice pricing={pricing} language={language} code={form.referralCode} />
+                    {submitError && (
                             <p
                                 className={
                                     styles.submitError
@@ -1306,7 +1285,7 @@ function CheckoutContent() {
                                 styles.buy
                             }
                             disabled={
-                                !canSubmit ||
+                                !pricing.ready || !canSubmit ||
                                 isSubmitting
                             }
                         >
@@ -1336,9 +1315,7 @@ function CheckoutContent() {
                             {itemCount} {itemLabel}{" "}
                             ·{" "}
                             {
-                                formatter.format(
-                                    total
-                                )
+                                (pricing.ready ? formatter.format(total) : "—")
                             }
                         </p>
                     </header>
@@ -1436,9 +1413,7 @@ function CheckoutContent() {
 
                             <dd>
                                 {
-                                    formatter.format(
-                                        subtotal
-                                    )
+                                    (pricing.ready ? formatter.format(subtotal) : "—")
                                 }
                             </dd>
                         </div>
@@ -1450,9 +1425,7 @@ function CheckoutContent() {
 
                             <dd>
                                 {
-                                    formatter.format(
-                                        discount
-                                    )
+                                    (pricing.ready ? formatter.format(discount) : "—")
                                 }
                             </dd>
                         </div>
@@ -1468,9 +1441,7 @@ function CheckoutContent() {
 
                             <dd>
                                 {
-                                    formatter.format(
-                                        total
-                                    )
+                                    (pricing.ready ? formatter.format(total) : "—")
                                 }
                             </dd>
                         </div>

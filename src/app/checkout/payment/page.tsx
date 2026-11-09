@@ -1,4 +1,5 @@
 "use client";
+import { useCheckoutQuote, QuoteNotice } from "@/lib/use-checkout-quote";
 
 import {
     useEffect,
@@ -492,13 +493,8 @@ export default function CheckoutPaymentPage() {
         );
 
 
-    const previewTotal =
-        checkoutItems.reduce(
-            (sum, item) =>
-                sum + item.unitPrice,
-            0
-        );
-
+    const pricing = useCheckoutQuote(checkoutItems, customer?.referralCode ?? "", customer?.deliveryLanguage ?? "en");
+   const previewTotal = pricing.quote?.total ?? 0;
 
     const productFingerprint =
         checkoutItems
@@ -545,7 +541,7 @@ export default function CheckoutPaymentPage() {
     const startPayment =
         async () => {
             if (
-                !customer ||
+                !pricing.ready || !customer ||
                 checkoutItems.length === 0 ||
                 busy
             ) {
@@ -584,6 +580,7 @@ export default function CheckoutPaymentPage() {
                                 body: JSON.stringify({
                                     action:
                                         "create-order",
+                                    expectedTotal: previewTotal,
 
                                     email:
                                     customer.email,
@@ -729,8 +726,11 @@ export default function CheckoutPaymentPage() {
                    CREATE NOWPAYMENTS PAYMENT
                 ========================= */
 
-                const response =
-                    await fetch(
+                if (pending.amount !== previewTotal) {
+                   throw new Error(language === "RU" ? "Сумма ранее созданного заказа отличается. Обратитесь в поддержку перед оплатой." : language === "UA" ? "Сума раніше створеного замовлення відрізняється. Зверніться до підтримки перед оплатою." : "The existing order amount differs. Contact support before paying.");
+               }
+               const response =
+                   await fetch(
                         "/api/payments/nowpayments/create",
                         {
                             method: "POST",
@@ -745,6 +745,7 @@ export default function CheckoutPaymentPage() {
                                 pending.orderCode,
 
                                 payCurrency,
+                                expectedTotal: previewTotal,
                             }),
                         }
                     );
@@ -792,10 +793,8 @@ export default function CheckoutPaymentPage() {
                         currency:
                         pending.currency,
 
-                        subtotal:
-                        previewTotal,
-
-                        discount: 0,
+                        subtotal: pricing.quote!.subtotal,
+                        discount: pricing.quote!.discount,
 
                         total:
                         pending.amount,
@@ -1015,6 +1014,7 @@ export default function CheckoutPaymentPage() {
                             )
                         )}
 
+                        <QuoteNotice pricing={pricing} language={language} code={customer?.referralCode ?? ""} />
                         {error && (
                             <p
                                 className={
@@ -1060,7 +1060,7 @@ export default function CheckoutPaymentPage() {
                                 startPayment
                             }
                             disabled={
-                                busy ||
+                                !pricing.ready || busy ||
                                 requiresEmailVerification
                             }
                             aria-busy={busy}
@@ -1094,9 +1094,7 @@ export default function CheckoutPaymentPage() {
                             }{" "}
                             · $
                             {
-                                previewTotal.toFixed(
-                                    2
-                                )
+                                (pricing.ready ? previewTotal.toFixed(2) : "—")
                             }
                         </p>
                     </header>
@@ -1155,9 +1153,7 @@ export default function CheckoutPaymentPage() {
                             <dd>
                                 $
                                 {
-                                    previewTotal.toFixed(
-                                        2
-                                    )
+                                    (pricing.ready ? previewTotal.toFixed(2) : "—")
                                 }
                             </dd>
                         </div>

@@ -13,6 +13,21 @@ import {
 } from "@/lib/cml";
 
 
+/* =========================
+   HELPERS
+========================= */
+
+// Same tolerant parsing as in /api/checkout (create-order):
+// strips everything except digits, dot and minus ("765.00 USD" -> 765).
+const amountOf = (
+    value: unknown
+) =>
+    Number.parseFloat(
+        String(value ?? "")
+            .replace(/[^\d.-]/g, "")
+    );
+
+
 export async function POST(
     req: NextRequest
 ) {
@@ -96,24 +111,44 @@ export async function POST(
            3. GET AUTHORITATIVE PRICE
         ========================= */
 
+        const rawAmount =
+            order.final_amount ??
+            order.total ??
+            order.amount;
+
+        const parsedAmount =
+            amountOf(rawAmount);
+
+        if (
+            !Number.isFinite(parsedAmount) ||
+            parsedAmount <= 0
+        ) {
+            console.error(
+                "CML ORDER AMOUNT FIELDS:",
+                {
+                    final_amount:
+                    order.final_amount,
+                    total:
+                    order.total,
+                    amount:
+                    order.amount,
+                }
+            );
+
+            throw new Error(
+                `Invalid CML order amount: ${String(rawAmount)}`
+            );
+        }
+
+        // Round to cents to avoid float artifacts (e.g. 764.9999999999999)
         const amount =
-            moneyCents(order.final_amount) / 100;
+            Math.round(parsedAmount * 100) / 100;
 
 
         const currency =
             String(
                 order.currency ?? ""
             ).toUpperCase();
-
-
-        if (
-            !Number.isFinite(amount) ||
-            amount <= 0
-        ) {
-            throw new Error(
-                `Invalid CML order amount: ${order.final_amount}`
-            );
-        }
 
 
         if (!currency) {
@@ -139,12 +174,30 @@ export async function POST(
 
 
         /* =========================
-           4. CREATE NOWPAYMENTS
+           4. CONSENT CHECK
         ========================= */
 
-        if (body.expectedTotal !== undefined && moneyCents(body.expectedTotal) !== moneyCents(amount)) {
-            return NextResponse.json({ success: false, error: "Price changed. Return to checkout to review the current total." }, { status: 409 });
+        if (
+            body.expectedTotal !== undefined &&
+            moneyCents(body.expectedTotal) !== moneyCents(amount)
+        ) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    error:
+                        "Price changed. Return to checkout to review the current total.",
+                },
+                {
+                    status: 409,
+                }
+            );
         }
+
+
+        /* =========================
+           5. CREATE NOWPAYMENTS
+        ========================= */
+
         const payment =
             await createNowPayment({
 

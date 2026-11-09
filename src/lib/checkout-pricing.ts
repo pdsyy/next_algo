@@ -7,12 +7,44 @@ export type CheckoutQuote = {
     warnings: string[];
 };
 
+/**
+ * Converts a money value to integer cents.
+ *
+ * Accepts:
+ *  - numbers (765, 765.5, 764.9999999999999 -> float noise is tolerated)
+ *  - numeric strings ("765", "765.5", "765.00", "765.0000")
+ *
+ * Rejects (throws):
+ *  - null / undefined / empty / non-numeric values
+ *  - negative values
+ *  - values with real sub-cent precision ("764.9999", "10.005")
+ */
 export function moneyCents(value: unknown): number {
+    const fail = (): never => {
+        throw new Error(`Invalid CML amount: ${JSON.stringify(value) ?? String(value)}`);
+    };
+
+    if (typeof value === "number") {
+        if (!Number.isFinite(value) || value < 0) return fail();
+        const cents = Math.round(value * 100);
+        // tolerate float noise only, not real sub-cent precision
+        if (Math.abs(value * 100 - cents) > 1e-6) return fail();
+        if (!Number.isSafeInteger(cents)) return fail();
+        return cents;
+    }
+
     const text = String(value ?? "").trim();
-    if (!/^\d+(\.\d{1,2})?$/.test(text)) throw new Error("Invalid CML amount");
-    const [whole, fraction = ""] = text.split(".");
-    const result = Number(whole) * 100 + Number(fraction.padEnd(2, "0"));
-    if (!Number.isSafeInteger(result)) throw new Error("Invalid CML amount");
+    const match = /^(\d+)(?:\.(\d+))?$/.exec(text);
+    if (!match) return fail();
+
+    const whole = match[1];
+    const fraction = match[2] ?? "";
+
+    // "765.0000" is fine, "764.9999" is not
+    if (fraction.length > 2 && /[1-9]/.test(fraction.slice(2))) return fail();
+
+    const result = Number(whole) * 100 + Number(fraction.slice(0, 2).padEnd(2, "0"));
+    if (!Number.isSafeInteger(result)) return fail();
     return result;
 }
 

@@ -758,12 +758,7 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                     ref={trackRecordRef}
                     className="track_record_container_gradient"
                 >
-                    <div className="track_record_container" onMouseEnter={() =>
-                        setIsTrackRecordPaused(true)
-                    }
-                         onMouseLeave={() =>
-                             setIsTrackRecordPaused(false)
-                         }>
+                    <div className="track_record_container">
                         <div className="track_record_container_grid">
 
                             <div className="track_record_info">
@@ -818,7 +813,13 @@ const MainPage = ({activePopup, setActivePopup}: any) => {
                                 })}
                             </div>
 
-                            <div className="track_record_image_container">
+                            <div className="track_record_image_container" onPointerEnter={(e) => {
+                                if (e.pointerType === "mouse") setIsTrackRecordPaused(true);
+                            }}
+                                 onPointerLeave={(e) => {
+                                     if (e.pointerType === "mouse") setIsTrackRecordPaused(false);
+                                 }}
+                            >
 
                                 <ImageMagnifier
                                     src={track_record_main.src}

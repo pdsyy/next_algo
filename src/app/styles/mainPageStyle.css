@@ -748,7 +748,7 @@
 .track_record_item.magnifier_active {
     background: #0000000D;
     border-left: 3px solid #181818;
-    padding: 16px;
+    padding: 16px 12px 16px 16px;
 }
 
 

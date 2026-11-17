@@ -58,22 +58,6 @@ function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, w: numbe
     ctx.closePath();
 }
 
-const PILL: Record<'dark' | 'light' | 'blue', [string, string, string | null]> = {
-    dark: ['#1d1e21', '#ffffff', null],
-    light: ['#f7f7f8', '#1d1e21', '#d6d7db'],
-    blue: ['rgba(47,102,240,.12)', '#2f66f0', null],
-};
-
-function pill(ctx: CanvasRenderingContext2D, x: number, y: number, txt: string, kind: 'dark' | 'light' | 'blue') {
-    ctx.font = MONO; ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
-    const tw = ctx.measureText(txt).width + 18;
-    const [bg, fg, stroke] = PILL[kind];
-    ctx.fillStyle = bg; roundRect(ctx, x, y - 12, tw, 24, 12); ctx.fill();
-    if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = 1; ctx.stroke(); }
-    ctx.fillStyle = fg; ctx.fillText(txt, x + 9, y + .5);
-    return tw;
-}
-
 /* ────────────────────────────── component ────────────────────────────── */
 
 export default function OurApproach() {
@@ -83,9 +67,6 @@ export default function OurApproach() {
     const [step, setStep] = useState(0);
     const rootRef = useRef<HTMLElement | null>(null);
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
-    // подписи читаются внутри rAF-цикла; ref позволяет менять язык без перезапуска canvas
-    const labels = useRef(chart);
-    labels.current = chart;
     // состояние пословного проявления; сбрасывается при каждом рендере (смена языка/шага),
     // чтобы новые span-ы сразу получили правильную прозрачность
     const fillState = useRef({ u: -1, s: -1 });
@@ -108,7 +89,6 @@ export default function OurApproach() {
             data: [] as Candle[],
         };
         let gains: Gain[] = [];
-        let mddAll: number[] = [];
         let entries: number[] = [];
         let exits: number[] = [];
         let ma: number[] = [];
@@ -133,7 +113,7 @@ export default function OurApproach() {
             st.pad = { l: small ? 2 : 16, r: small ? 74 : 88, t: small ? 34 : 40, b: small ? 6 : 12 };
             st.cw = (st.W - st.pad.l - st.pad.r) / st.N;
 
-            // производные данные: зоны прибыли, просадка, точки входа/выхода, тренд
+            // производные данные: зоны прибыли, точки входа/выхода, тренд
             const d = st.data;
             const legs = legBounds(d.length);
             gains = legs.map((L, k) => {
@@ -143,8 +123,6 @@ export default function OurApproach() {
                 while (bo < L.b && at(d, bo).c <= base) bo++; // первая свеча выше прошлого максимума
                 return { a: bo, b: L.b, base, peak: pk };
             });
-            let peak = at(d, 0).c;
-            mddAll = d.map(q => { peak = Math.max(peak, q.c); return 1 - q.c / peak; });
             entries = []; exits = [];
             for (let i = 3; i < d.length - 3; i++) {
                 const w = d.slice(i - 3, i + 4);
@@ -184,7 +162,6 @@ export default function OurApproach() {
         let idx = -1;
         const al = [0, 0, 0]; // прозрачность слоёв: 01 зоны / 02 входы-выходы / 03 тренд
         const za = [0, 0, 0]; // прозрачность зон прибыли
-        let sum = 0;          // итоговая сводка
 
         function drawUnder(c: CanvasRenderingContext2D) {
             gains.forEach((z, k) => {
@@ -200,18 +177,7 @@ export default function OurApproach() {
         }
 
         function drawOver(c: CanvasRenderingContext2D) {
-            const L = labels.current;
-            const d = st.data, upto = Math.min(st.full, st.N - 1), small = st.W < 600;
-            gains.forEach((z, k) => {
-                const a = at(za, k);
-                if (a < .02) return;
-                const b = Math.min(z.b, upto);
-                if (b - z.a < (small ? 1 : 2)) return;
-                const pct = (at(d, b).c / z.base - 1) * 100;
-                c.globalAlpha = a;
-                pill(c, X(z.a) - st.cw / 2 + (small ? 3 : 6), st.pad.t + 16, small ? `+${pct.toFixed(0)}%` : `${L.profit} +${pct.toFixed(1)}%`, 'blue');
-                c.globalAlpha = 1;
-            });
+            const d = st.data, upto = Math.min(st.full, st.N - 1);
             // 02 — входы и выходы
             if (at(al, 1) > .02) {
                 c.globalAlpha = at(al, 1);
@@ -235,19 +201,6 @@ export default function OurApproach() {
                     for (let i = 0; i <= upto; i++) { const x = X(i), y = Y(at(ma, i)); if (i) c.lineTo(x, y); else c.moveTo(x, y); }
                 };
                 c.strokeStyle = COLORS.bull; c.lineWidth = 2.2; path(); c.stroke();
-                c.globalAlpha = 1;
-            }
-            // сводка — когда график вырос полностью
-            if (sum > .02) {
-                const prof = (at(d, upto).c / at(d, 0).o - 1) * 100;
-                const mdd = Math.max(0, ...mddAll.slice(0, upto + 1)) * 100;
-                c.globalAlpha = sum;
-                const t1 = `${L.profit} +${prof.toFixed(1)}%`, t2 = `${L.maxDrawdown} ${mdd.toFixed(1)}%`;
-                c.font = MONO;
-                const w1 = c.measureText(t1).width + 18, w2 = c.measureText(t2).width + 18;
-                const yb = st.H - st.pad.b - 18, xr = st.W - st.pad.r;
-                if (small) { pill(c, xr - w1, yb - 30, t1, 'dark'); pill(c, xr - w2, yb, t2, 'light'); }
-                else { pill(c, xr - w2 - w1 - 8, yb, t1, 'dark'); pill(c, xr - w2, yb, t2, 'light'); }
                 c.globalAlpha = 1;
             }
         }
@@ -326,7 +279,6 @@ export default function OurApproach() {
             if (Math.abs(u - fs.u) > .002 || s !== fs.s) { fill(s, u); fs.u = u; fs.s = s; }
             for (let k = 0; k < STEPS; k++) al[k] = at(al, k) + ((k === idx ? 1 : k < idx ? .4 : 0) - at(al, k)) * smooth;
             for (let k = 0; k < 3; k++) za[k] = at(za, k) + ((k < idx ? .7 : k === idx ? 1 : 0) - at(za, k)) * smooth; // зона k появляется со слайда k
-            sum += ((st.shown > .985 ? 1 : 0) - sum) * smooth;
             draw(clamp(candlesAt(p) / (st.N || 1), 0, 1));
         };
 

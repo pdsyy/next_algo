@@ -47,6 +47,12 @@ const LENS_POSITIONS: Record<number, LensPosition> = {
     2: { x: 0.079, y: 0.048 },
 };
 
+/*
+ * Сколько миллисекунд курсор «не мешает» анимации после смены карточки.
+ * Должно быть не меньше, чем длительность transition линзы в style.css.
+ */
+const LENS_ANIMATION_MS = 700;
+
 const clamp = (
     value: number,
     minimum: number,
@@ -58,6 +64,7 @@ const clamp = (
 const ImageMagnifier = ({src, alt = "", zoom = 1.6, lensSize = 160, activeMagnifierItem = 0}: ImageMagnifierProps) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const moveFrameRef = useRef<number | null>(null);
+    const animationTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const [containerSize, setContainerSize] =
         useState<ContainerSize>({
@@ -75,14 +82,48 @@ const ImageMagnifier = ({src, alt = "", zoom = 1.6, lensSize = 160, activeMagnif
         useState(false);
 
     /*
+     * Идёт анимация перехода к карточке.
+     * Пока она идёт, курсор не двигает линзу,
+     * а CSS-transition остаётся включённым.
+     */
+    const [isAnimating, setIsAnimating] =
+        useState(false);
+
+    const stopAnimation = () => {
+        if (animationTimerRef.current !== null) {
+            clearTimeout(animationTimerRef.current);
+            animationTimerRef.current = null;
+        }
+
+        setIsAnimating(false);
+    };
+
+    /*
      * Меняем положение линзы при выборе карточки.
+     * Анимация проигрывается, даже если курсор сейчас над картинкой.
      */
     useEffect(() => {
         const nextPosition =
             LENS_POSITIONS[activeMagnifierItem] ??
             LENS_POSITIONS[0];
 
+        // отменяем отложенное обновление от курсора, чтобы оно не перебило анимацию
+        if (moveFrameRef.current !== null) {
+            cancelAnimationFrame(moveFrameRef.current);
+            moveFrameRef.current = null;
+        }
+
+        if (animationTimerRef.current !== null) {
+            clearTimeout(animationTimerRef.current);
+        }
+
+        setIsAnimating(true);
         setLensPosition(nextPosition);
+
+        animationTimerRef.current = setTimeout(() => {
+            animationTimerRef.current = null;
+            setIsAnimating(false);
+        }, LENS_ANIMATION_MS);
     }, [activeMagnifierItem]);
 
     /*
@@ -129,12 +170,16 @@ const ImageMagnifier = ({src, alt = "", zoom = 1.6, lensSize = 160, activeMagnif
     }, []);
 
     /*
-     * Очищаем запланированное обновление позиции.
+     * Очищаем запланированное обновление позиции и таймер анимации.
      */
     useEffect(() => {
         return () => {
             if (moveFrameRef.current !== null) {
                 cancelAnimationFrame(moveFrameRef.current);
+            }
+
+            if (animationTimerRef.current !== null) {
+                clearTimeout(animationTimerRef.current);
             }
         };
     }, []);
@@ -187,6 +232,9 @@ const ImageMagnifier = ({src, alt = "", zoom = 1.6, lensSize = 160, activeMagnif
             event.pointerId,
         );
 
+        // явное нажатие прерывает анимацию и отдаёт управление пользователю
+        stopAnimation();
+
         setIsPointerActive(true);
         updateLensPosition(event);
     };
@@ -194,6 +242,11 @@ const ImageMagnifier = ({src, alt = "", zoom = 1.6, lensSize = 160, activeMagnif
     const handlePointerMove = (
         event: PointerEvent<HTMLDivElement>,
     ) => {
+        // во время анимации движение курсора не должно перебивать её
+        if (isAnimating) {
+            return;
+        }
+
         updateLensPosition(event);
     };
 
@@ -238,6 +291,13 @@ const ImageMagnifier = ({src, alt = "", zoom = 1.6, lensSize = 160, activeMagnif
     const backgroundY =
         lensSize / 2 - lensY * zoom;
 
+    /*
+     * Класс "pointer" (без transition, линза мгновенно следует за курсором)
+     * включаем только когда анимация не идёт.
+     */
+    const isFollowingPointer =
+        isPointerActive && !isAnimating;
+
     return (
         <div
             ref={containerRef}
@@ -270,7 +330,7 @@ const ImageMagnifier = ({src, alt = "", zoom = 1.6, lensSize = 160, activeMagnif
 
             <div
                 className={`image_magnifier_lens ${
-                    isPointerActive
+                    isFollowingPointer
                         ? "image_magnifier_lens_pointer"
                         : ""
                 }`}
